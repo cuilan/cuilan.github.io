@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="java.util.LinkedHashMap 类继承了 java.util.HashMap 类，实现了 java.util.Map 接口。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap2.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap2.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.239Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LinkedHashMap源码分析">
 <meta name="twitter:description" content="java.util.LinkedHashMap 类继承了 java.util.HashMap 类，实现了 java.util.Map 接口。">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -97,7 +97,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong><code>java.util.LinkedHashMap</code></strong> 类继承了 <strong><code>java.util.HashMap</code></strong> 类，实现了 <strong><code>java.util.Map</code></strong> 接口。</p>
-<p><img src="/blog/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png" alt="LinkedHashMap继承关系" title="LinkedHashMap继承关系"></p>
+<p><img src="/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap1.png" alt="LinkedHashMap继承关系" title="LinkedHashMap继承关系"></p>
 <a id="more"></a>
 
 <hr>
@@ -139,7 +139,7 @@
 <p><strong><font color="red">注意</font></strong>：调用 <strong><code>put()</code></strong> / <strong><code>putAll()</code></strong> / <strong><code>putIfAbsent()</code></strong> / <strong><code>get()</code></strong> / <strong><code>getOrDefault()</code></strong> / <strong><code>replace()</code></strong> / <strong><code>compute()</code></strong> / <strong><code>computeIfAbsent()</code></strong> / <strong><code>computeIfPresent()</code></strong> / <strong><code>merge()</code></strong> 等方法也会对 Entry 进行访问，会对迭代顺序产生影响。</p>
 <p>关于构建LRU缓存，见文章末尾：<strong><a href="#LRU">构建LRU缓存</a></strong></p>
 <h3 id="1-3-数据结构-amp-性能"><a href="#1-3-数据结构-amp-性能" class="headerlink" title="1.3 数据结构 &amp; 性能"></a>1.3 数据结构 &amp; 性能</h3><p><strong>数据结构</strong>：</p>
-<p><img src="/blog/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap2.png" alt="LinkedHashMap数据结构" title="LinkedHashMap数据结构"></p>
+<p><img src="/2019/09/15/javase/LinkedHashMap-source-analysis/LinkedHashMap2.png" alt="LinkedHashMap数据结构" title="LinkedHashMap数据结构"></p>
 <p>LinkedHashMap 的数据结构在 HashMap 的基础上增加了 <strong>双端链表</strong> 的实现，与 HashMap 的 <strong>哈希数组 + 链表或红黑树</strong> 不冲突，同时存在。</p>
 <p><strong>性能</strong>：</p>
 <ul>
@@ -188,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/09/15/javase/LinkedHashMap-source-analysis/" data-id="ckbkxw4n5001bp8wphb3tqi1i" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2019/09/15/javase/LinkedHashMap-source-analysis/" data-id="ckbkz8dc800164swpthxi3ip9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/集合框架/">集合框架</a></li></ul>

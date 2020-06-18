@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="ArrayList应该算是日常开发中使用最多的List实现类。 一、ArrayList 的特性 有序 可重复 线程不安全 允许插入 null 值 查询快、增删慢 底层通过 Object[] 数组实现">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/11/15/javase/array-list-source-analysis/array-list.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/15/javase/array-list-source-analysis/array-list.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ArrayList源码分析">
 <meta name="twitter:description" content="ArrayList应该算是日常开发中使用最多的List实现类。 一、ArrayList 的特性 有序 可重复 线程不安全 允许插入 null 值 查询快、增删慢 底层通过 Object[] 数组实现">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2018/11/15/javase/array-list-source-analysis/array-list.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/11/15/javase/array-list-source-analysis/array-list.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -107,7 +107,7 @@
 <a id="more"></a>
 
 <h2 id="二、ArrayList继承关系"><a href="#二、ArrayList继承关系" class="headerlink" title="二、ArrayList继承关系"></a>二、ArrayList继承关系</h2><p><strong><code>java.util.ArrayList</code></strong> 继承 <strong><code>java.util.AbstractList</code></strong>，实现了 <strong><code>java.util.List</code></strong>、<strong><code>java.util.RandomAccess</code></strong>、 <strong><code>java.io.Serializable</code></strong> 接口。</p>
-<p><img src="/blog/2018/11/15/javase/array-list-source-analysis/array-list.png" alt="ArrayList继承关系" title="ArrayList继承关系"></p>
+<p><img src="/2018/11/15/javase/array-list-source-analysis/array-list.png" alt="ArrayList继承关系" title="ArrayList继承关系"></p>
 <hr>
 <h2 id="三、成员变量"><a href="#三、成员变量" class="headerlink" title="三、成员变量"></a>三、成员变量</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 序列化版本id</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">8683452581122892189L</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认初始容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_CAPACITY = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于空实例的共享空数组实例</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[] EMPTY_ELEMENTDATA = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于默认大小的空实例的共享空数组实例。</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 存储 ArrayList 元素的数组缓冲区</span></span><br><span class="line"><span class="keyword">transient</span> Object[] elementData;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ArrayList 的大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ArrayList 最大容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
 
@@ -213,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/11/15/javase/array-list-source-analysis/" data-id="ckbkxw4np002kp8wplqdg5b9e" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2018/11/15/javase/array-list-source-analysis/" data-id="ckbkz8dcs002g4swp6kv81e9u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/集合框架/">集合框架</a></li></ul>
