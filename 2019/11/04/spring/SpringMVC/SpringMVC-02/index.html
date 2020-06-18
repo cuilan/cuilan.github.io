@@ -15,23 +15,23 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="一、SpringMVC入口SpringMVC启动类为：org.springframework.web.servlet.DispatcherServlet">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2.SpringMVC核心分发器DispatcherServlet分析">
 <meta name="twitter:description" content="一、SpringMVC入口SpringMVC启动类为：org.springframework.web.servlet.DispatcherServlet">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -107,7 +107,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="一、SpringMVC入口"><a href="#一、SpringMVC入口" class="headerlink" title="一、SpringMVC入口"></a>一、SpringMVC入口</h2><p>SpringMVC启动类为：<strong><code>org.springframework.web.servlet.DispatcherServlet</code></strong></p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png" alt="DispatcherServlet继承关系" title="DispatcherServlet继承关系"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png" alt="DispatcherServlet继承关系" title="DispatcherServlet继承关系"></p>
 <a id="more"></a>
 
 <p>由此可以看出 <strong>DispatcherServlet</strong> 本质上是继承自 <strong><code>javax.servlet.Servlet</code></strong> 顶级接口，因此其生命周期为：<strong><code>init() --&gt; service() --&gt; destory()</code></strong>。</p>
@@ -133,22 +133,22 @@
 <p>所以，SpringMVC启动时，是由 servlet容器（tomcat）调用执行 <strong><code>init()</code></strong> 方法，而 <strong><code>HttpServletBean</code></strong> 中覆盖了 <strong><code>init()</code></strong>方法，并 <strong><code>final</code></strong> 修饰，<strong><code>DispatcherServlet</code></strong> 和 <strong><code>FrameworkServlet</code></strong> 中都无法再继续覆盖，因此启动时会调用 <strong><code>HttpServletBean.init()</code></strong> 方法。</p>
 <hr>
 <h2 id="二、init-方法，对初始化过程进行处理"><a href="#二、init-方法，对初始化过程进行处理" class="headerlink" title="二、init()方法，对初始化过程进行处理"></a>二、init()方法，对初始化过程进行处理</h2><p>init() 方法执行过程大概分为三步：</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png" alt="HttpServletBean.init()方法" title="HttpServletBean.init()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png" alt="HttpServletBean.init()方法" title="HttpServletBean.init()方法"></p>
 <h3 id="1-设置web-xml中的配置参数"><a href="#1-设置web-xml中的配置参数" class="headerlink" title="1.设置web.xml中的配置参数"></a>1.设置web.xml中的配置参数</h3><p><strong><code>ServletConfigPropertyValues</code></strong> 是 <strong><code>HttpServletBean</code></strong> 的内部静态类，构造过程中会使用 <strong><code>ServletConfig</code></strong> 对象找出 web.xml 配置文件中的配置参数并设置到 <strong><code>ServletConfigPropertyValues</code></strong> 中。</p>
 <h3 id="2-初始化BeanWrapper"><a href="#2-初始化BeanWrapper" class="headerlink" title="2.初始化BeanWrapper"></a>2.初始化BeanWrapper</h3><p>使用 <strong><code>BeanWrapper</code></strong> 来构造实例化 <strong><code>DispatcherServlet</code></strong> 对象（即：this当前对象），接着通过当前 this 对象的 <strong><code>getServletContext()</code></strong> 方法获取 servlet 上下文信息，并创建 <strong><code>ServletContextResourceLoader</code></strong> 对象，给 <strong>bw</strong> 注册 <strong><code>Resource</code></strong> 类型的属性编辑器，然后调用 <strong><code>initBeanWrapper()</code></strong> 进行初始化（空方法，供子类进行扩展），初始化后，给 bw 对象设置属性值，即 web.xml 中配置的参数值。</p>
 <h3 id="3-调用initServletBean-方法"><a href="#3-调用initServletBean-方法" class="headerlink" title="3.调用initServletBean()方法"></a>3.调用initServletBean()方法</h3><p>空方法，供子类进行扩展。</p>
 <p><strong>如</strong>：web.xml 中的 <strong><code>contextConfigLocation</code></strong> 参数，使用 <strong><code>BeanWrapper</code></strong> 构造，会将这个属性注入到子类 <strong><code>FrameworkServlet</code></strong> 的 <strong><code>contextConfigLocation</code></strong> 属性中，因为HttpServletBean中并没有定义该属性。</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png" alt="web.xml配置文件" title="web.xml配置文件"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png" alt="web.xml配置文件" title="web.xml配置文件"></p>
 <hr>
 <h2 id="三、FrameworkServlet中进行初始化"><a href="#三、FrameworkServlet中进行初始化" class="headerlink" title="三、FrameworkServlet中进行初始化"></a>三、FrameworkServlet中进行初始化</h2><p>由于 HttpServletBean 中的 <strong><code>initServletBean()</code></strong> 方法为空方法，<strong><code>FrameworkServlet</code></strong> 中对其进行<strong>覆写</strong>：</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png" alt="initServletBean()方法" title="initServletBean()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png" alt="initServletBean()方法" title="initServletBean()方法"></p>
 <p>SpringMVC启动时的几行日志即为此处输出，此方法重点关注 <strong>try代码块</strong> 中的代码。</p>
 <p>此处代码分为两部分：</p>
 <ul>
 <li><a href="#3_1">初始化WebApplicationContext</a></li>
 <li><a href="#3_2">初始化initFrameworkServlet</a></li>
 </ul>
-<h3 id="1-初始化WebApplicationContext"><a href="#1-初始化WebApplicationContext" class="headerlink" title="1.初始化WebApplicationContext"></a><a name="3_1">1.初始化WebApplicationContext</a></h3><p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png" alt="initWebApplicationContext()方法" title="initWebApplicationContext()方法"></p>
+<h3 id="1-初始化WebApplicationContext"><a href="#1-初始化WebApplicationContext" class="headerlink" title="1.初始化WebApplicationContext"></a><a name="3_1">1.初始化WebApplicationContext</a></h3><p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png" alt="initWebApplicationContext()方法" title="initWebApplicationContext()方法"></p>
 <ul>
 <li><p>第一段代码：初始化 <strong><code>webApplicationContext</code></strong> 属性，<strong><code>WebApplicationContext</code></strong> 是继承自 <strong><code>ApplicationContext</code></strong> 接口的子接口，该属性也就是 <strong>Spring容器上下文</strong>。</p>
 <p><strong>FrameworkServlet 的作用就是将 Servlet 与 Spring 容器关联</strong>。<strong><code>WebApplicationContextUtils.getWebApplicationContext(getServletContext())</code></strong> 得到根上下文。</p>
@@ -165,11 +165,11 @@
 </li>
 </ul>
 <h3 id="2-初始化initFrameworkServlet"><a href="#2-初始化initFrameworkServlet" class="headerlink" title="2.初始化initFrameworkServlet"></a><a name="3_2">2.初始化initFrameworkServlet</a></h3><p><strong><code>initFrameworkServlet()</code></strong> 方法并没有做任何处理，该方法主要是为了让子类覆写该方法并做一些需要处理的事情，但DispatcherServlet并未覆写该方法。</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png" alt="initFrameworkServlet()方法" title="initFrameworkServlet()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png" alt="initFrameworkServlet()方法" title="initFrameworkServlet()方法"></p>
 <p><font color="red">注意：</font></p>
 <p><strong>根上下文</strong> 是 web.xml 中配置的 <strong>ContextLoaderListener监听器</strong> 中根据 <strong><code>contextConfigLocation</code></strong> 路径生成的上下文。</p>
 <p>例如：以下这段配置文件中是根据 <strong><code>classpath:spring-mvc.xml</code></strong> 下的 xml 文件生成的根上下文。</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png" alt="根上下文" title="根上下文"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png" alt="根上下文" title="根上下文"></p>
 <hr>
 <h2 id="四、DispatcherServlet初始化各种接口的实现类"><a href="#四、DispatcherServlet初始化各种接口的实现类" class="headerlink" title="四、DispatcherServlet初始化各种接口的实现类"></a>四、DispatcherServlet初始化各种接口的实现类</h2><p>DispatcherServlet 覆写了 FrameworkServlet 中的 <strong><code>onRefresh()</code></strong> 方法。</p>
 <p><strong><code>initStrategies()</code></strong> 方法内部会初始化各个 <strong>策略接口的实现类</strong>。</p>
@@ -178,7 +178,7 @@
 <li>视图处理初始化 <strong><code>initViewResolvers(context)</code></strong> 方法：SpringMVC视图机制。</li>
 <li>请求映射处理初始化 <strong><code>initHandlerMappings(context)</code></strong> 方法：详解SpringMVC请求的时候是如何找到正确的Controller。</li>
 </ul>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png" alt="onRefresh()方法" title="onRefresh()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png" alt="onRefresh()方法" title="onRefresh()方法"></p>
 <hr>
 <h2 id="五、总结各个Servlet的作用"><a href="#五、总结各个Servlet的作用" class="headerlink" title="五、总结各个Servlet的作用"></a>五、总结各个Servlet的作用</h2><ol>
 <li><strong>HttpServletBean</strong><br> 主要做一些初始化的工作，将 web.xml 中配置的参数设置到 Servlet 中。比如 servlet 标签的子标签 init-param 标签中配置的参数。</li>
@@ -187,13 +187,13 @@
 </ol>
 <hr>
 <h2 id="六、DispatcherServlet处理请求过程"><a href="#六、DispatcherServlet处理请求过程" class="headerlink" title="六、DispatcherServlet处理请求过程"></a>六、DispatcherServlet处理请求过程</h2><h3 id="1-doGet-方法"><a href="#1-doGet-方法" class="headerlink" title="1.doGet()方法"></a>1.doGet()方法</h3><p>首先，当 HTTP 请求到 Servle t后，HttpServlet 提供了 service() 方法用于处理请求，service方法使用了模板方法设计模式，在内部对于 http 的 get 请求（或其他请求）会调用 doGet() 方法，SpringMVC 在 FrameworkServlet 中对 doGet() 方法进行了覆盖，在其方法内部调用了 <strong><code>processRequest(request, response)</code></strong> 方法。</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png" alt="doGet()方法" title="doGet()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png" alt="doGet()方法" title="doGet()方法"></p>
 <h3 id="2-processRequest-方法"><a href="#2-processRequest-方法" class="headerlink" title="2.processRequest()方法"></a>2.processRequest()方法</h3><p>进入 <strong><code>processRequest()</code></strong> 方法，得到与当前请求线程绑定的 LocalContext 和 ServletRequestAttributes 对象，然后执行 <strong><code>initContextHolders()</code></strong> 方法，让新构造的 LocalContext 和 ServletRequestAttributes 与当前请求线程绑定（通过ThreadLocal完成）。</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png" alt="processRequest()方法" title="processRequest()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png" alt="processRequest()方法" title="processRequest()方法"></p>
 <h3 id="3-doService-方法"><a href="#3-doService-方法" class="headerlink" title="3.doService()方法"></a>3.doService()方法</h3><p>DispatcherServlet覆写的 <strong><code>doService()</code></strong>方法：</p>
-<p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png" alt="doService()方法" title="doService()方法"></p>
+<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png" alt="doService()方法" title="doService()方法"></p>
 <p>在 <strong><code>doService()</code></strong> 方法中判断，如果该请求是 include 请求，那么保存一份快照版本的 request 域中的请求参数，doDispatch() 方法结束后，这个快照版本的数据将会覆盖新的 request 域中的数据。最终请求到 <strong><code>doDispatch()</code></strong> 方法。</p>
-<h3 id="4-doDispatch-方法"><a href="#4-doDispatch-方法" class="headerlink" title="4.doDispatch()方法"></a>4.doDispatch()方法</h3><p><img src="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png" alt="doDispatch()方法" title="doDispatch()方法"></p>
+<h3 id="4-doDispatch-方法"><a href="#4-doDispatch-方法" class="headerlink" title="4.doDispatch()方法"></a>4.doDispatch()方法</h3><p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png" alt="doDispatch()方法" title="doDispatch()方法"></p>
 <p>首先根据请求的路径找到 HandlerMethod（带有 Method 反射属性，也就是对应 Controller 中的方法），然后匹配路径对应的拦截器，有了 HandlerMethod 和拦截器构造个 HandlerExecutionChain 对象。</p>
 <p>HandlerExecutionChain 对象的获取是通过 HandlerMapping 接口提供的方法中得到。有了 HandlerExecutionChain 之后，通过 HandlerAdapter 对象进行处理得到 ModelAndView 对象，HandlerMethod 内部 handle 的时候，使用各种 HandlerMethodArgumentResolver 实现类处理 HandlerMethod 的参数，使用各种 HandlerMethodReturnValueHandler 实现类处理返回值。</p>
 <p>最终返回值被处理成 ModelAndView 对象，这期间发生的异常会被 HandlerExceptionResolver 接口实现类进行处理。</p>
@@ -203,7 +203,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/" data-id="ckbkxw4pz008tp8wptglfaiuv" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/" data-id="ckbkz8dfl009f4swp9lu56f6r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li></ul>

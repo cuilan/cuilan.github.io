@@ -15,17 +15,17 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="一、Nginx的反向代理反向代理服务器：  优势：  隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high1.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high2.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high3.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high4.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high5.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high6.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high1.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high2.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high3.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high4.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high5.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high6.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx高级">
 <meta name="twitter:description" content="一、Nginx的反向代理反向代理服务器：  优势：  隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2018/12/19/nginx/nginx-high/nginx-high1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/12/19/nginx/nginx-high/nginx-high1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -101,7 +101,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="一、Nginx的反向代理"><a href="#一、Nginx的反向代理" class="headerlink" title="一、Nginx的反向代理"></a>一、Nginx的反向代理</h2><p>反向代理服务器：</p>
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high1.png" alt="Nginx反向代理" title="Nginx反向代理"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high1.png" alt="Nginx反向代理" title="Nginx反向代理"></p>
 <p><strong>优势：</strong></p>
 <ol>
 <li>隔离内部服务器，提高安全性。</li>
@@ -121,23 +121,23 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream xxx &#123;</span><br><span class="line">    server ip:port;</span><br><span class="line">    server ip:port;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high2.png" alt="轮询" title="轮询"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high2.png" alt="轮询" title="轮询"></p>
 <ol start="2">
 <li><strong>ip_hash</strong>：访问固定的一台后端服务器，可以保证session。</li>
 </ol>
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high3.png" alt="ip_hash" title="ip_hash"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high3.png" alt="ip_hash" title="ip_hash"></p>
 <ol start="3">
 <li><strong>权重(weight)</strong>：分配轮询的比重，weight值越高，访问的几率越大，权重值跟请求几率成正比。</li>
 </ol>
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high4.png" alt="权重" title="权重"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high4.png" alt="权重" title="权重"></p>
 <ol start="4">
 <li><strong>响应时间</strong>：响应时间最短的优先分配。</li>
 </ol>
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high5.png" alt="响应时间" title="响应时间"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high5.png" alt="响应时间" title="响应时间"></p>
 <ol start="5">
 <li><strong>url_hash</strong>：根据url计算来确定访问哪台主机，配置hash。</li>
 </ol>
-<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high6.png" alt="url_hash" title="url_hash"></p>
+<p><img src="/2018/12/19/nginx/nginx-high/nginx-high6.png" alt="url_hash" title="url_hash"></p>
 <h2 id="三、进程模型及工作原理"><a href="#三、进程模型及工作原理" class="headerlink" title="三、进程模型及工作原理"></a>三、进程模型及工作原理</h2><p>Master/Worker进程模型</p>
 <p><strong>Master进程：</strong></p>
 <ol>
@@ -189,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/12/19/nginx/nginx-high/" data-id="ckbkxw4os004mp8wp3nyk908x" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2018/12/19/nginx/nginx-high/" data-id="ckbkz8ddu004v4swpn3mqreqj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>

@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="标记-清除算法最基础的收集算法是“ 标记-清除 ”（Mark-Sweep）算法，如同它的名字一样，算法分为“标记”和“清除”两个阶段： 首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象 ，它的标记过程其实在前一节讲述对象标记判定时已经介绍过了。之所以说它是最基础的收集算法，是因为后续的收集算法都是基于这种思路并对其不足进行改进而得到的。它的主要不足有两个：一个是效率问题，标记和清">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/11/08/jvm/jvm-gc-algorithm/gc1.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/11/08/jvm/jvm-gc-algorithm/gc2.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/11/08/jvm/jvm-gc-algorithm/gc3.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/gc1.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/gc2.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/gc3.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.264Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="四、垃圾回收算法">
 <meta name="twitter:description" content="标记-清除算法最基础的收集算法是“ 标记-清除 ”（Mark-Sweep）算法，如同它的名字一样，算法分为“标记”和“清除”两个阶段： 首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象 ，它的标记过程其实在前一节讲述对象标记判定时已经介绍过了。之所以说它是最基础的收集算法，是因为后续的收集算法都是基于这种思路并对其不足进行改进而得到的。它的主要不足有两个：一个是效率问题，标记和清">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2018/11/08/jvm/jvm-gc-algorithm/gc1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/gc1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -100,18 +100,18 @@
         <h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>最基础的收集算法是“ <strong>标记-清除</strong> ”（Mark-Sweep）算法，如同它的名字一样，算法分为“标记”和“清除”两个阶段： <strong><em>首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象</em></strong> ，它的标记过程其实在前一节讲述对象标记判定时已经介绍过了。之所以说它是最基础的收集算法，是因为后续的收集算法都是基于这种思路并对其不足进行改进而得到的。它的主要不足有两个：一个是效率问题，标记和清除两个过程的效率都不高；另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。标记—清除算法的执行过程如图所示。</p>
 <a id="more"></a>
 
-<p><img src="/blog/2018/11/08/jvm/jvm-gc-algorithm/gc1.png" alt="标记-清除" title="标记-清除"></p>
+<p><img src="/2018/11/08/jvm/jvm-gc-algorithm/gc1.png" alt="标记-清除" title="标记-清除"></p>
 <h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>为了解决效率问题，一种称为“ <strong>复制</strong> ”（Copying）的收集算法出现了，它 <strong><em>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉</em></strong> 。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。只是这种算法的代价是将内存缩小为了原来的一半，未免太高了一点。复制算法的执行过程如图所示。</p>
-<p><img src="/blog/2018/11/08/jvm/jvm-gc-algorithm/gc2.png" alt="复制算法" title="复制算法"></p>
+<p><img src="/2018/11/08/jvm/jvm-gc-algorithm/gc2.png" alt="复制算法" title="复制算法"></p>
 <p> <strong>现在的商业虚拟机都采用这种收集算法来回收新生代</strong> ，IBM公司的专门研究表明，新生代中的对象98%是“朝生夕死”的，所以并不需要按照1∶1的比例来划分内存空间， <strong><em>而是将内存分为一块较大的Eden空间和两块较小的Survivor空间</em></strong> ，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。 <strong><em>HotSpot虚拟机默认Eden和Survivor的大小比例是8∶1，也就是每次新生代中可用内存空间为整个新生代容量的90%（80%+10%），只有10%的内存会被“浪费”</em></strong> 。当然，98%的对象可回收只是一般场景下的数据，我们没有办法保证每次回收都只有不多于10%的对象存活，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行 <strong><em>分配担保</em></strong> （Handle Promotion）。<br> <strong><em>如果另外一块Survivor空间没有足够空间存放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代</em></strong> 。</p>
 <h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>复制收集算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。更关键的是，如果不想浪费50%的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况， <strong><em>所以在老年代一般不能直接选用复制算法</em></strong> 。<br>根据老年代的特点，有人提出了另外一种“标记-整理”（Mark-Compact）算法，标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存，“标记-整理”算法的示意图如图所示。</p>
-<p><img src="/blog/2018/11/08/jvm/jvm-gc-algorithm/gc3.png" alt="标记-整理" title="标记-整理"></p>
+<p><img src="/2018/11/08/jvm/jvm-gc-algorithm/gc3.png" alt="标记-整理" title="标记-整理"></p>
 <h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>当前商业虚拟机的垃圾收集都采用“ <strong>分代收集</strong> ”（Generational Collection）算法，这种算法并没有什么新的思想，只是根据对象存活周期的不同将内存划分为几块。一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法。 <strong><em>在新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。而老年代中因为对象存活率高、没有额外空间对它进行分配担保，就必须使用“标记—清理”或者“标记—整理”算法来进行回收</em></strong> 。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/" data-id="ckbkxw4og0043p8wpi8wyklvh" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2018/11/08/jvm/jvm-gc-algorithm/" data-id="ckbkz8dde003w4swptwud2zgd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟机/">虚拟机</a></li></ul>

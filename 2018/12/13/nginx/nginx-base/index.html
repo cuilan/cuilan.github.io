@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。 Nginx的进程模型：deamon (守护)。  Nginx的优势：  1、Nginx采用多进程模型：Master、多个 Worker (独立进程，不需要锁，避免了锁带来的性能开销) 2、异步非阻塞 (N">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/13/nginx/nginx-base/nginx1.png">
-<meta property="og:image" content="https://cuilan.github.io/blog/2018/12/13/nginx/nginx-base/nginx2.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/13/nginx/nginx-base/nginx1.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/12/13/nginx/nginx-base/nginx2.png">
 <meta property="og:updated_time" content="2020-06-18T14:26:11.273Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx基础">
 <meta name="twitter:description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。 Nginx的进程模型：deamon (守护)。  Nginx的优势：  1、Nginx采用多进程模型：Master、多个 Worker (独立进程，不需要锁，避免了锁带来的性能开销) 2、异步非阻塞 (N">
-<meta name="twitter:image" content="https://cuilan.github.io/blog/2018/12/13/nginx/nginx-base/nginx1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/12/13/nginx/nginx-base/nginx1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -103,7 +103,7 @@
 <li>1、Nginx采用多进程模型：<strong>Master</strong>、多个 <strong>Worker</strong> (独立进程，不需要锁，避免了锁带来的性能开销)</li>
 <li>2、异步非阻塞 <strong>(NIO)</strong></li>
 </ul>
-<p><img src="/blog/2018/12/13/nginx/nginx-base/nginx1.png" alt="Nginx进程模型" title="Nginx进程模型"></p>
+<p><img src="/2018/12/13/nginx/nginx-base/nginx1.png" alt="Nginx进程模型" title="Nginx进程模型"></p>
 <a id="more"></a>
 
 <h2 id="二、Nginx安装与命令"><a href="#二、Nginx安装与命令" class="headerlink" title="二、Nginx安装与命令"></a>二、Nginx安装与命令</h2><h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>Linux 下安装 Nginx：</p>
@@ -198,7 +198,7 @@
 <p><strong>例如</strong>：对远程指定IP进行限制访问：</p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($remote_addr = <span class="number">192.168</span>.<span class="number">0</span>.<span class="number">120</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">403</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/blog/2018/12/13/nginx/nginx-base/nginx2.png" alt="Rewrite重写" title="Rewrite重写"></p>
+<p><img src="/2018/12/13/nginx/nginx-base/nginx2.png" alt="Rewrite重写" title="Rewrite重写"></p>
 <h2 id="八、gzip压缩"><a href="#八、gzip压缩" class="headerlink" title="八、gzip压缩"></a>八、gzip压缩</h2><p>gizp主要对内容、静态文件做压缩，用来提升网站访问速度，节省带宽。<br>gzip可以在http作用范围内配置，也可以对单独一台虚拟主机进行配置。</p>
 <p><strong>gzip相关配置：</strong><br>gizp on | off 是否开启。<br>gzip_buffer 32 4k  设置系统获取多少个单位的缓存用于存储gzip的压缩结果数据流，即以32乘4k的大小去申请缓冲区，128k。<br>gzip_comp_level [1-9] 压缩级别，值越高，压缩的内容越小。<br>gzip_min_length 200 开始压缩的最小长度，大于200B的文件进行压缩。<br>gzip_types 对哪些文件做压缩处理。<br>gzip_vary on|off 是否传输gzip压缩标识。<br>gzip_disable 正则匹配UA,表示对指定的浏览器不做gzip压缩。</p>
 <font color="red">
@@ -209,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/12/13/nginx/nginx-base/" data-id="ckbkxw4ov004up8wpsyna8vof" class="article-share-link">Share</a>
+      <a data-url="https://cuilan.github.io/2018/12/13/nginx/nginx-base/" data-id="ckbkz8ddr004q4swp9zlugbcu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>
