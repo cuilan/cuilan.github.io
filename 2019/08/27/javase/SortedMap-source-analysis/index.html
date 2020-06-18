@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>SortedMap接口源码分析 | 翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="java.util.SortedMap 接口直接继承自 java.util.Map 接口。">
+<meta name="keywords" content="Java,源码,集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SortedMap接口源码分析">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/2019/08/27/javase/SortedMap-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.SortedMap 接口直接继承自 java.util.Map 接口。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2019/08/27/javase/SortedMap-source-analysis/SortedMap1.png">
+<meta property="og:updated_time" content="2020-06-18T14:26:11.246Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SortedMap接口源码分析">
+<meta name="twitter:description" content="java.util.SortedMap 接口直接继承自 java.util.Map 接口。">
+<meta name="twitter:image" content="http://cuilan.gitee.io/blog/2019/08/27/javase/SortedMap-source-analysis/SortedMap1.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-javase/SortedMap-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/08/27/javase/SortedMap-source-analysis/" class="article-date">
+  <time datetime="2019-08-27T15:00:00.000Z" itemprop="datePublished">2019-08-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SortedMap接口源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.SortedMap</code></strong> 接口直接继承自 <strong><code>java.util.Map</code></strong> 接口。</p>
+<p><img src="/blog/2019/08/27/javase/SortedMap-source-analysis/SortedMap1.png" alt="SortedMap接口继承关系" title="SortedMap接口继承关系"></p>
+<a id="more"></a>
+
+<h2 id="一、SortedMap特点或规范"><a href="#一、SortedMap特点或规范" class="headerlink" title="一、SortedMap特点或规范"></a>一、SortedMap特点或规范</h2><ul>
+<li><strong>SortedMap</strong> 在 <strong>Map</strong> 的基础上进一步提供其 key 的总排序。</li>
+<li><strong>SortedMap</strong> 默认是根据其 key 的 <strong>自然顺序</strong> 排序的，或者根据 <strong>SortedMap</strong> 在创建时提供的比较器进行排序。</li>
+<li><strong>SortedMap</strong> 的集合视图：<strong><code>entrySet()</code></strong>，<strong><code>keySet()</code></strong>、<strong><code>values()</code></strong> ，在迭代这些视图时会按照顺序返回。</li>
+<li><strong>SortedMap</strong> 在 <strong>Map</strong> 的基础上提供了几个额外的方法扩展排序相关功能。</li>
+</ul>
+<h3 id="1-1-可比较性规范"><a href="#1-1-可比较性规范" class="headerlink" title="1.1 可比较性规范"></a>1.1 可比较性规范</h3><p>插入到 <strong>SortedMap</strong> 中的所有 key 必须实现 <strong>Comparable</strong> 接口。此外，子类实现所有的 <strong>key</strong> 必须是 <strong>可相互比较的</strong>，即：<strong><code>k1.compareTo(k2)</code></strong> 或 <strong><code>comparator.compare(k1, k2)</code></strong>，违反此规范将导致函数调用抛出 <strong>ClassCastException</strong>。</p>
+<p><font color="red">注意</font>：如果 <strong>SortedMap</strong> 要正确实现 <strong>Map</strong> 接口，则由 <strong>SortedMap</strong> 维护的排序（无论是否提供显式比较器）必须与 <strong><code>equals()</code></strong> 方法一致。这是因为 Map 接口是根据 equals() 方法定义的，但是有序映射使用 compareTo（或compare）方法执行所有 key 的比较，因此从 SortedMap 的角度来看，equals() 方法认为相等的两个键是相等的。</p>
+<p><strong>TreeMap</strong> 比较特别，它的排序与 equals() 不一致。</p>
+<h3 id="1-2-构造器规范"><a href="#1-2-构造器规范" class="headerlink" title="1.2 构造器规范"></a>1.2 构造器规范</h3><p>所有 <strong>SortedMap</strong> 实现类都应该提供 <strong>四个“标准”构造函数</strong>。由于接口无法指定构造函数，所以无法强制子类实现此规范。</p>
+<ul>
+<li><strong>无参构造器</strong>：根据 key 的自然顺序创建一个空的 <strong>SortedMap</strong>。</li>
+<li><strong>参数为 Comparator 类型的构造器</strong>：根据指定的比较器创建一个空的 <strong>SortedMap</strong>。</li>
+<li><strong>参数为 Map 类型的构造器</strong>：它创建一个具有与其参数 Map 相同的 key-value 映射的新 Map，并根据 key 的自然顺序进行排序。</li>
+<li><strong>参数为 SortedMap 类型的构造器</strong>：它创建一个具有与其参数 SortedMap 相同的 key-value 映射的新 SortedMap，并与其参数 SortedMap 相同的顺序进行排序。</li>
+</ul>
+<p><font color="red">注意</font>：有几种方法返回 <strong>key 的有限范围 subMap</strong>。这样的 subMap 是半开放的，即：包含头不包含尾。</p>
+<hr>
+<h2 id="二、方法描述"><a href="#二、方法描述" class="headerlink" title="二、方法描述"></a>二、方法描述</h2><h3 id="2-1-SortedMap中的方法"><a href="#2-1-SortedMap中的方法" class="headerlink" title="2.1 SortedMap中的方法"></a>2.1 SortedMap中的方法</h3><h4 id="comparator-方法"><a href="#comparator-方法" class="headerlink" title="comparator() 方法"></a>comparator() 方法</h4><p>返回用于对此 SortedMap 中的 key 的比较器，如果此 SortedMap 使用其 key 的自然顺序，则返回 <strong><code>null</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;? <span class="keyword">super</span> K&gt; comparator();</span><br></pre></td></tr></table></figure>
+
+<h4 id="subMap-K-K-方法"><a href="#subMap-K-K-方法" class="headerlink" title="subMap(K, K) 方法"></a>subMap(K, K) 方法</h4><p>返回此 SortedMap 的部分视图，其 key 的范围从 fromKey（包括）到 toKey（不包括），如果 fromKey 和 toKey 相等，则返回的 Map 为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedMap&lt;K,V&gt; <span class="title">subMap</span><span class="params">(K fromKey, K toKey)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="headMap-K-方法"><a href="#headMap-K-方法" class="headerlink" title="headMap(K) 方法"></a>headMap(K) 方法</h4><p>返回此 SortedMap 的部分视图，其 key 的范围严格小于 toKey。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedMap&lt;K,V&gt; <span class="title">headMap</span><span class="params">(K toKey)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="tailMap-K-方法"><a href="#tailMap-K-方法" class="headerlink" title="tailMap(K) 方法"></a>tailMap(K) 方法</h4><p>返回此 SortedMap 的部分视图，其 key 的范围大于等于 fromKey。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedMap&lt;K,V&gt; <span class="title">tailMap</span><span class="params">(K fromKey)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="firstKey-方法"><a href="#firstKey-方法" class="headerlink" title="firstKey() 方法"></a>firstKey() 方法</h4><p>返回此 SortedMap 中第一个（最低）key。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">K <span class="title">firstKey</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="lastKey-方法"><a href="#lastKey-方法" class="headerlink" title="lastKey() 方法"></a>lastKey() 方法</h4><p>返回此 SortedMap 中最后一个（最高）key。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">K <span class="title">lastKey</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-继承自Map的方法"><a href="#2-2-继承自Map的方法" class="headerlink" title="2.2 继承自Map的方法"></a>2.2 继承自Map的方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回所有 key 的集合</span></span><br><span class="line"><span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 返回所有 value 的集合</span></span><br><span class="line"><span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 返回所有 Entry 的集合</span></span><br><span class="line">Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/08/27/javase/SortedMap-source-analysis/" data-id="ckbkxw4nj0026p8wpn4iihe3y" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          NavigableMap接口源码分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2019/08/21/javase/Map-source-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Map接口源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
