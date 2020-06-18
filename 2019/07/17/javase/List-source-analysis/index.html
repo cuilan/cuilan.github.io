@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>List接口源码分析 | 翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="java.util.List 接口直接继承自 java.util.Collection 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。">
+<meta name="keywords" content="Java,源码,集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="List接口源码分析">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/2019/07/17/javase/List-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.List 接口直接继承自 java.util.Collection 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2019/07/17/javase/List-source-analysis/List1.png">
+<meta property="og:updated_time" content="2020-06-18T14:26:11.241Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="List接口源码分析">
+<meta name="twitter:description" content="java.util.List 接口直接继承自 java.util.Collection 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。">
+<meta name="twitter:image" content="http://cuilan.gitee.io/blog/2019/07/17/javase/List-source-analysis/List1.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-javase/List-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/17/javase/List-source-analysis/" class="article-date">
+  <time datetime="2019-07-17T07:34:00.000Z" itemprop="datePublished">2019-07-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      List接口源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.List</code></strong> 接口直接继承自 <strong><code>java.util.Collection</code></strong> 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。</p>
+<p><img src="/blog/2019/07/17/javase/List-source-analysis/List1.png" alt="List接口继承关系" title="List接口继承关系"></p>
+<a id="more"></a>
+
+<h2 id="一、List接口特点"><a href="#一、List接口特点" class="headerlink" title="一、List接口特点"></a>一、List接口特点</h2><ul>
+<li><p><strong>有序</strong>集合。</p>
+</li>
+<li><p>该接口的子类实现可以精确控制列表中每个元素的插入位置，可以通过索引访问元素，并搜索列表中的元素。</p>
+</li>
+<li><p>与 Set 集合不同，通常允许重复元素，且允许 <strong><code>null</code></strong> 元素， <strong><code>null</code></strong> 元素也可重复。</p>
+</li>
+<li><p>List 接口提供了一个特殊的迭代器：<strong><code>java.util.ListIterator</code></strong>，它允许元素<strong>插入</strong>和<strong>替换</strong>，以及 <strong><code>java.util.Iterator</code></strong> 接口提供的常规操作之外的<strong>双向访问</strong>。</p>
+</li>
+<li><p>还提供了一种从列表的指定位置开始的迭代器：<strong><code>listIterator(int index)</code></strong>。</p>
+</li>
+</ul>
+<hr>
+<h2 id="二、继承自-Collection-的方法"><a href="#二、继承自-Collection-的方法" class="headerlink" title="二、继承自 Collection 的方法"></a>二、继承自 Collection 的方法</h2><p>详细方法描述，见：<a href="/blog/2019/07/15/javase/Collection-source-analysis/"><strong><code>java.util.Collection</code></strong></a> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function">Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">Object[] toArray();</span><br><span class="line">&lt;T&gt; T[] toArray(T[] a);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改操作</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 批量操作</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// equals、hashCode</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">default</span> Spliterator&lt;E&gt; <span class="title">spliterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 返回一个有序分割迭代器</span></span><br><span class="line">    <span class="keyword">return</span> Spliterators.spliterator(<span class="keyword">this</span>, Spliterator.ORDERED);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、List接口方法描述"><a href="#三、List接口方法描述" class="headerlink" title="三、List接口方法描述"></a>三、List接口方法描述</h2><h3 id="3-1-添加方法"><a href="#3-1-添加方法" class="headerlink" title="3.1 添加方法"></a>3.1 添加方法</h3><p>List 接口包含 <strong>四种添加方法</strong>：</p>
+<ul>
+<li>继承自 Collection 接口的<ul>
+<li><strong>添加单个元素至末尾</strong></li>
+<li><strong>添加整个集合元素至末尾</strong></li>
+</ul>
+</li>
+<li>以及 List 接口提供的<ul>
+<li><strong>在指定位置插入单个元素</strong></li>
+<li><strong>在指定位置插入整个集合</strong></li>
+</ul>
+</li>
+</ul>
+<h4 id="add-int-index-E-element-方法"><a href="#add-int-index-E-element-方法" class="headerlink" title="add(int index, E element)方法"></a>add(int index, E element)方法</h4><p>将指定元素插入当前列表中的指定位置，并将当前位置的元素（如果有）和之后的元素向右移动（增加其索引）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="addAll-int-index-Collection-c-方法"><a href="#addAll-int-index-Collection-c-方法" class="headerlink" title="addAll(int index, Collection c)方法"></a>addAll(int index, Collection c)方法</h4><p>将指定集合中的所有元素插入到当前列表的指定位置。并将当前位置的元素（如果有）和之后的元素向右移动（增加其索引）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-索引相关操作"><a href="#3-2-索引相关操作" class="headerlink" title="3.2 索引相关操作"></a>3.2 索引相关操作</h3><h4 id="get-int-index-方法"><a href="#get-int-index-方法" class="headerlink" title="get(int index)方法"></a>get(int index)方法</h4><p>返回此列表中指定位置的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="set-方法"><a href="#set-方法" class="headerlink" title="set()方法"></a>set()方法</h4><p>将指定位置的元素替换为指定的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="remove"><a href="#remove" class="headerlink" title="remove()"></a>remove()</h4><p>删除此列表中指定位置的元素。并将之后的元素向左移位（索引减一）。返回从列表中删除的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="indexOf-Object-o-方法"><a href="#indexOf-Object-o-方法" class="headerlink" title="indexOf(Object o)方法"></a>indexOf(Object o)方法</h4><p>返回此列表中第一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。<br>即：返回<strong>最低索引</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="lastIndexOf-Object-o-方法"><a href="#lastIndexOf-Object-o-方法" class="headerlink" title="lastIndexOf(Object o)方法"></a>lastIndexOf(Object o)方法</h4><p>返回此列表中最后一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。<br>即：返回<strong>最高索引</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-其他操作"><a href="#3-3-其他操作" class="headerlink" title="3.3 其他操作"></a>3.3 其他操作</h3><h4 id="replaceAll-方法"><a href="#replaceAll-方法" class="headerlink" title="replaceAll()方法"></a>replaceAll()方法</h4><p>替换列表中所有满足条件的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">replaceAll</span><span class="params">(UnaryOperator&lt;E&gt; operator)</span> </span>&#123;</span><br><span class="line">    Objects.requireNonNull(operator);</span><br><span class="line">    <span class="keyword">final</span> ListIterator&lt;E&gt; li = <span class="keyword">this</span>.listIterator();</span><br><span class="line">    <span class="keyword">while</span> (li.hasNext()) &#123;</span><br><span class="line">        li.set(operator.apply(li.next()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="sort-方法"><a href="#sort-方法" class="headerlink" title="sort()方法"></a>sort()方法</h4><p>根据指定的比较器的顺序对当前列表进行排序。</p>
+<p>如果指定的比较器为 <strong><code>null</code></strong>，则当前列表中的所有元素都必须实现 <strong><code>Comparable</code></strong> 接口，并且应使用元素的自然顺序。列表必须是可修改的，但无需调整大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; c)</span> </span>&#123;</span><br><span class="line">    Object[] a = <span class="keyword">this</span>.toArray();</span><br><span class="line">    Arrays.sort(a, (Comparator) c);</span><br><span class="line">    ListIterator&lt;E&gt; i = <span class="keyword">this</span>.listIterator();</span><br><span class="line">    <span class="keyword">for</span> (Object e : a) &#123;</span><br><span class="line">        i.next();</span><br><span class="line">        i.set((E) e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="subList-方法"><a href="#subList-方法" class="headerlink" title="subList()方法"></a>subList()方法</h4><p>返回从起始索引（包含）至结束索引（不包含）的子列表。即：包含头不包含尾。<br>如果开始索引与结束索引相等，则返回空列表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;E&gt; <span class="title">subList</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="listIterator-方法"><a href="#listIterator-方法" class="headerlink" title="listIterator()方法"></a>listIterator()方法</h4><p>返回当前列表中元素的 <strong><code>ListIterator</code></strong> 列表迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="listIterator-int-index-方法"><a href="#listIterator-int-index-方法" class="headerlink" title="listIterator(int index)方法"></a>listIterator(int index)方法</h4><p>从指定索引位置开始，返回当前列表中元素的 <strong><code>ListIterator</code></strong> 列表迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、ListIterator迭代器"><a href="#四、ListIterator迭代器" class="headerlink" title="四、ListIterator迭代器"></a>四、ListIterator迭代器</h2><p><strong><code>java.util.ListIterator</code></strong> 继承自 <strong><code>java.util.Iterator</code></strong> 接口，可实现从双端迭代。该迭代器允许在迭代期间对列表进行修改。</p>
+<p><strong><code>ListIterator</code></strong> 没有当前元素，它的迭代光标位置是位于元素之间的，长度为 n 的列表的迭代器具有 n+1 个可能的索引位置，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">列表元素：  Element(<span class="number">0</span>)   Element(<span class="number">1</span>)   Element(<span class="number">2</span>)   ... Element(n-<span class="number">1</span>)</span><br><span class="line">索引位置: ^            ^            ^            ^                  ^</span><br></pre></td></tr></table></figure>
+
+<p>需要注意：<strong><code>remove()</code></strong> 方法和 <strong><code>set(Object)</code></strong> 方法没有根据光标位置进行操作；它们是对 <strong><code>next()</code></strong> 方法或 <strong><code>previous()</code></strong> 方法调用后返回的最后一个光标进行操作。</p>
+<h3 id="方法描述"><a href="#方法描述" class="headerlink" title="方法描述"></a>方法描述</h3><h4 id="hasNext-方法"><a href="#hasNext-方法" class="headerlink" title="hasNext()方法"></a>hasNext()方法</h4><p>如果当前列表迭代器从前向后遍历列表时还有下一个元素，则返回 <strong><code>true</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="next-方法"><a href="#next-方法" class="headerlink" title="next()方法"></a>next()方法</h4><p>返回当前列表中的下一个元素并向前移动光标位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="hasPrevious-方法"><a href="#hasPrevious-方法" class="headerlink" title="hasPrevious()方法"></a>hasPrevious()方法</h4><p>如果当前列表迭代器从后向前遍历列表时还有下一个元素，则返回 <strong><code>true</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">hasPrevious</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="previous-方法"><a href="#previous-方法" class="headerlink" title="previous()方法"></a>previous()方法</h4><p>返回当前列表中的上一个元素并向后移动光标位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">previous</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="nextIndex-方法"><a href="#nextIndex-方法" class="headerlink" title="nextIndex()方法"></a>nextIndex()方法</h4><p>返回下一个元素的索引。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nextIndex</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="previousIndex-方法"><a href="#previousIndex-方法" class="headerlink" title="previousIndex()方法"></a>previousIndex()方法</h4><p>返回上一个元素的索引。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">previousIndex</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove()方法"></a>remove()方法</h4><p>从当前列表中删除 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 返回的最后一个元素。<br>此方法只能在每次调用下一次或上一次时进行一次。<br>只有在最后一次调用 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 之后没有调用 <strong><code>add(E)</code></strong> 时才能进行此操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="set-E-e-方法"><a href="#set-E-e-方法" class="headerlink" title="set(E e)方法"></a>set(E e)方法</h4><p>用指定的元素替换 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 返回的最后一个元素。<br>只有在最后一次调用 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 之后才调用 <strong><code>remove()</code></strong> 和 <strong><code>add(E)</code></strong>时，才能进行此调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(E e)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="add-E-e-方法"><a href="#add-E-e-方法" class="headerlink" title="add(E e)方法"></a>add(E e)方法</h4><p>将指定的元素插入当前列表。<br>元素将紧接在 <strong><code>next()</code></strong> 返回的元素之前插入（如果有），并且在 <strong><code>previous()</code></strong> 返回的元素之后插入（如果有）。<br>如果当前列表中不包含任何元素，则新元素将成为列表中的唯一元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/17/javase/List-source-analysis/" data-id="ckbkxw4n7001ep8wppn212uvq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/07/18/javase/Set-source-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Set接口源码分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2019/07/15/javase/Collection-source-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Collection接口源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

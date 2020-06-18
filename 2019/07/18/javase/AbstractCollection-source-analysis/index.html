@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>AbstractCollection源码分析 | 翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="java.util.AbstractCollection 抽象类实现了 java.util.Collection 接口。">
+<meta name="keywords" content="Java,源码,集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AbstractCollection源码分析">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/2019/07/18/javase/AbstractCollection-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.AbstractCollection 抽象类实现了 java.util.Collection 接口。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2019/07/18/javase/AbstractCollection-source-analysis/AbstractCollection1.png">
+<meta property="og:updated_time" content="2020-06-18T14:26:11.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AbstractCollection源码分析">
+<meta name="twitter:description" content="java.util.AbstractCollection 抽象类实现了 java.util.Collection 接口。">
+<meta name="twitter:image" content="http://cuilan.gitee.io/blog/2019/07/18/javase/AbstractCollection-source-analysis/AbstractCollection1.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-javase/AbstractCollection-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/18/javase/AbstractCollection-source-analysis/" class="article-date">
+  <time datetime="2019-07-18T09:00:00.000Z" itemprop="datePublished">2019-07-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      AbstractCollection源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.AbstractCollection</code></strong> 抽象类实现了 <strong><code>java.util.Collection</code></strong> 接口。</p>
+<p><img src="/blog/2019/07/18/javase/AbstractCollection-source-analysis/AbstractCollection1.png" alt="AbstractCollection继承关系" title="AbstractCollection继承关系"></p>
+<a id="more"></a>
+
+<h2 id="一、AbstractCollection类继承规范"><a href="#一、AbstractCollection类继承规范" class="headerlink" title="一、AbstractCollection类继承规范"></a>一、AbstractCollection类继承规范</h2><ul>
+<li><strong><code>AbstractCollection</code></strong> 抽象类提供了 <strong><code>Collection</code></strong> 接口的骨干实现，以最大限度地减少实现 <strong><code>Collection</code></strong> 接口所需的工作量。</li>
+<li>如需实现一个 <strong>不可修改的集合</strong>，只需要继承此类并提供 <strong><code>iterator()</code></strong> 方法和 <strong><code>size()</code></strong> 方法的实现。（<strong><code>iterator()</code></strong> 方法返回的迭代器必须实现 <strong><code>hasNext()</code></strong> 方法和 <strong><code>next()</code></strong>方法。）</li>
+<li>如需实现一个 <strong>可修改的集合</strong>，则必须另外覆盖此类的 <strong><code>add()</code></strong> 方法（否则会抛出 <code>UnsupportedOperationException</code> 异常），<strong><code>iterator()</code></strong> 方法返回的迭代器必须另外实现其 <strong><code>remove()</code></strong> 方法。</li>
+<li>除此之外还应该根据 <strong><code>Collection</code></strong> 接口的规范提供 <strong>无参数构造器</strong> 和 <strong>参数为 Collection 的构造器</strong>。</li>
+<li>每个非抽象的方法都有自己的实现，如果子类需要特殊的实现，则可以覆盖对应的方法。</li>
+</ul>
+<hr>
+<h2 id="二、成员分析"><a href="#二、成员分析" class="headerlink" title="二、成员分析"></a>二、成员分析</h2><h3 id="2-1-常量"><a href="#2-1-常量" class="headerlink" title="2.1 常量"></a>2.1 常量</h3><p>集合的最大数组大小。某些虚拟机在数组中保留一些 <code>header words</code>。如果尝试分配更大的数组可能会导致 <code>OutOfMemoryError</code>：请求的数组大小超过VM限制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-构造方法"><a href="#2-2-构造方法" class="headerlink" title="2.2 构造方法"></a>2.2 构造方法</h3><p>唯一的构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractCollection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-抽象方法"><a href="#2-3-抽象方法" class="headerlink" title="2.3 抽象方法"></a>2.3 抽象方法</h3><p>方法描述见：<a href="/blog/2019/07/15/javase/Collection-source-analysis/"><strong><code>java.util.Collection</code></strong></a> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-实现方法"><a href="#2-4-实现方法" class="headerlink" title="2.4 实现方法"></a>2.4 实现方法</h3><h4 id="isEmpty-方法"><a href="#isEmpty-方法" class="headerlink" title="isEmpty()方法"></a>isEmpty()方法</h4><p>如果挡墙集合不包含任何元素，则返回 <strong><code>true</code></strong>。依赖子类实现的 <strong><code>size()</code></strong> 方法，判断size是否等于0。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> size() == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="contains-Object-o-方法"><a href="#contains-Object-o-方法" class="headerlink" title="contains(Object o)方法"></a>contains(Object o)方法</h4><p>如果当前集合中包含指定的元素，则返回 <strong><code>true</code></strong>。<br>即：当且仅当此集合包含至少一个元素e时才返回true，<strong><code>(o == null ? e == null : o.equals(e))</code></strong>。<br>此实现迭代集合中的元素，依次检查每个元素是否与指定元素相等。<br>iterator()方法依赖子类的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())</span><br><span class="line">            <span class="keyword">if</span> (it.next() == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())</span><br><span class="line">            <span class="keyword">if</span> (o.equals(it.next()))</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="toArray-方法"><a href="#toArray-方法" class="headerlink" title="toArray()方法"></a>toArray()方法</h4><p>返回包含当前集合中所有元素的数组。<br>如果当前集合的迭代器返回的元素是有序的，则此方法必须以相同的顺序返回元素数组。<br>当前集合不会保留对数组中元素的引用，所以返回的数组是“安全的”。<br>此方法充当基于数组和基于集合的API之间的桥梁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object[] toArray() &#123;</span><br><span class="line">    <span class="comment">// 初始化数组的大小</span></span><br><span class="line">    Object[] r = <span class="keyword">new</span> Object[size()];</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!it.hasNext()) <span class="comment">// 元素少于预期的大小</span></span><br><span class="line">            <span class="keyword">return</span> Arrays.copyOf(r, i);</span><br><span class="line">        r[i] = it.next();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> it.hasNext() ? finishToArray(r, it) : r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="toArray-T-a-方法"><a href="#toArray-T-a-方法" class="headerlink" title="toArray(T[] a)方法"></a>toArray(T[] a)方法</h4><p>返回包含当前集合中所有元素的数组，并按照类型放入指定数组 <strong>a</strong> 中。如果数组 <code>length</code> 小于当前集合，则创建一个新的数组并放入集合中的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">    <span class="comment">// 预估数组的大小为集合的 size</span></span><br><span class="line">    <span class="keyword">int</span> size = size();</span><br><span class="line">    <span class="comment">// 如果数组 a 的长度小于 size，则反射一个 size 大小的数组</span></span><br><span class="line">    T[] r = a.length &gt;= size ? a :</span><br><span class="line">              (T[])java.lang.reflect.Array</span><br><span class="line">              .newInstance(a.getClass().getComponentType(), size);</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! it.hasNext()) &#123; <span class="comment">// 元素少于预期的大小</span></span><br><span class="line">            <span class="keyword">if</span> (a == r) &#123;</span><br><span class="line">                r[i] = <span class="keyword">null</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a.length &lt; i) &#123;</span><br><span class="line">                <span class="keyword">return</span> Arrays.copyOf(r, i);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.arraycopy(r, <span class="number">0</span>, a, <span class="number">0</span>, i);</span><br><span class="line">                <span class="keyword">if</span> (a.length &gt; i) &#123;</span><br><span class="line">                    a[i] = <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> a;</span><br><span class="line">        &#125;</span><br><span class="line">        r[i] = (T)it.next();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 元素大于预期的大小</span></span><br><span class="line">    <span class="keyword">return</span> it.hasNext() ? finishToArray(r, it) : r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="finishToArray-T-r-Iterator-lt-gt-it-方法"><a href="#finishToArray-T-r-Iterator-lt-gt-it-方法" class="headerlink" title="finishToArray(T[] r, Iterator&lt;?&gt; it)方法"></a>finishToArray(T[] r, Iterator&lt;?&gt; it)方法</h4><p>当迭代器返回的元素多于预期时，则重新分配在 <strong><code>toArray</code></strong> 中使用的数组，并完成从迭代器填充它。</p>
+<p>迭代器每次迭代到下一个元素时，判断 <strong><code>cap</code></strong> 数组的长度等于 <strong><code>i</code></strong> 当前迭代的元素数量，就将 cap 数组的长度增加 <strong><code>cap x 1.5 + 1</code></strong>，并判断是否超出了虚拟机最大限制，如果超出限制就调用 <strong><code>hugeCapacity()</code></strong> 方法调整大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; T[] finishToArray(T[] r, Iterator&lt;?&gt; it) &#123;</span><br><span class="line">    <span class="keyword">int</span> i = r.length;</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        <span class="keyword">int</span> cap = r.length;</span><br><span class="line">        <span class="keyword">if</span> (i == cap) &#123;</span><br><span class="line">            <span class="keyword">int</span> newCap = cap + (cap &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// 检测大小是否溢出</span></span><br><span class="line">            <span class="keyword">if</span> (newCap - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">                newCap = hugeCapacity(cap + <span class="number">1</span>);</span><br><span class="line">            r = Arrays.copyOf(r, newCap);</span><br><span class="line">        &#125;</span><br><span class="line">        r[i++] = (T)it.next();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 修剪过度分配</span></span><br><span class="line">    <span class="keyword">return</span> (i == r.length) ? r : Arrays.copyOf(r, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="hugeCapacity-int-minCapacity-方法"><a href="#hugeCapacity-int-minCapacity-方法" class="headerlink" title="hugeCapacity(int minCapacity)方法"></a>hugeCapacity(int minCapacity)方法</h4><p>调整最大容量，如果小于0，抛出 <strong><code>OutOfMemoryError</code></strong> 异常，如果大于虚拟机最大限制，则设置为常量 <strong><code>MAX_ARRAY_SIZE</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError</span><br><span class="line">            (<span class="string">"Required array size too large"</span>);</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="add-E-e-方法"><a href="#add-E-e-方法" class="headerlink" title="add(E e)方法"></a>add(E e)方法</h4><ul>
+<li><strong>AbstractCollection</strong> 没有提供 add() 方法的具体实现，只提供子类实现的规范，始终抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</li>
+<li>如果添加成功（集合因调用导致改变），则返回 <strong><code>true</code></strong>。</li>
+<li>如果此集合不允许重复且已包含指定的元素 e ，则返回 <strong><code>false</code></strong>。</li>
+<li>某些子类实现的集合不允许添加 <strong><code>null</code></strong> 元素，或集合对添加的元素有 <strong>类型限制</strong>。</li>
+<li>如果集合因已包含该元素而拒绝添加特定元素 e，则必须 <strong>抛出异常，而不是返回 <code>false</code></strong>。以保证在此调用后集合始终保持不变。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 不支持的操作类型</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="remove-Object-o-方法"><a href="#remove-Object-o-方法" class="headerlink" title="remove(Object o)方法"></a>remove(Object o)方法</h4><ul>
+<li>从当前集合中移除指定元素的第一个出现的实例（如果存在）。</li>
+<li>此子类实现的 <strong><code>iterator()</code></strong> 方法查找指定的元素。如果找到该元素，则由此迭代器的 <strong><code>remove()</code></strong> 方法从集合中删除该元素。</li>
+<li><strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="comment">// 判断 o 对象是否为 null，某些子类实现允许包含 null 元素，则需要提供对 null 元素进行删除</span></span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())</span><br><span class="line">            <span class="keyword">if</span> (it.next() == <span class="keyword">null</span>)</span><br><span class="line">                it.remove();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())</span><br><span class="line">            <span class="keyword">if</span> (o.equals(it.next()))</span><br><span class="line">                it.remove();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="containsAll-Collection-lt-gt-c-方法"><a href="#containsAll-Collection-lt-gt-c-方法" class="headerlink" title="containsAll(Collection&lt;?&gt; c)方法"></a>containsAll(Collection&lt;?&gt; c)方法</h4><p>如果当前集合包含指定 Collection 中的所有元素，则返回 <strong><code>true</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Object e : c)</span><br><span class="line">        <span class="keyword">if</span> (!contains(e))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="addAll-Collection-lt-extends-E-gt-c-方法"><a href="#addAll-Collection-lt-extends-E-gt-c-方法" class="headerlink" title="addAll(Collection&lt;? extends E&gt; c)方法"></a>addAll(Collection&lt;? extends E&gt; c)方法</h4><p>将指定集合中的所有元素条件至当前集合中，此方法依赖 <strong><code>add()</code></strong> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> modified = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (E e : c)</span><br><span class="line">        <span class="keyword">if</span> (add(e))</span><br><span class="line">            <span class="comment">// 只要 c 集合发生改变，就将 modified 置为 true</span></span><br><span class="line">            modified = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">return</span> modified;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="removeAll-Collection-lt-gt-c-方法"><a href="#removeAll-Collection-lt-gt-c-方法" class="headerlink" title="removeAll(Collection&lt;?&gt; c)方法"></a>removeAll(Collection&lt;?&gt; c)方法</h4><p>从当前集合，删除指定集合 c 中的全部元素，且该指定的集合不可为 null。<br><strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span> </span>&#123;</span><br><span class="line">    Objects.requireNonNull(c);</span><br><span class="line">    <span class="keyword">boolean</span> modified = <span class="keyword">false</span>;</span><br><span class="line">    Iterator&lt;?&gt; it = iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (c.contains(it.next())) &#123;</span><br><span class="line">            it.remove();</span><br><span class="line">            <span class="comment">// 只要 c 集合发生改变，就将 modified 置为 true</span></span><br><span class="line">            modified = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> modified;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="retainAll-Collection-lt-gt-c-方法"><a href="#retainAll-Collection-lt-gt-c-方法" class="headerlink" title="retainAll(Collection&lt;?&gt; c)方法"></a>retainAll(Collection&lt;?&gt; c)方法</h4><p>仅保留当前集合包含了指定集合 c 中的元素，即：删除当前集合中不包含指定集合 c 中的元素。<br><strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span> </span>&#123;</span><br><span class="line">    Objects.requireNonNull(c);</span><br><span class="line">    <span class="keyword">boolean</span> modified = <span class="keyword">false</span>;</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!c.contains(it.next())) &#123;</span><br><span class="line">            it.remove();</span><br><span class="line">            <span class="comment">// 只要 c 集合发生改变，就将 modified 置为 true</span></span><br><span class="line">            modified = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> modified;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="clear-方法"><a href="#clear-方法" class="headerlink" title="clear()方法"></a>clear()方法</h4><p><strong>清空集合</strong>，将当前集合中的全部元素删除。子类实现通常会以 <strong>高效的实现</strong> 来覆盖此方法。<br><strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        it.next();</span><br><span class="line">        it.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="toString-方法"><a href="#toString-方法" class="headerlink" title="toString()方法"></a>toString()方法</h4><p>返回当前集合的字符串表现形式，按照迭代器返回的顺序进行字符串拼接。<br>覆盖 <strong><code>Object</code></strong> 的 <strong><code>toString()</code></strong> 方法，以 <strong><code>[</code></strong> 开始，以 <strong><code>]</code></strong> 结束，相邻元素以 <strong><code>,</code></strong> 逗号 + 空格来间隔，元素调用 <strong><code>String.valueOf(Object)</code></strong> 转换字符串形式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Iterator&lt;E&gt; it = iterator();</span><br><span class="line">    <span class="keyword">if</span> (!it.hasNext())</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"[]"</span>; <span class="comment">// 空集合</span></span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    sb.append(<span class="string">'['</span>); <span class="comment">// 开始</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        E e = it.next();</span><br><span class="line">        sb.append(e == <span class="keyword">this</span> ? <span class="string">"(this Collection)"</span> : e);</span><br><span class="line">        <span class="keyword">if</span> (!it.hasNext())</span><br><span class="line">            <span class="keyword">return</span> sb.append(<span class="string">']'</span>).toString(); <span class="comment">// 结束</span></span><br><span class="line">        sb.append(<span class="string">','</span>).append(<span class="string">' '</span>); <span class="comment">// 元素间隔</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/18/javase/AbstractCollection-source-analysis/" data-id="ckbkxw4m00006p8wp9k8ieeyc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/07/24/javase/AbstractList-source-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          AbstractList源码分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2019/07/18/javase/Set-source-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Set接口源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

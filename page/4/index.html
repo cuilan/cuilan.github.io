@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
+<meta name="keywords" content="博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="翠兰 - Greenland">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/page/4/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翠兰 - Greenland">
+<meta name="twitter:description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-javase/Set-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/18/javase/Set-source-analysis/" class="article-date">
+  <time datetime="2019-07-18T07:55:00.000Z" itemprop="datePublished">2019-07-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/18/javase/Set-source-analysis/">Set接口源码分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.Set</code></strong> 接口直接继承自 <strong><code>java.util.Collection</code></strong> 接口。</p>
+<p><img src="/blog/2019/07/18/javase/Set-source-analysis/Set1.png" alt="Set接口继承关系" title="Set接口继承关系"></p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/07/18/javase/Set-source-analysis/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/18/javase/Set-source-analysis/" data-id="ckbkxw4ng001zp8wp7ck37tx9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javase/List-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/17/javase/List-source-analysis/" class="article-date">
+  <time datetime="2019-07-17T07:34:00.000Z" itemprop="datePublished">2019-07-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/17/javase/List-source-analysis/">List接口源码分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.List</code></strong> 接口直接继承自 <strong><code>java.util.Collection</code></strong> 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。</p>
+<p><img src="/blog/2019/07/17/javase/List-source-analysis/List1.png" alt="List接口继承关系" title="List接口继承关系"></p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/07/17/javase/List-source-analysis/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/17/javase/List-source-analysis/" data-id="ckbkxw4n7001ep8wppn212uvq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javase/Collection-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/15/javase/Collection-source-analysis/" class="article-date">
+  <time datetime="2019-07-15T03:02:00.000Z" itemprop="datePublished">2019-07-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/15/javase/Collection-source-analysis/">Collection接口源码分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.Collection</code></strong> 接口是单列集合层次结构中的 <strong>根接口</strong>。集合表示 <strong>一组对象</strong>，称为其 <strong>元素</strong>。其有些子类集合允许重复元素，有些其他集合则不允许。有些是有序的，有些是无序的。JDK中 <strong><code>Collection</code></strong> 不提供此接口的任何直接实现：它提供了更具体的子接口（如Set和List）的实现。此接口通常用于更抽象的传递集合，并在需要最大通用性的情况下对其进行操作。</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Collection&lt;?&gt; c = <span class="keyword">new</span> ArrayList();</span><br><span class="line">Collection&lt;?&gt; c = <span class="keyword">new</span> HashSet();</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/07/15/javase/Collection-source-analysis/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/15/javase/Collection-source-analysis/" data-id="ckbkxw4mc000hp8wpgnqmrm20" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javase/JavaCollectionsFramework" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/12/javase/JavaCollectionsFramework/" class="article-date">
+  <time datetime="2019-07-12T08:31:00.000Z" itemprop="datePublished">2019-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/12/javase/JavaCollectionsFramework/">Java集合框架源码分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><font style="font-size:18px;">
+**单列集合接口**
+<a href="/blog/2019/07/12/javase/Iterable-source-analysis/">java.lang.Iterable</a>&lt;Interface&gt;
+&emsp;<a href="/blog/2019/07/15/javase/Collection-source-analysis/">java.util.Collection</a>&lt;Interface&gt;
+&emsp;&emsp;<a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>&lt;Interface&gt;
+&emsp;&emsp;<a href="/blog/2019/07/18/javase/Set-source-analysis/">java.util.Set</a>&lt;Interface&gt;
+&emsp;&emsp;&emsp;<a href="/blog/2019/07/30/javase/SortedSet-source-analysis/">java.util.SortedSet</a>&lt;Interface&gt;
+&emsp;&emsp;&emsp;&emsp;<a href="/blog/2019/08/01/javase/NavigableSet-source-analysis/">java.util.NavigableSet</a>&lt;Interface&gt;
+&emsp;&emsp;<a href="/blog/2019/08/05/javase/Queue-source-analysis/">java.util.Queue</a>&lt;Interface&gt;
+&emsp;&emsp;&emsp;<a href="/blog/2019/08/06/javase/Deque-source-analysis/">java.util.Deque</a>&lt;Interface&gt;
+
+<p><strong>双列集合接口</strong><br><a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>&lt;Interface&gt;<br>&emsp;<a href="/blog/2019/08/27/javase/SortedMap-source-analysis/">java.util.SortedMap</a>&lt;Interface&gt;<br>&emsp;&emsp;<a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/">java.util.NavigableMap</a>&lt;Interface&gt;</p>
+</font>
+
+<hr>
+<h2 id="抽象类-类，继承关系，实现接口"><a href="#抽象类-类，继承关系，实现接口" class="headerlink" title="抽象类/类，继承关系，实现接口"></a>抽象类/类，继承关系，实现接口</h2><font style="font-size:18px;">
+**单列集合类**
+<a href="/blog/2019/07/18/javase/AbstractCollection-source-analysis/">java.util.AbstractCollection</a>&lt;Abstract&gt; ------------------------- <a href="/blog/2019/07/15/javase/Collection-source-analysis/">java.util.Collection</a>
+&emsp;<a href="/blog/2019/07/24/javase/AbstractList-source-analysis/">java.util.AbstractList</a>&lt;Abstract&gt; ------------------------------- <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>
+&emsp;&emsp;<a href="/blog/2018/11/15/javase/array-list-source-analysis/">java.util.ArrayList</a>&lt;Class&gt; ------------------------------------ <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>, java.util.RandomAccess
+&emsp;&emsp;<a href="/blog/2019/08/09/javase/AbstractSequentialList-source-analysis/">java.util.AbstractSequentialList</a>&lt;Abstract&gt;
+&emsp;&emsp;&emsp;<a href="/blog/2018/12/06/javase/linked-list-source-analysis/">java.util.LinkedList</a>&lt;Class&gt; ------------------------------- <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>, <a href="/blog/2019/08/06/javase/Deque-source-analysis/">java.util.Deque</a>
+&emsp;&emsp;<a href="">java.util.Vector</a>&lt;Class&gt; --------------------------------------- <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>, java.util.RandomAccess
+&emsp;&emsp;&emsp;<a href="">java.util.Stack</a>&lt;Class&gt;
+&emsp;<a href="/blog/2019/08/16/javase/AbstractSet-source-analysis/">java.util.AbstractSet</a>&lt;Abstract&gt; ------------------------------- <a href="/blog/2019/07/18/javase/Set-source-analysis/">java.util.Set</a>
+&emsp;&emsp;<a href="/blog/2019/08/19/javase/HashSet-source-analysis/">java.util.HashSet</a>&lt;Class&gt; ------------------------------------- <a href="/blog/2019/07/18/javase/Set-source-analysis/">java.util.Set</a>
+&emsp;&emsp;&emsp;<a href="/blog/2019/08/19/javase/LinkedHashSet-source-analysis/">java.util.LinkedHashSet</a>&lt;Class&gt; ------------------------- <a href="/blog/2019/07/18/javase/Set-source-analysis/">java.util.Set</a>
+&emsp;&emsp;<a href="/blog/2019/08/20/javase/TreeSet-source-analysis/">java.util.TreeSet</a>&lt;Class&gt; -------------------------------------- <a href="/blog/2019/08/01/javase/NavigableSet-source-analysis/">java.util.NavigableSet</a>
+&emsp;<a href="/blog/2019/08/21/javase/AbstractQueue-source-analysis/">java.util.AbstractQueue</a>&lt;Abstract&gt; -------------------------- <a href="/blog/2019/08/05/javase/Queue-source-analysis/">java.util.Queue</a>
+&emsp;<a href="">java.util.ArrayDeque</a>&lt;Class&gt; ---------------------------------- <a href="/blog/2019/08/06/javase/Deque-source-analysis/">java.util.Deque</a>
+
+<p><strong>双列集合类</strong><br><a href="/blog/2019/09/02/javase/AbstractMap-source-analysis/">java.util.AbstractMap</a>&lt;Abstract&gt; ——————————– <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a><br>&emsp;<a href="/blog/2019/09/03/javase/HashMap-source-analysis/">java.util.HashMap</a>&lt;Class&gt; ————————————- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a><br>&emsp;&emsp;<a href="/blog/2019/09/15/javase/LinkedHashMap-source-analysis/">java.util.LinkedHashMap</a>&lt;Class&gt; ————————- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a><br>&emsp;<a href="/blog/2019/09/17/javase/TreeMap-source-analysis/">java.util.TreeMap</a>&lt;Class&gt; ————————————— <a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/">java.util.NavigableMap</a><br>&emsp;<a href="">java.util.WeakHashMap</a>&lt;Class&gt; —————————— <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a><br><a href="/blog/2019/09/17/javase/Dictionary-source-analysis/">java.util.Dictionary</a>&lt;Abstract&gt; 已过时<br>&emsp;<a href="">java.util.Hashtable</a>&lt;Class&gt; 已过时 ————————— <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a></p>
+</font>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/12/javase/JavaCollectionsFramework/" data-id="ckbkxw4mz0014p8wpmt43107d" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javase/Iterable-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/12/javase/Iterable-source-analysis/" class="article-date">
+  <time datetime="2019-07-12T02:18:22.000Z" itemprop="datePublished">2019-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/12/javase/Iterable-source-analysis/">Iterable接口源码分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现此接口的对象成为“for-each loop”语句的目标，即具有可迭代功能。</p>
+<p><strong>Iterable</strong> 接口在 <strong><code>java.lang</code></strong> 包下，<strong><code>java.util.Collection</code></strong> 接口实现了此接口，因此 <strong><code>Collection</code></strong> 及其子类都可以使用迭代器。</p>
+<h2 id="一、方法描述"><a href="#一、方法描述" class="headerlink" title="一、方法描述"></a>一、方法描述</h2><h4 id="iterator-方法"><a href="#iterator-方法" class="headerlink" title="iterator()方法"></a>iterator()方法</h4><p>返回 <strong>T</strong> 类型元素的迭代器。见：<a href="#Iterator">Iterator</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/07/12/javase/Iterable-source-analysis/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/12/javase/Iterable-source-analysis/" data-id="ckbkxw4mv0010p8wpqgjsfxyv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java并发编程/Java中的锁一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/09/java并发编程/Java中的锁一/" class="article-date">
+  <time datetime="2019-07-09T11:39:01.000Z" itemprop="datePublished">2019-07-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Java并发编程/">Java并发编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/07/09/java并发编程/Java中的锁一/">Java中的锁（Lock接口）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如：读写锁）。</p>
+<p>在Lock接口出现之前，Java程序依靠 <strong>synchronized</strong> 关键字实现锁的功能。</p>
+<p><strong>Java1.5</strong>之后，并发包中新增了 <strong>Lock</strong> 接口（以及相关实现类）用来实现锁功能，它提供了与 synchronized 关键字类似的同步功能，只是使用时需要显示地获取和释放锁。</p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/07/09/java并发编程/Java中的锁一/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/09/java并发编程/Java中的锁一/" data-id="ckbkxw4ns002rp8wps9d93ao9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java并发编程/java内存模型四" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/05/30/java并发编程/java内存模型四/" class="article-date">
+  <time datetime="2019-05-30T15:35:00.000Z" itemprop="datePublished">2019-05-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Java并发编程/">Java并发编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/05/30/java并发编程/java内存模型四/">Java内存模型四（volatile内存语义）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1、volatile的特性"><a href="#1、volatile的特性" class="headerlink" title="1、volatile的特性"></a>1、volatile的特性</h2><ul>
+<li><strong>可见性</strong>：对一个 volatile 变量的读，总是能看到（任意线程）对这个 volatile 变量最后的写入。</li>
+<li><strong>原子性</strong>：对任意单个 volatile 变量的读/写具有原子性，但类似于 volatile++ 这种复合操作不具有原子性。</li>
+</ul>
+<h2 id="2、volatile写-读建立的happens-before关系"><a href="#2、volatile写-读建立的happens-before关系" class="headerlink" title="2、volatile写-读建立的happens-before关系"></a>2、volatile写-读建立的happens-before关系</h2><p>从 JSR-133 开始（JDK5），volatile 变量的写-读可以实现线程之间的通信。</p>
+<p><strong>从内存语义的角度来说，volatile 的读-写与锁的释放-获取有相同的内存效果</strong>：_volatile 写和锁的释放有相同的内存语义<em>；</em>volatile 读和锁的获取有相同的内存语义_。</p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/05/30/java并发编程/java内存模型四/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/05/30/java并发编程/java内存模型四/" data-id="ckbkxw4o3003cp8wp3t0m3to5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java并发编程/java内存模型三" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/05/29/java并发编程/java内存模型三/" class="article-date">
+  <time datetime="2019-05-29T15:37:00.000Z" itemprop="datePublished">2019-05-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Java并发编程/">Java并发编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/05/29/java并发编程/java内存模型三/">Java内存模型三（顺序一致性）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>顺序一致性内存模型</strong> 是一个理论参考模型。<strong>处理器的内存模型</strong> 和 <strong>编程语言的内存模型</strong> 都会以其作为参考。</p>
+<h2 id="1、数据竞争与顺序一致性"><a href="#1、数据竞争与顺序一致性" class="headerlink" title="1、数据竞争与顺序一致性"></a>1、数据竞争与顺序一致性</h2><p>Java内存模型规范对 <strong>数据竞争</strong> 的定义：</p>
+<ul>
+<li>在一个线程中写一个变量</li>
+<li>在另一个线程读同一个变量</li>
+<li>而且写和读没有通过同步来排序</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/05/29/java并发编程/java内存模型三/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/05/29/java并发编程/java内存模型三/" data-id="ckbkxw4nz0035p8wpnz96ygwo" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java并发编程/java内存模型二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/05/27/java并发编程/java内存模型二/" class="article-date">
+  <time datetime="2019-05-27T15:33:46.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Java并发编程/">Java并发编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/05/27/java并发编程/java内存模型二/">Java内存模型二（重排序）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>重排序</strong>：指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。</p>
+<h2 id="1、数据依赖性"><a href="#1、数据依赖性" class="headerlink" title="1、数据依赖性"></a>1、数据依赖性</h2><p>如果两个操作访问同一个变量，且这两个操作中有一个为<strong>写操作</strong>，此时这两个操作之间就存在<strong>数据依赖性</strong>。</p>
+<p>数据依赖性分为下列3种：</p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/05/27/java并发编程/java内存模型二/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/05/27/java并发编程/java内存模型二/" data-id="ckbkxw4o5003hp8wpvoizi3mo" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java并发编程/java内存模型一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/05/22/java并发编程/java内存模型一/" class="article-date">
+  <time datetime="2019-05-22T14:26:01.000Z" itemprop="datePublished">2019-05-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Java并发编程/">Java并发编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2019/05/22/java并发编程/java内存模型一/">Java内存模型一（基础）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1">Java内存模型的基础</a>：主要介绍内存模型相关的基本概念</li>
+<li>Java内存模型中的顺序一致性：主要介绍 <strong>重排序</strong> 与 <strong>顺序一致性内存模型</strong></li>
+<li>同步原语：主要介绍3个同步原语 (<strong>synchronized</strong>、<strong>volatile</strong>、<strong>final</strong>) 的内存语义及重排序规则在处理器中的实现</li>
+<li>Java内存模型的设计：主要介绍Java内存模型的设计原理，及其余处理器内存模型和顺序一致性内存模型的关系</li>
+</ul>
+<h2 id="1、并发编程模型的两个关键问题"><a href="#1、并发编程模型的两个关键问题" class="headerlink" title="1、并发编程模型的两个关键问题"></a>1、并发编程模型的两个关键问题</h2><p>在命令式编程中，线程之间的通信机制有两种：<strong>共享内存</strong>、<strong>消息传递</strong></p>
+        
+          <p class="article-more-link">
+            <a href="/blog/2019/05/22/java并发编程/java内存模型一/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/05/22/java并发编程/java内存模型一/" data-id="ckbkxw4nx0032p8wpgwypiqya" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/blog/page/3/">&laquo; Prev</a><a class="page-number" href="/blog/">1</a><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/blog/page/5/">5</a><a class="page-number" href="/blog/page/6/">6</a><a class="extend next" rel="next" href="/blog/page/5/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

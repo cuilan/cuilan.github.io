@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>SortedSet接口源码分析 | 翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="java.util.SortedSet 接口直接继承自 java.util.Set 接口。">
+<meta name="keywords" content="Java,源码,集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SortedSet接口源码分析">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/2019/07/30/javase/SortedSet-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.SortedSet 接口直接继承自 java.util.Set 接口。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2019/07/30/javase/SortedSet-source-analysis/SortedSet1.png">
+<meta property="og:updated_time" content="2020-06-18T14:26:11.247Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SortedSet接口源码分析">
+<meta name="twitter:description" content="java.util.SortedSet 接口直接继承自 java.util.Set 接口。">
+<meta name="twitter:image" content="http://cuilan.gitee.io/blog/2019/07/30/javase/SortedSet-source-analysis/SortedSet1.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-javase/SortedSet-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/30/javase/SortedSet-source-analysis/" class="article-date">
+  <time datetime="2019-07-30T15:00:00.000Z" itemprop="datePublished">2019-07-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/JavaSE/">JavaSE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SortedSet接口源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><code>java.util.SortedSet</code></strong> 接口直接继承自 <strong><code>java.util.Set</code></strong> 接口。</p>
+<p><img src="/blog/2019/07/30/javase/SortedSet-source-analysis/SortedSet1.png" alt="SortedSet接口继承关系" title="SortedSet接口继承关系"></p>
+<a id="more"></a>
+
+<h2 id="一、SortedSet接口特点或规范"><a href="#一、SortedSet接口特点或规范" class="headerlink" title="一、SortedSet接口特点或规范"></a>一、SortedSet接口特点或规范</h2><h3 id="实现规范"><a href="#实现规范" class="headerlink" title="实现规范"></a>实现规范</h3><ul>
+<li>在 <strong><code>java.util.Set</code></strong> 基础上进一步提供其元素的总排序。元素按照 <strong>自然顺序</strong> 排序，或通过创建时提供的 <strong>比较器排序</strong>。</li>
+<li>迭代器将按 <strong>升序</strong> 顺序遍历集合。提供了几个额外的操作以利用订购。 （此接口是SortedMap的集合模拟。）</li>
+<li>插入到 SortedSet 中的所有元素必须实现 <strong><code>java.lang.Comparable</code></strong> 接口（或指定的比较器）。</li>
+<li>所有元素必须可相互比较，即：<strong><code>e1.compareTo(e2)</code></strong>（或 <strong><code>comparator.compare(e1, e2)</code></strong>）。</li>
+<li><strong>注意</strong>，如果 SortedSet 要正确实现 Set 接口，则由 SortedSet 维护的排序（无论是否提供显式比较器）必须与 <strong>equals()</strong> 方法一致。</li>
+</ul>
+<p>因为 Set 接口的不可重复性依赖于 <strong><code>equals()</code></strong> 方法，而 SortedSet 使用 <strong><code>compareTo()</code></strong> 方法进行所有元素的比较，</p>
+<h3 id="构造器规范"><a href="#构造器规范" class="headerlink" title="构造器规范"></a>构造器规范</h3><p>所有 <strong><code>SortedSet</code></strong> 的实现类应提供 <strong>四个“标准”构造器</strong>：</p>
+<ol>
+<li><strong>无参构造器</strong>，它根据元素的<strong>自然顺序</strong>创建一个<strong>空</strong>的 SortedSet。（Collection规范）</li>
+<li>参数为 <strong><code>Collection</code></strong> 类型的构造器，它创建一个新的 SortedSet，其元素类型与 Collection 参数中的元素类型相同，并根据元素的<strong>自然顺序</strong>进行排序。（Collection规范）</li>
+<li>参数为 <strong><code>Comparator</code></strong> 类型的构造器，它创建一个根据<strong>指定比较器排序</strong>的<strong>空</strong>的 SortedSet。</li>
+<li>参数为 <strong><code>SortedSet</code></strong> 类型的构造器，它创建一个新的 SortedSet，其具有与输入的 SortedSet 相同的元素和相同的顺序。</li>
+</ol>
+<p>由于接口不能包含构造函数，因此无法强制执行此规范。</p>
+<hr>
+<h2 id="二、方法描述"><a href="#二、方法描述" class="headerlink" title="二、方法描述"></a>二、方法描述</h2><h4 id="comparator-方法"><a href="#comparator-方法" class="headerlink" title="comparator()方法"></a>comparator()方法</h4><p>获取当前 <strong><code>Set</code></strong> 对其元素进行排序的比较器，如果当前 Set 的元素排序为自然顺序，则返回 <strong><code>null</code></strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;? <span class="keyword">super</span> E&gt; comparator();</span><br></pre></td></tr></table></figure>
+
+<h4 id="subSet-E-E-方法"><a href="#subSet-E-E-方法" class="headerlink" title="subSet(E, E)方法"></a>subSet(E, E)方法</h4><p>返回当前 Set 的子集视图，其元素范围从 <strong>fromElement</strong>（包含）到 <strong>toElement</strong>（不包含）。如果fromElement和toElement相等，则返回的集合为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedSet&lt;E&gt; <span class="title">subSet</span><span class="params">(E fromElement, E toElement)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="headSet-E-方法"><a href="#headSet-E-方法" class="headerlink" title="headSet(E)方法"></a>headSet(E)方法</h4><p>返回当前 Set 的子集视图，其元素范围从 Set 第一个元素到 <strong>toElement</strong>（不包含）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedSet&lt;E&gt; <span class="title">headSet</span><span class="params">(E toElement)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="tailSet-E-方法"><a href="#tailSet-E-方法" class="headerlink" title="tailSet(E)方法"></a>tailSet(E)方法</h4><p>返回当前 Set 的子集视图，其元素范围从 <strong>fromElement</strong>（包含）到 Set 最后一个元素（包含）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SortedSet&lt;E&gt; <span class="title">tailSet</span><span class="params">(E fromElement)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="first-方法"><a href="#first-方法" class="headerlink" title="first()方法"></a>first()方法</h4><p>返回当前 Set 中的第一个（最低）元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">first</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="last-方法"><a href="#last-方法" class="headerlink" title="last()方法"></a>last()方法</h4><p>返回当前 Set 中的最后一个（最高）元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">last</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="spliterator-方法"><a href="#spliterator-方法" class="headerlink" title="spliterator()方法"></a>spliterator()方法</h4><p>在此有序集中的元素上创建Spliterator。</p>
+<ul>
+<li><strong><code>Spliterator.DISTINCT</code></strong></li>
+<li><strong><code>Spliterator.SORTED</code></strong></li>
+<li><strong><code>Spliterator.ORDERED</code></strong></li>
+</ul>
+<p>如果 <strong><code>SortedSet</code></strong> 的比较器为 <strong><code>null</code></strong>，则 Spliterator 的比较器必须为 <strong><code>null</code></strong>。<br>否则，Spliterator 的比较器必须与分类组的比较器相同或强加相同的总排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">default</span> Spliterator&lt;E&gt; <span class="title">spliterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Spliterators.IteratorSpliterator&lt;E&gt;(</span><br><span class="line">            <span class="keyword">this</span>, Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.ORDERED) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Comparator&lt;? <span class="keyword">super</span> E&gt; getComparator() &#123;</span><br><span class="line">            <span class="keyword">return</span> SortedSet.<span class="keyword">this</span>.comparator();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2019/07/30/javase/SortedSet-source-analysis/" data-id="ckbkxw4ni0023p8wpsiobnxj9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/08/01/javase/NavigableSet-source-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          NavigableSet接口源码分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2019/07/24/javase/AbstractList-source-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">AbstractList源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

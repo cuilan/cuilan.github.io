@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Nginx高级 | 翠兰 - Greenland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、Nginx的反向代理反向代理服务器：  优势：  隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
+<meta name="keywords" content="中间件,Web服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx高级">
+<meta property="og:url" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="一、Nginx的反向代理反向代理服务器：  优势：  隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high1.png">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high2.png">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high3.png">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high4.png">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high5.png">
+<meta property="og:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high6.png">
+<meta property="og:updated_time" content="2020-06-18T14:26:11.275Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx高级">
+<meta name="twitter:description" content="一、Nginx的反向代理反向代理服务器：  优势：  隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
+<meta name="twitter:image" content="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/nginx-high1.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">翠兰 - Greenland</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Let the cat out of the bag.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/blog/atom.xml">rss</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://cuilan.gitee.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-nginx/nginx-high" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2018/12/19/nginx/nginx-high/" class="article-date">
+  <time datetime="2018-12-19T04:19:23.000Z" itemprop="datePublished">2018-12-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/Nginx/">Nginx</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nginx高级
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、Nginx的反向代理"><a href="#一、Nginx的反向代理" class="headerlink" title="一、Nginx的反向代理"></a>一、Nginx的反向代理</h2><p>反向代理服务器：</p>
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high1.png" alt="Nginx反向代理" title="Nginx反向代理"></p>
+<p><strong>优势：</strong></p>
+<ol>
+<li>隔离内部服务器，提高安全性。</li>
+<li>可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。</li>
+<li>方便横向扩展。</li>
+<li>AIO（异步非阻塞）动静分离，提高性能。</li>
+</ol>
+<a id="more"></a>
+
+<p><strong>反向代理配置：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://www.baidu.com;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"># proxy_pass [可以是 IP、IP:port 或 域名]</span><br><span class="line">location /cuilan &#123;</span><br><span class="line">    proxy_set_header Host $host;</span><br><span class="line">    proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">    proxy_set_header X-Forwarded-For $http_x_forwarded_for;</span><br><span class="line">    proxy_pass http://192.168.0.200:8080;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Nginx的负载均衡"><a href="#二、Nginx的负载均衡" class="headerlink" title="二、Nginx的负载均衡"></a>二、Nginx的负载均衡</h2><p>目前主流的负载均衡器：<strong>Nginx、LVS、HAProxy</strong></p>
+<p><strong>upstream</strong>：是 nginx 服务器的一个重要模块，upstream 模块实现在轮询客户端IP之间实现后端的负载均衡，<strong>ip_hash算法</strong>。<br><strong>配置负载均衡</strong>：修改 <strong><em>nginx.conf</em></strong></p>
+<ol>
+<li><strong>轮询</strong>：无法保证session。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream xxx &#123;</span><br><span class="line">    server ip:port;</span><br><span class="line">    server ip:port;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high2.png" alt="轮询" title="轮询"></p>
+<ol start="2">
+<li><strong>ip_hash</strong>：访问固定的一台后端服务器，可以保证session。</li>
+</ol>
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high3.png" alt="ip_hash" title="ip_hash"></p>
+<ol start="3">
+<li><strong>权重(weight)</strong>：分配轮询的比重，weight值越高，访问的几率越大，权重值跟请求几率成正比。</li>
+</ol>
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high4.png" alt="权重" title="权重"></p>
+<ol start="4">
+<li><strong>响应时间</strong>：响应时间最短的优先分配。</li>
+</ol>
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high5.png" alt="响应时间" title="响应时间"></p>
+<ol start="5">
+<li><strong>url_hash</strong>：根据url计算来确定访问哪台主机，配置hash。</li>
+</ol>
+<p><img src="/blog/2018/12/19/nginx/nginx-high/nginx-high6.png" alt="url_hash" title="url_hash"></p>
+<h2 id="三、进程模型及工作原理"><a href="#三、进程模型及工作原理" class="headerlink" title="三、进程模型及工作原理"></a>三、进程模型及工作原理</h2><p>Master/Worker进程模型</p>
+<p><strong>Master进程：</strong></p>
+<ol>
+<li>接受外界的信号：kill -QUIT / kill -HUP</li>
+<li>向各个Worker进程发送信号。</li>
+<li>监控Worker的运行状态。</li>
+<li>当Worker进程因异常退出，会自动重新启动新的Worker进程。</li>
+</ol>
+<p><strong>Worker进程：</strong></p>
+<ol>
+<li>处理客户端请求。</li>
+<li>同步锁。</li>
+</ol>
+<p><strong>Nginx模块：</strong></p>
+<ol>
+<li>核心模块：<strong>http模块、event模块、mail模块</strong></li>
+<li>基础模块</li>
+<li>第三方模块</li>
+</ol>
+<h2 id="四、Nginx-keepalived实现高可用"><a href="#四、Nginx-keepalived实现高可用" class="headerlink" title="四、Nginx + keepalived实现高可用"></a>四、Nginx + keepalived实现高可用</h2><p>keepalived：基于VRRP（虚拟路由器冗余器）来实现对web服务的高可用方案。</p>
+<p>安装：</p>
+<ol>
+<li><p>下载 <strong>keepalived</strong>，并解压：<strong><code>tar -zxvf keepalived-1.3.4.tar.gz</code></strong></p>
+</li>
+<li><p>配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#keepalived启动时会默认读取/etc/keepalived/keepalived.conf配置文件。</span></span><br><span class="line">./configure --prefix=/usr/soft/keepalived/keepalived-1.3.4-bin/ --sysconf=/etc/</span><br></pre></td></tr></table></figure>
+
+<p>依赖OpenSSL，安装OpenSSL：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install openssl-devel</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>make &amp;&amp; make install</strong></p>
+</li>
+<li><p>建立软连接(安装路径下)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /usr/soft/keepalived/keepalived-1.3.5-bin/sbin/keepalived /sbin/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制启动脚本，配置服务（源码包下）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/soft/keepalived/keepalived-1.3.5/keepalived/etc/init.d/keepalived /etc/init.d/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将配置添加入服务（CentOS下）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo chkconfig --add keepalived</span><br><span class="line">chkconfig keepalived on</span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">sudo service keepalived start</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="keepalived配置文件"><a href="#keepalived配置文件" class="headerlink" title="keepalived配置文件"></a><strong>keepalived配置文件</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">global_defs &#123; (全局配置，配置告警邮件服务器)</span><br><span class="line">    router_id LVS_DEVEL (唯一识别id)</span><br><span class="line">&#125;</span><br><span class="line">vrrp_instance VI_1 &#123;       (VRRP实例)</span><br><span class="line">    state MASTER / BACKUP  (设置主从)</span><br><span class="line">    interface eth0         (设置网卡，通过ifconfig命令查看)</span><br><span class="line">    virtual_router_id 51   (虚拟路由器id)</span><br><span class="line">    priority 100           (设置权重，大的为Master)</span><br><span class="line">    virtual_ipaddress &#123;    (设置对外的虚拟ip)</span><br><span class="line">        192.168.0.100</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">vrrp_script chk_nginx_service &#123; (vrrp_script指定检测脚本，对应名称自定义)</span><br><span class="line">    script <span class="string">"/usr/soft/nginx/nginx-1.10.3-bin/sbin/nginx_service.sh"</span></span><br><span class="line">    interval 3</span><br><span class="line">    weight -10</span><br><span class="line">&#125;</span><br><span class="line">virtual_server 192.168.0.100 80 &#123;   (LVS配置，映射VRRP虚拟ip)</span><br><span class="line">    real_server 192.168.0.200 80 &#123;  (真实服务器地址)</span><br><span class="line">    weight 1                        (权重)</span><br><span class="line">    TCP_GET &#123;                       (TCP连接)</span><br><span class="line">        connect_timeout 3           (连接超时时间)</span><br><span class="line">        nb_get_retry 3</span><br><span class="line">        delay_before_retry 3</span><br><span class="line">        connect_port 80             (重新连接监听的端口)</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;                  (配置检测nginx的脚本，指向vrrp_script)</span><br><span class="line">        chk_nginx_service</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="nginx安装目录下的检测nginx运行状态的脚本（nginx-service-sh）"><a href="#nginx安装目录下的检测nginx运行状态的脚本（nginx-service-sh）" class="headerlink" title="nginx安装目录下的检测nginx运行状态的脚本（nginx_service.sh）"></a><strong>nginx安装目录下的检测nginx运行状态的脚本（nginx_service.sh）</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">PATH=/bin:/sbin:/usr/bin:/usr/sbin</span><br><span class="line">A=`ps -C nginx --no-header | wc -l`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$A</span> -eq 0 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'nginx service is died'</span></span><br><span class="line">service keepalived stop</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://cuilan.gitee.io/blog/2018/12/19/nginx/nginx-high/" data-id="ckbkxw4os004mp8wp3nyk908x" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/中间件/">中间件</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/01/07/概率论与数理统计/一、概率与随机事件/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          一、概率与随机事件
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/12/13/nginx/nginx-base/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Nginx基础</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/">docker</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/docker/k8s/">k8s</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/环境搭建/">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/集合框架/">集合框架</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Go/" style="font-size: 10px;">Go</a> <a href="/blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/blog/tags/Java/" style="font-size: 20px;">Java</a> <a href="/blog/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/blog/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/blog/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/blog/tags/docker/" style="font-size: 10px;">docker</a> <a href="/blog/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/blog/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/blog/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/blog/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/blog/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/blog/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/blog/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/blog/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/blog/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/blog/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
+	  &copy; 2020 zhang.yan<br>
+	  &copy; Copyright 转载请附出处<br>
+	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
+	  <span class="post-meta-divider"> | </span>
+	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 不蒜子 页面访问统计插件 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/blog/atom.xml" class="mobile-nav-link">rss</a>
+  
+</nav>
+    
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
