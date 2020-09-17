@@ -238,17 +238,15 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
-      <ul>
-        <li></li>
-      </ul>
-    </li>
+    <li><a href="#创建maven工程">创建maven工程</a></li>
+    <li><a href="#创建-spring-mvcxml-配置文件">创建 <code>spring-mvc.xml</code> 配置文件</a></li>
+    <li><a href="#配置-webxml-文件">配置 <code>web.xml</code> 文件</a></li>
   </ul>
 </nav>
                 
                 <p>SpringMVC项目的演示示例，包含 maven 依赖配置，web.xml 文件配置，spring-mvc.xml 文件配置等，代码部分省略。</p>
 <!-- raw HTML omitted -->
-<h3 id="创建maven工程">创建maven工程</h3>
+<h1 id="创建maven工程">创建maven工程</h1>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#ff79c6">&lt;project</span> <span style="color:#50fa7b">xmlns=</span><span style="color:#f1fa8c">&#34;http://maven.apache.org/POM/4.0.0&#34;</span> <span style="color:#50fa7b">xmlns:xsi=</span><span style="color:#f1fa8c">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
         <span style="color:#50fa7b">xsi:schemaLocation=</span><span style="color:#f1fa8c">&#34;http://maven.apache.org/POM/4.0.0http://maven.apache.org/maven-v4_0_0.xsd&#34;</span><span style="color:#ff79c6">&gt;</span>
     <span style="color:#ff79c6">&lt;parent&gt;</span>
@@ -297,7 +295,7 @@
         <span style="color:#ff79c6">&lt;/plugins&gt;</span>
     <span style="color:#ff79c6">&lt;/build&gt;</span>
 <span style="color:#ff79c6">&lt;/project&gt;</span>
-</code></pre></div><h3 id="创建-spring-mvcxml-配置文件">创建 <code>spring-mvc.xml</code> 配置文件</h3>
+</code></pre></div><h1 id="创建-spring-mvcxml-配置文件">创建 <code>spring-mvc.xml</code> 配置文件</h1>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#ff79c6">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#ff79c6">&lt;beans</span>  <span style="color:#50fa7b">xmlns=</span><span style="color:#f1fa8c">&#34;http://www.springframework.org/schema/beans&#34;</span>
         <span style="color:#50fa7b">xmlns:xsi=</span><span style="color:#f1fa8c">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
@@ -338,7 +336,7 @@
         <span style="color:#ff79c6">&lt;property</span> <span style="color:#50fa7b">name=</span><span style="color:#f1fa8c">&#34;requestContextAttribute&#34;</span> <span style="color:#50fa7b">value=</span><span style="color:#f1fa8c">&#34;request&#34;</span><span style="color:#ff79c6">/&gt;</span>
     <span style="color:#ff79c6">&lt;/bean&gt;</span>
 <span style="color:#ff79c6">&lt;/beans&gt;</span>
-</code></pre></div><h3 id="配置-webxml-文件">配置 <code>web.xml</code> 文件</h3>
+</code></pre></div><h1 id="配置-webxml-文件">配置 <code>web.xml</code> 文件</h1>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#ff79c6">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#ff79c6">&lt;web-app</span> <span style="color:#50fa7b">xmlns=</span><span style="color:#f1fa8c">&#34;http://xmlns.jcp.org/xml/ns/javaee&#34;</span>
          <span style="color:#50fa7b">xmlns:xsi=</span><span style="color:#f1fa8c">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>

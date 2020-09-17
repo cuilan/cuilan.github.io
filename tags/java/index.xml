@@ -40,7 +40,7 @@
       <pubDate>Tue, 29 Oct 2019 12:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/spring/springmvc/springmvc/</guid>
-      <description>1.SpringMVC使用示例2.SpringMVC核心分发器DispatcherServlet分析</description>
+      <description>目录 1.SpringMVC使用示例 2.SpringMVC核心分发器DispatcherServlet分析 3.SpringMVC的请求如何分发</description>
     </item>
     
     <item>
@@ -58,7 +58,7 @@
       <pubDate>Tue, 17 Sep 2019 23:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9B%AE%E5%BD%95/</guid>
-      <description>Java并发机制的底层实现原理（volatile）Java并发机制的底层实现原理（synchronized）Java并发机制的底层实现原理（</description>
+      <description>目录 Java并发解决方案 Java并发机制的底层实现原理（volatile） Java并发机制的底层实现原理（synchronized） Java</description>
     </item>
     
     <item>
@@ -292,7 +292,7 @@
       <pubDate>Fri, 12 Jul 2019 16:31:00 +0800</pubDate>
       
       <guid>https://cuilan.github.io/post/java/javacollectionsframework/</guid>
-      <description>接口 双列集合接口 java.util.Map&amp;lt;Interface&amp;gt; java.util.SortedMap&amp;lt;Interface&amp;gt; java.util.NavigableMap&amp;lt;Interface&amp;gt; 抽象类/类，继承关系，实现接口 双列集合类 java.util.AbstractMap&amp;lt;Abstract&amp;gt; &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash; java.util.Mapjava.util.HashMap&amp;lt;Class&amp;gt; &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;- java.util.Mapjava.util.LinkedHashMap&amp;lt;Class&amp;gt; &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;- java.util.Mapjava.util.TreeMap&amp;lt;Class&amp;gt; &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash; java.util.NavigableMapjava.util.WeakHashMap&amp;lt;Class&amp;gt; &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash; java.util.Mapjava.util.Dictionary&amp;lt;Abstract&amp;gt; 已过时 java.util.Hashtable&amp;lt;Class&amp;gt; 已过时 &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash; java.util.Map</description>
+      <description>一、接口 单列集合接口 java.lang.Iterable java.util.Collection java.util.List java.util.Set java.util.SortedSet java.util.NavigableSet java.util.Queue java.util.Deque 双列集合接口 java.util.Map java.util.SortedMap java.util.NavigableMap 二、抽象类/类，继承关系，实现接口 单列集合类 java.util.AbstractCollection java.util.AbstractList java.util.ArrayList java.util.AbstractSequentialList java.util.LinkedList java.util.Vector java.util.Stack java.util.AbstractSet java.util.HashSet java.util.LinkedHashSet java.util.TreeSet java.util.AbstractQueue java.util.ArrayDeque 双列集合类 java.util.AbstractMap java.util.HashMap java.util.LinkedHashMap</description>
     </item>
     
     <item>
