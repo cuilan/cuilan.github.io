@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,12 +238,34 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一abstractlist类继承规范">一、AbstractList类继承规范</a>
       <ul>
-        <li><a href="#一abstractlist类继承规范">一、AbstractList类继承规范</a></li>
-        <li><a href="#二成员分析">二、成员分析</a></li>
-        <li><a href="#三迭代器">三、迭代器</a></li>
-        <li><a href="#四子列表">四、子列表</a></li>
+        <li><a href="#随机访问性与顺序访问性规范">随机访问性与顺序访问性规范</a></li>
+        <li><a href="#可修改性规范">可修改性规范</a></li>
+        <li><a href="#大小可变性规范">大小可变性规范</a></li>
+        <li><a href="#子类构造器规范">子类构造器规范</a></li>
+        <li><a href="#迭代器规范">迭代器规范</a></li>
+        <li><a href="#可覆盖性规范">可覆盖性规范</a></li>
+      </ul>
+    </li>
+    <li><a href="#二成员分析">二、成员分析</a>
+      <ul>
+        <li><a href="#21-成员属性">2.1 成员属性</a></li>
+        <li><a href="#22-构造方法">2.2 构造方法</a></li>
+        <li><a href="#23-抽象方法">2.3 抽象方法</a></li>
+        <li><a href="#24-实现方法">2.4 实现方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#三迭代器">三、迭代器</a>
+      <ul>
+        <li><a href="#31-itr">3.1 Itr</a></li>
+        <li><a href="#32-listitr">3.2 ListItr</a></li>
+      </ul>
+    </li>
+    <li><a href="#四子列表">四、子列表</a>
+      <ul>
+        <li><a href="#41-sublist">4.1 SubList</a></li>
+        <li><a href="#42-randomaccesssublist">4.2 RandomAccessSubList</a></li>
       </ul>
     </li>
   </ul>
@@ -257,37 +279,36 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一abstractlist类继承规范">一、AbstractList类继承规范</h2>
-<h4 id="随机访问性与顺序访问性规范">随机访问性与顺序访问性规范</h4>
+<h1 id="一abstractlist类继承规范">一、AbstractList类继承规范</h1>
+<h2 id="随机访问性与顺序访问性规范">随机访问性与顺序访问性规范</h2>
 <ul>
 <li><strong><code>AbstractList</code></strong> 类提供了 <strong><code>List</code></strong> 接口的基础实现，以最大限度地减少子类且实现了 <strong>“随机访问”</strong> 数据存储（如：数组）所需的工作量（如：<strong><code>ArrayList</code></strong>）。</li>
 <li>对于顺序访问的数据结构（如：<strong><code>LinkedList</code></strong>），应该优先使用 <strong><code>java.util.AbstractSequentialList</code></strong>，而不是此类。</li>
 </ul>
-<h4 id="可修改性规范">可修改性规范</h4>
+<h2 id="可修改性规范">可修改性规范</h2>
 <ul>
 <li>如果要实现不可修改的列表，子类只需要扩展此类并提供 <strong><code>get(int)</code></strong> 方法和 <strong><code>size()</code></strong> 方法的实现。</li>
 <li>如果要实现可修改的列表，子类必须另外覆盖 <strong><code>set(int, E)</code></strong> 方法，否则会抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</li>
 </ul>
-<h4 id="大小可变性规范">大小可变性规范</h4>
+<h2 id="大小可变性规范">大小可变性规范</h2>
 <ul>
 <li>如果列表是 <strong>size</strong> 是可变的，则子类必须另外覆盖 <strong><code>add(int, E)</code></strong> 方法和 <strong><code>remove(int)</code></strong> 方法，<strong><code>add(E)</code></strong> 方法已提供实现，元素默认加入列表末尾。</li>
 </ul>
-<h4 id="子类构造器规范">子类构造器规范</h4>
+<h2 id="子类构造器规范">子类构造器规范</h2>
 <ul>
 <li>子类应根据 <strong><code>Collection</code></strong> 接口的规范提供 <strong>无参数构造器</strong> 和 <strong>参数为 Collection 的构造器</strong>。</li>
 </ul>
-<h4 id="迭代器规范">迭代器规范</h4>
+<h2 id="迭代器规范">迭代器规范</h2>
 <ul>
 <li>与其他抽象集合实现不同，子类不必提供迭代器实现；<strong>迭代器（通常是：<code>Itr</code>）</strong> 和 <strong>列表迭代器（通常是：<code>ListItr</code>）</strong> 是由这个类的 <strong>“随机访问”</strong> 方法实现的：<strong><code>get(int) set(int, E) add(int, E) remove(int)</code></strong>。</li>
 </ul>
-<h4 id="可覆盖性规范">可覆盖性规范</h4>
+<h2 id="可覆盖性规范">可覆盖性规范</h2>
 <ul>
 <li>此类中每个非抽象方法的实现。子类都可以以更高效的方式或特有的方式进行覆盖。</li>
 </ul>
 <hr>
-<h2 id="二成员分析">二、成员分析</h2>
-<h3 id="21-成员属性">2.1 成员属性</h3>
+<h1 id="二成员分析">二、成员分析</h1>
+<h2 id="21-成员属性">2.1 成员属性</h2>
 <p>当前列表已被 <strong>结构修改</strong> 的次数。
 <strong>结构修改</strong>：是改变列表大小 或 以其他方式扰乱它的方式，即：正在进行的迭代可能产生不正确的结果。</p>
 <p>该字段由 <strong><code>iterator()</code></strong> 方法返回的 <strong>迭代器</strong> 和 <strong><code>listIterator()</code></strong> 方法返回 <strong>列表迭代器</strong> 使用。
@@ -298,20 +319,20 @@
 <li>如果子类实现不提供快速失败的迭代器，则可以忽略此字段。</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#8be9fd;font-style:italic">transient</span> <span style="color:#8be9fd">int</span> modCount <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
-</code></pre></div><h3 id="22-构造方法">2.2 构造方法</h3>
+</code></pre></div><h2 id="22-构造方法">2.2 构造方法</h2>
 <p>唯一的构造器。<strong>Collection</strong> 的构造器规范由子类实现。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#50fa7b">AbstractList</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="23-抽象方法">2.3 抽象方法</h3>
+</code></pre></div><h2 id="23-抽象方法">2.3 抽象方法</h2>
 <p>唯一的一个抽象方法，为调用者提供索引访问的方法。来自 <strong>java.util.List</strong> 接口。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">get</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">);</span>
-</code></pre></div><h3 id="24-实现方法">2.4 实现方法</h3>
-<h4 id="set可修改性方法">set()可修改性方法</h4>
+</code></pre></div><h2 id="24-实现方法">2.4 实现方法</h2>
+<h3 id="set可修改性方法">set()可修改性方法</h3>
 <p>如果子类要实现一个 <strong>可修改</strong> 的列表，则必须覆盖此方法，提供可根据索引修改元素。来自 <strong>java.util.List</strong> 接口。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">set</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">,</span> E element<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> UnsupportedOperationException<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="addremove大小可变性方法">add()、remove()大小可变性方法</h4>
+</code></pre></div><h3 id="addremove大小可变性方法">add()、remove()大小可变性方法</h3>
 <p>如果子类要实现一个 <strong>大小可变</strong> 的列表，则必须覆盖 <strong><code>add(int, E)</code></strong> 方法和 <strong><code>remove(int)</code></strong> 方法。均来自 <strong>java.util.List</strong> 接口。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 添加单个元素
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -329,7 +350,7 @@
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">remove</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> UnsupportedOperationException<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="indexof正序搜索">indexOf()正序搜索</h4>
+</code></pre></div><h3 id="indexof正序搜索">indexOf()正序搜索</h3>
 <p>返回此列表中第一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。来自 <strong>java.util.List</strong> 接口。
 即：返回<strong>最低索引</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">indexOf</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -345,7 +366,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="lastindexof倒序搜索">lastIndexOf()倒序搜索</h4>
+</code></pre></div><h3 id="lastindexof倒序搜索">lastIndexOf()倒序搜索</h3>
 <p>返回此列表中最后一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。来自 <strong>java.util.List</strong> 接口。
 即：返回<strong>最高索引</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">lastIndexOf</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -361,7 +382,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="clearremoverangeint-int方法">clear()、removeRange(int, int)方法</h4>
+</code></pre></div><h3 id="clearremoverangeint-int方法">clear()、removeRange(int, int)方法</h3>
 <p>清空列表中的全部元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">clear</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     removeRange<span style="color:#ff79c6">(</span>0<span style="color:#ff79c6">,</span> size<span style="color:#ff79c6">());</span>
@@ -377,7 +398,7 @@
         it<span style="color:#ff79c6">.</span><span style="color:#50fa7b">remove</span><span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="addallint-collection方法">addAll(int, Collection)方法</h4>
+</code></pre></div><h3 id="addallint-collection方法">addAll(int, Collection)方法</h3>
 <ul>
 <li>将<strong>指定集合</strong>中的<strong>所有元素</strong>插入到<strong>当前列表</strong>的<strong>指定位置</strong>中。</li>
 <li>新添加的元素将按照<strong>指定集合</strong>的迭代器返回的顺序插入至此列表中。</li>
@@ -405,7 +426,7 @@
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> String <span style="color:#50fa7b">outOfBoundsMsg</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;Index: &#34;</span><span style="color:#ff79c6">+</span>index<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#34;, Size: &#34;</span><span style="color:#ff79c6">+</span>size<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="equalsobject方法">equals(Object)方法</h4>
+</code></pre></div><h3 id="equalsobject方法">equals(Object)方法</h3>
 <p>将指定对象与当前列表进行比较。如果指定的对象类型为 <strong>List</strong>，且两个列表大小相同，且两个列表中的所有元素的 <strong>equals()</strong> 方法相等，顺序相等，才返回 <strong><code>true</code></strong>。</p>
 <ul>
 <li>此实现方法首先检查指定的对象是否为当前列表：
@@ -441,7 +462,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">!(</span>e1<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hasNext</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">||</span> e2<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hasNext</span><span style="color:#ff79c6">());</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="hashcode方法">hashCode()方法</h4>
+</code></pre></div><h3 id="hashcode方法">hashCode()方法</h3>
 <p>遵循 <strong>java.util.List.hashCode()</strong> 方法，确保两个列表进行 <strong>equals()</strong> 方法对比时，比较的是列表中元素的哈希值。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hashCode</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> hashCode <span style="color:#ff79c6">=</span> 1<span style="color:#ff79c6">;</span>
@@ -450,25 +471,24 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> hashCode<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><hr>
-<h4 id="iterator方法">iterator()方法</h4>
+</code></pre></div><h3 id="iterator方法">iterator()方法</h3>
 <p>创建并返回一个 <strong><code>Itr</code></strong> 迭代器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> Itr<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="listiterator方法">listIterator()方法</h4>
+</code></pre></div><h3 id="listiterator方法">listIterator()方法</h3>
 <p>创建并返回一个 <strong><code>ListIterator</code></strong> 迭代器，默认从位置 <strong>0</strong> 开始迭代。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> ListIterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">listIterator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> listIterator<span style="color:#ff79c6">(</span>0<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="listiteratorint方法">listIterator(int)方法</h4>
+</code></pre></div><h3 id="listiteratorint方法">listIterator(int)方法</h3>
 <p>创建并返回一个从指定索引位置开始的 <strong><code>ListIterator</code></strong> 迭代器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> ListIterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">listIterator</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#6272a4">// 检查添加位置
 </span><span style="color:#6272a4"></span>    rangeCheckForAdd<span style="color:#ff79c6">(</span>index<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> ListItr<span style="color:#ff79c6">(</span>index<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="sublistint-int方法">subList(int, int)方法</h4>
+</code></pre></div><h3 id="sublistint-int方法">subList(int, int)方法</h3>
 <p>返回一个从 <strong>fromIndex</strong> 位置到 <strong>toIndex</strong> 位置的子 <strong>List</strong>，该子 <strong>List</strong> 继承 <strong><code>AbstractList</code></strong>。
 如果当前列表实现 <strong>java.util.RandomAccess</strong>，返回一个支持随机访问的子列表。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> List<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">subList</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> fromIndex<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">int</span> toIndex<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -477,9 +497,9 @@
             <span style="color:#ff79c6">new</span> SubList<span style="color:#ff79c6">&lt;&gt;(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">,</span> fromIndex<span style="color:#ff79c6">,</span> toIndex<span style="color:#ff79c6">));</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="三迭代器">三、迭代器</h2>
+<h1 id="三迭代器">三、迭代器</h1>
 <p><strong>AbstractList</strong> 抽象类内部提供了两个通用的迭代器，分别是：<strong><code>Itr</code></strong>、<strong><code>ListItr</code></strong>，子类无需实现迭代器，可直接使用。</p>
-<h3 id="31-itr">3.1 Itr</h3>
+<h2 id="31-itr">3.1 Itr</h2>
 <p>迭代器，实现了 <strong><code>java.util.Iterator</code></strong> 接口。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Itr</span> <span style="color:#8be9fd;font-style:italic">implements</span> Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">{</span>
     <span style="color:#6272a4">// 游标，记录上次返回元素与下一个元素之间的位置
@@ -530,7 +550,7 @@
             <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> ConcurrentModificationException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="32-listitr">3.2 ListItr</h3>
+</code></pre></div><h2 id="32-listitr">3.2 ListItr</h2>
 <p>
   <figure>
     <img src="/images/javase/AbstractList-source-analysis/ListItr.png" alt="ListItr继承关系">
@@ -596,9 +616,9 @@
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="四子列表">四、子列表</h2>
+<h1 id="四子列表">四、子列表</h1>
 <p>调用 <strong><code>subList()</code></strong> 方法返回当前列表的子列表。</p>
-<h3 id="41-sublist">4.1 SubList</h3>
+<h2 id="41-sublist">4.1 SubList</h2>
 <p><strong><code>AbstractList</code></strong> 抽象类的子类。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">SubList</span><span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd;font-style:italic">extends</span> AbstractList<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> AbstractList<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> l<span style="color:#ff79c6">;</span>
@@ -759,7 +779,7 @@
             <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> ConcurrentModificationException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="42-randomaccesssublist">4.2 RandomAccessSubList</h3>
+</code></pre></div><h2 id="42-randomaccesssublist">4.2 RandomAccessSubList</h2>
 <p>继承 <strong><code>SubList</code></strong>，实现了 <strong><code>java.util.RandomAccess</code></strong> 接口的随机访问子列表。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">RandomAccessSubList</span><span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd;font-style:italic">extends</span> SubList<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd;font-style:italic">implements</span> RandomAccess <span style="color:#ff79c6">{</span>
     RandomAccessSubList<span style="color:#ff79c6">(</span>AbstractList<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> list<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">int</span> fromIndex<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">int</span> toIndex<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>

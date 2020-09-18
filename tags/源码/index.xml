@@ -283,7 +283,7 @@
       <pubDate>Thu, 06 Dec 2018 23:10:05 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/java/linked-list-source-analysis/</guid>
-      <description>一、LinkedList简介二、成员分析三、链表实现四、双端队列实现五、队列实现六、栈实现七、列表实现八、迭代器、分割器一、LinkedLi</description>
+      <description>一、LinkedList简介 java.util.LinkedList 是 java.util.List 接口实现，是一个 链表 数据结构的实现，直接继承自 java.util.AbstractSequentialList 抽象有序集合，是一个有序的 List，同时实现了 java.util.List 、 java.util.Deque 接口，</description>
     </item>
     
     <item>
@@ -292,7 +292,7 @@
       <pubDate>Thu, 15 Nov 2018 22:26:53 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/java/array-list-source-analysis/</guid>
-      <description>ArrayList应该算是日常开发中使用最多的List实现类。 一、ArrayList 的特性 有序 可重复 线程不安全 允许插入 null 值 查询快、增删慢 底层</description>
+      <description>一、ArrayList 的特性 有序 可重复 线程不安全 允许插入 null 值 查询快、增删慢 底层通过 Object[] 数组实现 二、ArrayList继承关系 java.util.ArrayList 继承 java.u</description>
     </item>
     
   </channel>

@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,11 +238,26 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一collection接口规范">一、Collection接口规范</a></li>
+    <li><a href="#二方法描述">二、方法描述</a>
       <ul>
-        <li><a href="#一collection接口规范">一、Collection接口规范</a></li>
-        <li><a href="#二方法描述">二、方法描述</a></li>
-        <li><a href="#三jdk18新增方法">三、JDK1.8新增方法</a></li>
+        <li><a href="#size方法">size()方法</a></li>
+        <li><a href="#isempty方法">isEmpty()方法</a></li>
+        <li><a href="#contains方法containsallcollection-c方法">contains()方法、containsAll(Collection&lt;?&gt; c)方法</a></li>
+        <li><a href="#iterator方法">iterator()方法</a></li>
+        <li><a href="#toarray方法toarrayt-a方法">toArray()方法、toArray(T[] a)方法</a></li>
+        <li><a href="#添加方法">添加方法</a></li>
+        <li><a href="#删除方法">删除方法</a></li>
+        <li><a href="#retainallcollection-c方法">retainAll(Collection&lt;?&gt; c)方法</a></li>
+        <li><a href="#clear方法">clear()方法</a></li>
+        <li><a href="#equalsobject-ohashcode方法">equals(Object o)、hashCode()方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#三jdk18新增方法">三、JDK1.8新增方法</a>
+      <ul>
+        <li><a href="#spliterator方法">spliterator()方法</a></li>
+        <li><a href="#stream方法">stream()方法</a></li>
+        <li><a href="#parallelstream方法">parallelStream()方法</a></li>
       </ul>
     </li>
   </ul>
@@ -252,33 +267,35 @@
 <p>如：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collection<span style="color:#ff79c6">&lt;?&gt;</span> c <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">();</span>
 Collection<span style="color:#ff79c6">&lt;?&gt;</span> c <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashSet<span style="color:#ff79c6">();</span>
-</code></pre></div><!-- raw HTML omitted -->
-<h2 id="一collection接口规范">一、Collection接口规范</h2>
+</code></pre></div><h1 id="一collection接口规范">一、Collection接口规范</h1>
 <p>Collection接口定义了一系列子类实现规范：</p>
-<p>1、<strong>可重复</strong>、<strong>无序</strong>的集合（可能包含重复元素的无序集合）应直接实现此接口。</p>
-<p>2、所 有通用Collection实现类（通常 <strong>通过其子接口间接实现Collection</strong>）应提供 <strong>两个“标准”构造函数</strong>：</p>
+<ol>
+<li><strong>可重复</strong>、<strong>无序</strong>的集合（可能包含重复元素的无序集合）应直接实现此接口。</li>
+<li>所有通用Collection实现类（通常 <strong>通过其子接口间接实现Collection</strong>）应提供 <strong>两个“标准”构造函数</strong>：
 <ul>
 <li>一个无参构造函数，用它来创建一个空集合。</li>
 <li>一个为子类类型的，参数为 Collection 的构造函数，使用与其参数相同的元素来创建新集合，允许用户复制任何集合，从而生成所需实现类型的等效集合。</li>
 </ul>
+</li>
+</ol>
 <p>Collection 接口无法强制执行此规范（因为接口不能包含构造函数），但Java平台库中的所有通用 Collection 实现都符合此规范。</p>
 <hr>
-<h2 id="二方法描述">二、方法描述</h2>
-<h4 id="size方法">size()方法</h4>
+<h1 id="二方法描述">二、方法描述</h1>
+<h2 id="size方法">size()方法</h2>
 <p>返回当前集合中的元素数量。如果此集合包含元素数量大于 <strong><code>Integer.MAX_VALUE</code></strong> 个元素，则返回 <strong><code>Integer.MAX_VALUE</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">int</span> <span style="color:#50fa7b">size</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="isempty方法">isEmpty()方法</h4>
+</code></pre></div><h2 id="isempty方法">isEmpty()方法</h2>
 <p>如果当前 <strong><code>Collection</code></strong> 不包含任何元素，则返回 <strong><code>true</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">isEmpty</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="contains方法containsallcollection-c方法">contains()方法、containsAll(Collection&lt;?&gt; c)方法</h4>
+</code></pre></div><h2 id="contains方法containsallcollection-c方法">contains()方法、containsAll(Collection&lt;?&gt; c)方法</h2>
 <p>如果当前集合包含指定元素，则返回 <strong><code>true</code></strong>。当且仅当此集合包含至少一个元素 e 时才返回 <strong><code>true</code></strong>。<code>(o == null ? e == null : o.equals(e))</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">contains</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">);</span>
 </code></pre></div><p>如果当前集合包含指定 Collection 中的所有元素，则返回 <strong><code>true</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">containsAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="iterator方法">iterator()方法</h4>
+</code></pre></div><h2 id="iterator方法">iterator()方法</h2>
 <p>继承自父类 <strong><code>java.lang.Iterable</code></strong>，返回一个当前集合的迭代器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="toarray方法toarrayt-a方法">toArray()方法、toArray(T[] a)方法</h4>
+</code></pre></div><h2 id="toarray方法toarrayt-a方法">toArray()方法、toArray(T[] a)方法</h2>
 <p>返回一个包含此集合中所有元素的数组。如果此集合是有序的，则此方法会以相同的顺序返回元素。返回的数组是线程安全的，因为当前集合不会保留对它的引用。此方法充当基于数组和基于集合的桥梁。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Object<span style="color:#ff79c6">[]</span> <span style="color:#50fa7b">toArray</span><span style="color:#ff79c6">();</span>
 
@@ -286,12 +303,12 @@ Collection<span style="color:#ff79c6">&lt;?&gt;</span> c <span style="color:#ff7
 </span><span style="color:#6272a4"> * 支持返回指定的类型 T
 </span><span style="color:#6272a4"> */</span>
 <span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> T<span style="color:#ff79c6">[]</span> <span style="color:#50fa7b">toArray</span><span style="color:#ff79c6">(</span>T<span style="color:#ff79c6">[]</span> a<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="添加方法">添加方法</h4>
+</code></pre></div><h2 id="添加方法">添加方法</h2>
 <p><strong>添加单个元素</strong>：如果因添加了该元素后，集合发生改变则返回 <strong><code>true</code></strong>，如果此集合不允许重复并且已包含指定的元素，则返回 <strong><code>false</code></strong>。部分子类实现可限制添加元素的范围，如某些集合会拒绝添加 <strong><code>null</code></strong> 元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">);</span>
 </code></pre></div><p><strong>添加集合</strong>：将指定且非空的集合中的所有元素添加到当前集合中。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">addAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> E<span style="color:#ff79c6">&gt;</span> c<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="删除方法">删除方法</h4>
+</code></pre></div><h2 id="删除方法">删除方法</h2>
 <p><strong>删除单个元素</strong>：从当前集合中移除指定元素的单个实例（如果存在）。如果当前集合中包含一个或多个此类元素，则删除元素 e <strong><code>(o == null ? e == null : o.equals(e))</code></strong>。如果当前集合包含指定的元素，则删除后返回 <strong><code>true</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">remove</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">);</span>
 </code></pre></div><p><strong>删除集合</strong>：将指定的集合中的所有元素从当前集合中删除。</p>
@@ -309,13 +326,13 @@ Collection<span style="color:#ff79c6">&lt;?&gt;</span> c <span style="color:#ff7
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> removed<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="retainallcollection-c方法">retainAll(Collection&lt;?&gt; c)方法</h4>
+</code></pre></div><h2 id="retainallcollection-c方法">retainAll(Collection&lt;?&gt; c)方法</h2>
 <p>仅保留当前集合中包含在指定集合中的元素。换句话说，从当前集合中删除未包含在指定集合中的所有元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">retainAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="clear方法">clear()方法</h4>
+</code></pre></div><h2 id="clear方法">clear()方法</h2>
 <p>从当前集合中删除所有元素。执行后当前集合将为空。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">void</span> <span style="color:#50fa7b">clear</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="equalsobject-ohashcode方法">equals(Object o)、hashCode()方法</h4>
+</code></pre></div><h2 id="equalsobject-ohashcode方法">equals(Object o)、hashCode()方法</h2>
 <p><strong>equals</strong>：将指定对象与此集合进行比较。</p>
 <p>Collection 接口没有为 <code>Object.equals()</code> 方法提供实现，当创建一个实现 Collection 接口的集合时（非 Set、List 实现类），建议不要覆盖 <code>Object.equals()</code> 方法，<code>Object.equals()</code> 方法提供了**“引用比较”**的实现，除非子类需要实现**“值比较”**，如 List、Set这样的实现类。</p>
 <p>实现 equals 方法需要遵循 <code>Object.equals()</code> 方法的契约声明，即：<strong>equals对称性</strong>，<strong><code>a.equals(b) 当且仅当 b.equals(a)</code></strong>。</p>
@@ -327,18 +344,18 @@ Collection<span style="color:#ff79c6">&lt;?&gt;</span> c <span style="color:#ff7
 <p>即：<strong><code>c1.equals(c2)</code></strong> 意味着 <strong><code>c1.hashCode() == c2.hashCode</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hashCode</span><span style="color:#ff79c6">();</span>
 </code></pre></div><hr>
-<h2 id="三jdk18新增方法">三、JDK1.8新增方法</h2>
-<h4 id="spliterator方法">spliterator()方法</h4>
+<h1 id="三jdk18新增方法">三、JDK1.8新增方法</h1>
+<h2 id="spliterator方法">spliterator()方法</h2>
 <p>获得当前集合的 <strong>分割迭代器</strong>，返回 <strong><code>java.util.Spliterators</code></strong> 类提供的 <strong><code>IteratorSpliterator</code></strong> 并行分割迭代器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ff79c6">default</span> Stream<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">stream</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> StreamSupport<span style="color:#ff79c6">.</span><span style="color:#50fa7b">stream</span><span style="color:#ff79c6">(</span>spliterator<span style="color:#ff79c6">(),</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="stream方法">stream()方法</h4>
+</code></pre></div><h2 id="stream方法">stream()方法</h2>
 <p>返回当前集合的串行流对象。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ff79c6">default</span> Stream<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">stream</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> StreamSupport<span style="color:#ff79c6">.</span><span style="color:#50fa7b">stream</span><span style="color:#ff79c6">(</span>spliterator<span style="color:#ff79c6">(),</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="parallelstream方法">parallelStream()方法</h4>
+</code></pre></div><h2 id="parallelstream方法">parallelStream()方法</h2>
 <p>与 <code>stream()</code> 方法类似，支持并行处理。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ff79c6">default</span> Stream<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">parallelStream</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> StreamSupport<span style="color:#ff79c6">.</span><span style="color:#50fa7b">stream</span><span style="color:#ff79c6">(</span>spliterator<span style="color:#ff79c6">(),</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>

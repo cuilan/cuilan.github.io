@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,12 +238,26 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一treemap特点或规范">一、TreeMap特点或规范</a></li>
+    <li><a href="#二成员变量">二、成员变量</a>
       <ul>
-        <li><a href="#一treemap特点或规范">一、TreeMap特点或规范</a></li>
-        <li><a href="#二成员变量">二、成员变量</a></li>
-        <li><a href="#三构造器">三、构造器</a></li>
-        <li><a href="#四方法分析">四、方法分析</a></li>
+        <li><a href="#21-常量">2.1 常量</a></li>
+        <li><a href="#22-变量">2.2 变量</a></li>
+      </ul>
+    </li>
+    <li><a href="#三构造器">三、构造器</a>
+      <ul>
+        <li><a href="#31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</a></li>
+        <li><a href="#32-遵循sortedmap接口的构造器规范">3.2 遵循SortedMap接口的构造器规范</a></li>
+      </ul>
+    </li>
+    <li><a href="#四方法分析">四、方法分析</a>
+      <ul>
+        <li><a href="#41-实现自map接口的方法">4.1 实现自Map接口的方法</a></li>
+        <li><a href="#42-实现自sortedmap接口的方法">4.2 实现自SortedMap接口的方法</a></li>
+        <li><a href="#43-实现自navigablemap接口的方法">4.3 实现自NavigableMap接口的方法</a></li>
+        <li><a href="#44-继承自abstractmap接口的方法">4.4 继承自AbstractMap接口的方法</a></li>
+        <li><a href="#45-treemap自身方法">4.5 TreeMap自身方法</a></li>
       </ul>
     </li>
   </ul>
@@ -257,18 +271,17 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
 <hr>
-<h2 id="一treemap特点或规范">一、TreeMap特点或规范</h2>
-<p><strong><code>TreeMap</code></strong> 是基于 <strong><!-- raw HTML omitted -->红黑树<!-- raw HTML omitted --></strong> 的 <strong>NavigableMap</strong> 实现。根据其 key 的 <strong>自然顺序</strong> 进行排序，或者根据使用的构造器在 Map 创建时提供的比较器进行排序。</p>
+<h1 id="一treemap特点或规范">一、TreeMap特点或规范</h1>
+<p><strong><code>TreeMap</code></strong> 是基于 <a href="/post/java/hashmap-treenode/"><strong>红黑树</strong></a> 的 <strong>NavigableMap</strong> 实现。根据其 key 的 <strong>自然顺序</strong> 进行排序，或者根据使用的构造器在 Map 创建时提供的比较器进行排序。</p>
 <p>由于底层采用了红黑树的数据结构，因此 TreeMap 的查询方法，如：<strong><code>containsKey()</code></strong>，<strong><code>get()</code></strong>，<strong><code>put()</code></strong>，<strong><code>remove()</code></strong>，其时间复杂度均为：<strong>O(logn)</strong>。</p>
 <p><!-- raw HTML omitted -->注意<!-- raw HTML omitted -->：<strong>TreeMap</strong> 不同步。
 如果多个线程同时访问，并且至少有一个线程进行了结构上的修改，则必须在外部进行同步；如下：</p>
 <p><strong><code>SortedMap m = Collections.synchronizedSortedMap(new TreeMap(...));</code></strong></p>
 <p><!-- raw HTML omitted -->注意<!-- raw HTML omitted -->：此类中的方法返回的所有 <strong><code>Map.Entry</code></strong> 都它们不支持 <strong><code>Entry.setValue()</code></strong> 方法；可以使用 <strong><code>put(K, V)</code></strong> 方法更改 <strong>Entry</strong> 中的值。</p>
 <hr>
-<h2 id="二成员变量">二、成员变量</h2>
-<h3 id="21-常量">2.1 常量</h3>
+<h1 id="二成员变量">二、成员变量</h1>
+<h2 id="21-常量">2.1 常量</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 虚拟值
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> Object UNBOUNDED <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> Object<span style="color:#ff79c6">();</span>
 <span style="color:#6272a4">// 表示红色节点
@@ -277,7 +290,7 @@
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">boolean</span> BLACK <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
 <span style="color:#6272a4">// 指定 Map 中的比较器
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> Comparator<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> K<span style="color:#ff79c6">&gt;</span> comparator<span style="color:#ff79c6">;</span>
-</code></pre></div><h3 id="22-变量">2.2 变量</h3>
+</code></pre></div><h2 id="22-变量">2.2 变量</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 红黑树的根节点
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">transient</span> Entry<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> root<span style="color:#ff79c6">;</span>
 <span style="color:#6272a4">// Map 的大小
@@ -291,8 +304,8 @@
 <span style="color:#6272a4">// 倒序的 Map
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">transient</span> NavigableMap<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> descendingMap<span style="color:#ff79c6">;</span>
 </code></pre></div><hr>
-<h2 id="三构造器">三、构造器</h2>
-<h3 id="31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</h3>
+<h1 id="三构造器">三、构造器</h1>
+<h2 id="31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 空参构造器
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">TreeMap</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     comparator <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
@@ -302,7 +315,7 @@
     comparator <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
     putAll<span style="color:#ff79c6">(</span>m<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="32-遵循sortedmap接口的构造器规范">3.2 遵循SortedMap接口的构造器规范</h3>
+</code></pre></div><h2 id="32-遵循sortedmap接口的构造器规范">3.2 遵循SortedMap接口的构造器规范</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 参数类型为 Comparator 的构造器，指定比较器
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">TreeMap</span><span style="color:#ff79c6">(</span>Comparator<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> K<span style="color:#ff79c6">&gt;</span> comparator<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">comparator</span> <span style="color:#ff79c6">=</span> comparator<span style="color:#ff79c6">;</span>
@@ -317,19 +330,19 @@
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="四方法分析">四、方法分析</h2>
+<h1 id="四方法分析">四、方法分析</h1>
 <p><strong>TreeMap</strong> 中的方法分为以下几类。</p>
-<h3 id="41-实现自map接口的方法">4.1 实现自Map接口的方法</h3>
-<p>见：<!-- raw HTML omitted -->java.util.Map<!-- raw HTML omitted --></p>
-<h3 id="42-实现自sortedmap接口的方法">4.2 实现自SortedMap接口的方法</h3>
-<p>见：<!-- raw HTML omitted -->java.util.SortedMap<!-- raw HTML omitted --></p>
-<h3 id="43-实现自navigablemap接口的方法">4.3 实现自NavigableMap接口的方法</h3>
-<p>见：<!-- raw HTML omitted -->java.util.NavigableMap<!-- raw HTML omitted --></p>
-<h3 id="44-继承自abstractmap接口的方法">4.4 继承自AbstractMap接口的方法</h3>
-<p>见，<!-- raw HTML omitted -->java.util.AbstractMap<!-- raw HTML omitted --></p>
-<h3 id="45-treemap自身方法">4.5 TreeMap自身方法</h3>
-<p><strong>TreeMap</strong> 中的大部分方法与 <strong>HashMap.TreeNode</strong> 内部类相似，都使用了 <strong><!-- raw HTML omitted -->红<!-- raw HTML omitted -->黑树</strong> 结构，<strong>变色</strong>、<strong>左旋</strong>、<strong>右旋</strong> 等基本操作也十分相似。</p>
-<p>见：<!-- raw HTML omitted -->HashMap.TreeNode<!-- raw HTML omitted --></p>
+<h2 id="41-实现自map接口的方法">4.1 实现自Map接口的方法</h2>
+<p>见：<a href="/post/java/map-source-analysis/">java.util.Map</a></p>
+<h2 id="42-实现自sortedmap接口的方法">4.2 实现自SortedMap接口的方法</h2>
+<p>见：<a href="/post/java/sortedmap-source-analysis/">java.util.SortedMap</a></p>
+<h2 id="43-实现自navigablemap接口的方法">4.3 实现自NavigableMap接口的方法</h2>
+<p>见：<a href="/post/java/navigablemap-source-analysis/">java.util.NavigableMap</a></p>
+<h2 id="44-继承自abstractmap接口的方法">4.4 继承自AbstractMap接口的方法</h2>
+<p>见，<a href="/post/java/abstractmap-source-analysis/">java.util.AbstractMap</a></p>
+<h2 id="45-treemap自身方法">4.5 TreeMap自身方法</h2>
+<p><strong>TreeMap</strong> 中的大部分方法与 <strong>HashMap.TreeNode</strong> 内部类相似，都使用了 <strong>红黑树</strong> 结构，<strong>变色</strong>、<strong>左旋</strong>、<strong>右旋</strong> 等基本操作也十分相似。</p>
+<p>见：<a href="/post/java/hashmap-treenode/">HashMap.TreeNode</a></p>
 
 
                 

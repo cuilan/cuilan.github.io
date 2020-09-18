@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,11 +238,12 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一abstractqueue特点或规范">一、AbstractQueue特点或规范</a></li>
+    <li><a href="#二构造器">二、构造器</a></li>
+    <li><a href="#三方法分析">三、方法分析</a>
       <ul>
-        <li><a href="#一abstractqueue特点或规范">一、AbstractQueue特点或规范</a></li>
-        <li><a href="#二构造器">二、构造器</a></li>
-        <li><a href="#三方法分析">三、方法分析</a></li>
+        <li><a href="#31-继承自-abstractcollection-的方法">3.1 继承自 AbstractCollection 的方法</a></li>
+        <li><a href="#32-继承自-abstractqueue-的方法">3.2 继承自 AbstractQueue 的方法</a></li>
       </ul>
     </li>
   </ul>
@@ -256,8 +257,7 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一abstractqueue特点或规范">一、AbstractQueue特点或规范</h2>
+<h1 id="一abstractqueue特点或规范">一、AbstractQueue特点或规范</h1>
 <p><strong>AbstractQueue</strong> 类提供 <strong>队列Queue</strong> 操作的基础实现。此类不允许 <strong><code>null</code></strong> 元素。</p>
 <p>如果操作没有找到元素，则会抛出异常，而不会返回 <strong><code>false</code></strong> 或 <strong><code>null</code></strong>。</p>
 <ul>
@@ -275,14 +275,14 @@
 </ul>
 <p>如果无法满足特定要求，可继承 <strong><code>AbstractCollection</code></strong>。</p>
 <hr>
-<h2 id="二构造器">二、构造器</h2>
+<h1 id="二构造器">二、构造器</h1>
 <p>唯一构造器，由子类实现提供 <strong>Collection</strong> 规范中的两个构造器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#50fa7b">AbstractQueue</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="三方法分析">三、方法分析</h2>
-<h3 id="31-继承自-abstractcollection-的方法">3.1 继承自 AbstractCollection 的方法</h3>
-<h4 id="adde-方法">add(E) 方法</h4>
+<h1 id="三方法分析">三、方法分析</h1>
+<h2 id="31-继承自-abstractcollection-的方法">3.1 继承自 AbstractCollection 的方法</h2>
+<h3 id="adde-方法">add(E) 方法</h3>
 <p>将指定的元素插入此队列，如果插入成功，则返回 <strong><code>true</code></strong>，否则抛出 <strong><code>IllegalStateException</code></strong> 异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>offer<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">))</span>
@@ -290,7 +290,7 @@
     <span style="color:#ff79c6">else</span>
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> IllegalStateException<span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;Queue full&#34;</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="addallcollection-方法">addAll(Collection) 方法</h4>
+</code></pre></div><h3 id="addallcollection-方法">addAll(Collection) 方法</h3>
 <p>将指定集合中的所有元素添加到当前队列中。此实现迭代指定的集合，并依次将迭代器返回的每个元素添加到当前队列中。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">addAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> E<span style="color:#ff79c6">&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>c <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span>
@@ -303,14 +303,14 @@
             modified <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> modified<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="clear-方法">clear() 方法</h4>
+</code></pre></div><h3 id="clear-方法">clear() 方法</h3>
 <p>删除队列中的所有元素。重复调用 <strong><code>poll()</code></strong> 方法直到返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">clear</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">(</span>poll<span style="color:#ff79c6">()</span> <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span>
         <span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="32-继承自-abstractqueue-的方法">3.2 继承自 AbstractQueue 的方法</h3>
-<h4 id="element-方法">element() 方法</h4>
+</code></pre></div><h2 id="32-继承自-abstractqueue-的方法">3.2 继承自 AbstractQueue 的方法</h2>
+<h3 id="element-方法">element() 方法</h3>
 <p>删除并返回此队列的头元素。此方法与 <strong><code>peek()</code></strong> 的不同之处仅在于，如果此队列为空，则抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">element</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     E x <span style="color:#ff79c6">=</span> peek<span style="color:#ff79c6">();</span>
@@ -319,7 +319,7 @@
     <span style="color:#ff79c6">else</span>
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> NoSuchElementException<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="remove-方法">remove() 方法</h4>
+</code></pre></div><h3 id="remove-方法">remove() 方法</h3>
 <p>删除并返回此队列的头元素。此方法与 <strong><code>poll()</code></strong> 的不同之处仅在于，如果此队列为空，则抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">remove</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     E x <span style="color:#ff79c6">=</span> poll<span style="color:#ff79c6">();</span>

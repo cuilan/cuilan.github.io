@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,12 +238,25 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一hashset特点或规范">一、HashSet特点或规范</a>
       <ul>
-        <li><a href="#一hashset特点或规范">一、HashSet特点或规范</a></li>
-        <li><a href="#二成员变量">二、成员变量</a></li>
-        <li><a href="#三构造器">三、构造器</a></li>
-        <li><a href="#四实现方法">四、实现方法</a></li>
+        <li><a href="#11-性能">1.1 性能</a></li>
+        <li><a href="#12-线程不安全">1.2 线程不安全</a></li>
+      </ul>
+    </li>
+    <li><a href="#二成员变量">二、成员变量</a></li>
+    <li><a href="#三构造器">三、构造器</a>
+      <ul>
+        <li><a href="#空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</a></li>
+        <li><a href="#参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</a></li>
+        <li><a href="#指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</a></li>
+        <li><a href="#有序-hashset-构造器">有序 HashSet 构造器</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实现方法">四、实现方法</a>
+      <ul>
+        <li><a href="#41-继承自abstractcollection的方法">4.1 继承自AbstractCollection的方法</a></li>
+        <li><a href="#42-其他方法">4.2 其他方法</a></li>
       </ul>
     </li>
   </ul>
@@ -257,43 +270,42 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一hashset特点或规范">一、HashSet特点或规范</h2>
+<h1 id="一hashset特点或规范">一、HashSet特点或规范</h1>
 <p><strong>HashSet</strong> 类是 <strong>Set</strong> 接口的实现类，底层由 <strong><code>java.util.HashMap</code></strong> 实现。</p>
 <ul>
 <li>无序，不保证集合的迭代顺序</li>
 <li>允许 <strong><code>null</code></strong> 元素。</li>
 </ul>
-<h3 id="11-性能">1.1 性能</h3>
+<h2 id="11-性能">1.1 性能</h2>
 <ul>
 <li>该类的基本操作（<strong><code>add(E)</code></strong>、<strong><code>remove(Object)</code></strong>、<strong><code>contains(Object)</code></strong>、<strong><code>size()</code></strong>）时间性能较高，时间复杂度为 <strong>O(1)</strong>，前提是 <strong>Hash</strong> 必须正确分布。</li>
 <li>迭代此集合需要的时间与 HashSet 实例的大小（元素数量）加上后备 HashMap 实例的“容量”（桶数）之和成比例。因此，如果迭代性能很重要，则不要将初始容量设置得太高（或负载因子太低）。</li>
 </ul>
-<h3 id="12-线程不安全">1.2 线程不安全</h3>
+<h2 id="12-线程不安全">1.2 线程不安全</h2>
 <p>注意，HashSet 线程不安全。如果多个线程同时访问，并且至少有一个线程修改了该 Set，则必须在外部进行同步。最好在创建完成时添加同步，以防止对 Set 的意外不同步访问：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Set s <span style="color:#ff79c6">=</span> Collections<span style="color:#ff79c6">.</span><span style="color:#50fa7b">synchronizedSet</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> HashSet<span style="color:#ff79c6">(...));</span>
 </code></pre></div><p>注意：线程并发访问，可能引发 <strong>ConcurrentModificationException</strong> 异常。</p>
 <hr>
-<h2 id="二成员变量">二、成员变量</h2>
+<h1 id="二成员变量">二、成员变量</h1>
 <p><strong>HashSet</strong> 底层由 <strong>HashMap</strong> 实现，由此来保证不可重复性。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">transient</span> HashMap<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">,</span>Object<span style="color:#ff79c6">&gt;</span> map<span style="color:#ff79c6">;</span>
 
 <span style="color:#6272a4">// 关联 HashMap 中的 Object 虚拟值
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> Object PRESENT <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> Object<span style="color:#ff79c6">();</span>
 </code></pre></div><hr>
-<h2 id="三构造器">三、构造器</h2>
-<h3 id="空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</h3>
+<h1 id="三构造器">三、构造器</h1>
+<h2 id="空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</h2>
 <p>使用 HashMap 实例，默认初始容量为 **16 **，默认加载因子为：<strong>0.75</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashSet</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashMap<span style="color:#ff79c6">&lt;&gt;();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</h3>
+</code></pre></div><h2 id="参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</h2>
 <p>使用 HashMap 实例，初始容量为：集合的 <strong>size / 0.75 + 1倍</strong>，默认加载因子为：<strong>0.75</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashSet</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> E<span style="color:#ff79c6">&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashMap<span style="color:#ff79c6">&lt;&gt;(</span>Math<span style="color:#ff79c6">.</span><span style="color:#50fa7b">max</span><span style="color:#ff79c6">((</span><span style="color:#8be9fd">int</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">(</span>c<span style="color:#ff79c6">.</span><span style="color:#50fa7b">size</span><span style="color:#ff79c6">()/.</span><span style="color:#50fa7b">75f</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">+</span> 1<span style="color:#ff79c6">,</span> 16<span style="color:#ff79c6">));</span>
     addAll<span style="color:#ff79c6">(</span>c<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</h3>
+</code></pre></div><h2 id="指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</h2>
 <p>构造一个空的 HashSet，使用 HashMap 实例，可指定 <strong>初始容量</strong> 和 <strong>加载因子</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashSet</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">float</span> loadFactor<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashMap<span style="color:#ff79c6">&lt;&gt;(</span>initialCapacity<span style="color:#ff79c6">,</span> loadFactor<span style="color:#ff79c6">);</span>
@@ -303,14 +315,14 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashSet</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashMap<span style="color:#ff79c6">&lt;&gt;(</span>initialCapacity<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="有序-hashset-构造器">有序 HashSet 构造器</h3>
+</code></pre></div><h2 id="有序-hashset-构造器">有序 HashSet 构造器</h2>
 <p>构造一个空的 LinkedHashSet，包访问权限，仅由子类 <strong><code>java.util.LinkedHashSet</code></strong> 使用。使用 LinkedHashMap 实例，可指定 <strong>初始容量</strong> 和 <strong>加载因子</strong>，<strong>dummy</strong> 参数仅作为标志位，用于区分其他构造器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">HashSet<span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">float</span> loadFactor<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">boolean</span> dummy<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> LinkedHashMap<span style="color:#ff79c6">&lt;&gt;(</span>initialCapacity<span style="color:#ff79c6">,</span> loadFactor<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="四实现方法">四、实现方法</h2>
-<h3 id="41-继承自abstractcollection的方法">4.1 继承自AbstractCollection的方法</h3>
+<h1 id="四实现方法">四、实现方法</h1>
+<h2 id="41-继承自abstractcollection的方法">4.1 继承自AbstractCollection的方法</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 获取迭代器，迭代器返回的元素无序
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">keySet</span><span style="color:#ff79c6">().</span><span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">();</span>
@@ -345,7 +357,7 @@
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">clear</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">clear</span><span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="42-其他方法">4.2 其他方法</h3>
+</code></pre></div><h2 id="42-其他方法">4.2 其他方法</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> Object <span style="color:#50fa7b">clone</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">try</span> <span style="color:#ff79c6">{</span>
         HashSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> newSet <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">(</span>HashSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;)</span> <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">clone</span><span style="color:#ff79c6">();</span>

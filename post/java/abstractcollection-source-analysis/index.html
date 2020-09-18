@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,10 +238,13 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一abstractcollection类继承规范">一、AbstractCollection类继承规范</a></li>
+    <li><a href="#二成员分析">二、成员分析</a>
       <ul>
-        <li><a href="#一abstractcollection类继承规范">一、AbstractCollection类继承规范</a></li>
-        <li><a href="#二成员分析">二、成员分析</a></li>
+        <li><a href="#21-常量">2.1 常量</a></li>
+        <li><a href="#22-构造方法">2.2 构造方法</a></li>
+        <li><a href="#23-抽象方法">2.3 抽象方法</a></li>
+        <li><a href="#24-实现方法">2.4 实现方法</a></li>
       </ul>
     </li>
   </ul>
@@ -255,8 +258,7 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一abstractcollection类继承规范">一、AbstractCollection类继承规范</h2>
+<h1 id="一abstractcollection类继承规范">一、AbstractCollection类继承规范</h1>
 <ul>
 <li><strong><code>AbstractCollection</code></strong> 抽象类提供了 <strong><code>Collection</code></strong> 接口的骨干实现，以最大限度地减少实现 <strong><code>Collection</code></strong> 接口所需的工作量。</li>
 <li>如需实现一个 <strong>不可修改的集合</strong>，只需要继承此类并提供 <strong><code>iterator()</code></strong> 方法和 <strong><code>size()</code></strong> 方法的实现。（<strong><code>iterator()</code></strong> 方法返回的迭代器必须实现 <strong><code>hasNext()</code></strong> 方法和 **<code>next()</code>**方法。）</li>
@@ -265,25 +267,25 @@
 <li>每个非抽象的方法都有自己的实现，如果子类需要特殊的实现，则可以覆盖对应的方法。</li>
 </ul>
 <hr>
-<h2 id="二成员分析">二、成员分析</h2>
-<h3 id="21-常量">2.1 常量</h3>
+<h1 id="二成员分析">二、成员分析</h1>
+<h2 id="21-常量">2.1 常量</h2>
 <p>集合的最大数组大小。某些虚拟机在数组中保留一些 <code>header words</code>。如果尝试分配更大的数组可能会导致 <code>OutOfMemoryError</code>：请求的数组大小超过VM限制。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> MAX_ARRAY_SIZE <span style="color:#ff79c6">=</span> Integer<span style="color:#ff79c6">.</span><span style="color:#50fa7b">MAX_VALUE</span> <span style="color:#ff79c6">-</span> 8<span style="color:#ff79c6">;</span>
-</code></pre></div><h3 id="22-构造方法">2.2 构造方法</h3>
+</code></pre></div><h2 id="22-构造方法">2.2 构造方法</h2>
 <p>唯一的构造函数。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#50fa7b">AbstractCollection</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="23-抽象方法">2.3 抽象方法</h3>
+</code></pre></div><h2 id="23-抽象方法">2.3 抽象方法</h2>
 <p>方法描述见：<!-- raw HTML omitted --><strong><code>java.util.Collection</code></strong><!-- raw HTML omitted --> 接口。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">abstract</span> Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">();</span>
 <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">size</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h3 id="24-实现方法">2.4 实现方法</h3>
-<h4 id="isempty方法">isEmpty()方法</h4>
+</code></pre></div><h2 id="24-实现方法">2.4 实现方法</h2>
+<h3 id="isempty方法">isEmpty()方法</h3>
 <p>如果挡墙集合不包含任何元素，则返回 <strong><code>true</code></strong>。依赖子类实现的 <strong><code>size()</code></strong> 方法，判断size是否等于0。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">isEmpty</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> size<span style="color:#ff79c6">()</span> <span style="color:#ff79c6">==</span> 0<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="containsobject-o方法">contains(Object o)方法</h4>
+</code></pre></div><h3 id="containsobject-o方法">contains(Object o)方法</h3>
 <p>如果当前集合中包含指定的元素，则返回 <strong><code>true</code></strong>。
 即：当且仅当此集合包含至少一个元素e时才返回true，<strong><code>(o == null ? e == null : o.equals(e))</code></strong>。
 此实现迭代集合中的元素，依次检查每个元素是否与指定元素相等。
@@ -301,7 +303,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="toarray方法">toArray()方法</h4>
+</code></pre></div><h3 id="toarray方法">toArray()方法</h3>
 <p>返回包含当前集合中所有元素的数组。
 如果当前集合的迭代器返回的元素是有序的，则此方法必须以相同的顺序返回元素数组。
 当前集合不会保留对数组中元素的引用，所以返回的数组是“安全的”。
@@ -317,7 +319,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> it<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hasNext</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">?</span> finishToArray<span style="color:#ff79c6">(</span>r<span style="color:#ff79c6">,</span> it<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">:</span> r<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="toarrayt-a方法">toArray(T[] a)方法</h4>
+</code></pre></div><h3 id="toarrayt-a方法">toArray(T[] a)方法</h3>
 <p>返回包含当前集合中所有元素的数组，并按照类型放入指定数组 <strong>a</strong> 中。如果数组 <code>length</code> 小于当前集合，则创建一个新的数组并放入集合中的元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> T<span style="color:#ff79c6">[]</span> <span style="color:#50fa7b">toArray</span><span style="color:#ff79c6">(</span>T<span style="color:#ff79c6">[]</span> a<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#6272a4">// 预估数组的大小为集合的 size
@@ -346,7 +348,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#6272a4">// 元素大于预期的大小
 </span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">return</span> it<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hasNext</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">?</span> finishToArray<span style="color:#ff79c6">(</span>r<span style="color:#ff79c6">,</span> it<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">:</span> r<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="finishtoarrayt-r-iterator-it方法">finishToArray(T[] r, Iterator&lt;?&gt; it)方法</h4>
+</code></pre></div><h3 id="finishtoarrayt-r-iterator-it方法">finishToArray(T[] r, Iterator&lt;?&gt; it)方法</h3>
 <p>当迭代器返回的元素多于预期时，则重新分配在 <strong><code>toArray</code></strong> 中使用的数组，并完成从迭代器填充它。</p>
 <p>迭代器每次迭代到下一个元素时，判断 <strong><code>cap</code></strong> 数组的长度等于 <strong><code>i</code></strong> 当前迭代的元素数量，就将 cap 数组的长度增加 <strong><code>cap x 1.5 + 1</code></strong>，并判断是否超出了虚拟机最大限制，如果超出限制就调用 <strong><code>hugeCapacity()</code></strong> 方法调整大小。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> T<span style="color:#ff79c6">[]</span> <span style="color:#50fa7b">finishToArray</span><span style="color:#ff79c6">(</span>T<span style="color:#ff79c6">[]</span> r<span style="color:#ff79c6">,</span> Iterator<span style="color:#ff79c6">&lt;?&gt;</span> it<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -365,7 +367,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#6272a4">// 修剪过度分配
 </span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>i <span style="color:#ff79c6">==</span> r<span style="color:#ff79c6">.</span><span style="color:#50fa7b">length</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> r <span style="color:#ff79c6">:</span> Arrays<span style="color:#ff79c6">.</span><span style="color:#50fa7b">copyOf</span><span style="color:#ff79c6">(</span>r<span style="color:#ff79c6">,</span> i<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="hugecapacityint-mincapacity方法">hugeCapacity(int minCapacity)方法</h4>
+</code></pre></div><h3 id="hugecapacityint-mincapacity方法">hugeCapacity(int minCapacity)方法</h3>
 <p>调整最大容量，如果小于0，抛出 <strong><code>OutOfMemoryError</code></strong> 异常，如果大于虚拟机最大限制，则设置为常量 <strong><code>MAX_ARRAY_SIZE</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hugeCapacity</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> minCapacity<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>minCapacity <span style="color:#ff79c6">&lt;</span> 0<span style="color:#ff79c6">)</span> <span style="color:#6272a4">// overflow
@@ -375,7 +377,7 @@ iterator()方法依赖子类的实现。</p>
         Integer<span style="color:#ff79c6">.</span><span style="color:#50fa7b">MAX_VALUE</span> <span style="color:#ff79c6">:</span>
         MAX_ARRAY_SIZE<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="adde-e方法">add(E e)方法</h4>
+</code></pre></div><h3 id="adde-e方法">add(E e)方法</h3>
 <ul>
 <li><strong>AbstractCollection</strong> 没有提供 add() 方法的具体实现，只提供子类实现的规范，始终抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</li>
 <li>如果添加成功（集合因调用导致改变），则返回 <strong><code>true</code></strong>。</li>
@@ -387,7 +389,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#6272a4">// 不支持的操作类型
 </span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> UnsupportedOperationException<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removeobject-o方法">remove(Object o)方法</h4>
+</code></pre></div><h3 id="removeobject-o方法">remove(Object o)方法</h3>
 <ul>
 <li>从当前集合中移除指定元素的第一个出现的实例（如果存在）。</li>
 <li>此子类实现的 <strong><code>iterator()</code></strong> 方法查找指定的元素。如果找到该元素，则由此迭代器的 <strong><code>remove()</code></strong> 方法从集合中删除该元素。</li>
@@ -409,7 +411,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="containsallcollection-c方法">containsAll(Collection&lt;?&gt; c)方法</h4>
+</code></pre></div><h3 id="containsallcollection-c方法">containsAll(Collection&lt;?&gt; c)方法</h3>
 <p>如果当前集合包含指定 Collection 中的所有元素，则返回 <strong><code>true</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">containsAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">(</span>Object e <span style="color:#ff79c6">:</span> c<span style="color:#ff79c6">)</span>
@@ -417,7 +419,7 @@ iterator()方法依赖子类的实现。</p>
             <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="addallcollection-extends-e-c方法">addAll(Collection&lt;? extends E&gt; c)方法</h4>
+</code></pre></div><h3 id="addallcollection-extends-e-c方法">addAll(Collection&lt;? extends E&gt; c)方法</h3>
 <p>将指定集合中的所有元素条件至当前集合中，此方法依赖 <strong><code>add()</code></strong> 方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">addAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> E<span style="color:#ff79c6">&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">boolean</span> modified <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
@@ -427,7 +429,7 @@ iterator()方法依赖子类的实现。</p>
 </span><span style="color:#6272a4"></span>            modified <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> modified<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removeallcollection-c方法">removeAll(Collection&lt;?&gt; c)方法</h4>
+</code></pre></div><h3 id="removeallcollection-c方法">removeAll(Collection&lt;?&gt; c)方法</h3>
 <p>从当前集合，删除指定集合 c 中的全部元素，且该指定的集合不可为 null。
 <strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">removeAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -443,7 +445,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> modified<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="retainallcollection-c方法">retainAll(Collection&lt;?&gt; c)方法</h4>
+</code></pre></div><h3 id="retainallcollection-c方法">retainAll(Collection&lt;?&gt; c)方法</h3>
 <p>仅保留当前集合包含了指定集合 c 中的元素，即：删除当前集合中不包含指定集合 c 中的元素。
 <strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">retainAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -459,7 +461,7 @@ iterator()方法依赖子类的实现。</p>
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> modified<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="clear方法">clear()方法</h4>
+</code></pre></div><h3 id="clear方法">clear()方法</h3>
 <p><strong>清空集合</strong>，将当前集合中的全部元素删除。子类实现通常会以 <strong>高效的实现</strong> 来覆盖此方法。
 <strong>注意</strong>：如果当前子类实现的 <code>iterator()</code> 方法返回的迭代器未实现 <code>remove()</code> 方法，且当前集合包含了指定的对象，则抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">clear</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
@@ -469,7 +471,7 @@ iterator()方法依赖子类的实现。</p>
         it<span style="color:#ff79c6">.</span><span style="color:#50fa7b">remove</span><span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="tostring方法">toString()方法</h4>
+</code></pre></div><h3 id="tostring方法">toString()方法</h3>
 <p>返回当前集合的字符串表现形式，按照迭代器返回的顺序进行字符串拼接。
 覆盖 <strong><code>Object</code></strong> 的 <strong><code>toString()</code></strong> 方法，以 <strong><code>[</code></strong> 开始，以 <strong><code>]</code></strong> 结束，相邻元素以 <strong><code>, </code></strong> 逗号 + 空格来间隔，元素调用 <strong><code>String.valueOf(Object)</code></strong> 转换字符串形式。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> String <span style="color:#50fa7b">toString</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>

@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,11 +238,25 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一navigableset接口特点或规范">一、NavigableSet接口特点或规范</a></li>
+    <li><a href="#二方法描述">二、方法描述</a>
       <ul>
-        <li><a href="#一navigableset接口特点或规范">一、NavigableSet接口特点或规范</a></li>
-        <li><a href="#二方法描述">二、方法描述</a></li>
-        <li><a href="#三继承自-sortedset-的方法">三、继承自 SortedSet 的方法</a></li>
+        <li><a href="#lowere方法">lower(E)方法</a></li>
+        <li><a href="#floore方法">floor(E)方法</a></li>
+        <li><a href="#ceilinge方法">ceiling(E)方法</a></li>
+        <li><a href="#highere方法">higher(E)方法</a></li>
+        <li><a href="#pollfirst方法">pollFirst()方法</a></li>
+        <li><a href="#polllast方法">pollLast()方法</a></li>
+        <li><a href="#iterator方法">iterator()方法</a></li>
+        <li><a href="#descendingset方法">descendingSet()方法</a></li>
+        <li><a href="#descendingiterator方法">descendingIterator()方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#三继承自-sortedset-的方法">三、继承自 SortedSet 的方法</a>
+      <ul>
+        <li><a href="#subset方法">subSet()方法</a></li>
+        <li><a href="#headset方法">headSet()方法</a></li>
+        <li><a href="#tailset方法">tailSet()方法</a></li>
       </ul>
     </li>
   </ul>
@@ -256,8 +270,7 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一navigableset接口特点或规范">一、NavigableSet接口特点或规范</h2>
+<h1 id="一navigableset接口特点或规范">一、NavigableSet接口特点或规范</h1>
 <ul>
 <li><strong><code>java.util.NavigableSet</code></strong> 接口在 <strong><code>java.util.SortedSet</code></strong> 基础上增加了导航功能，使用导航方法扩展的 SortedSet 报告给定搜索目标的最接近匹配。</li>
 <li><strong><code>lower()</code></strong>，<strong><code>floor()</code></strong>，<strong><code>ceiling()</code></strong> 和 <strong><code>higher()</code></strong> 方法返回元素分别小于，小于或等于，大于或等于，大于给定元素，如果没有这样的元素则返回 <strong><code>null</code></strong>。</li>
@@ -265,29 +278,29 @@
 <li>任何 NavigableSet 实现类的的子集都必须实现 NavigableSet 接口。</li>
 </ul>
 <hr>
-<h2 id="二方法描述">二、方法描述</h2>
-<h4 id="lowere方法">lower(E)方法</h4>
+<h1 id="二方法描述">二、方法描述</h1>
+<h2 id="lowere方法">lower(E)方法</h2>
 <p>返回当前 Set 中<strong>小于</strong>指定元素的<strong>最大元素</strong>，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">lower</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="floore方法">floor(E)方法</h4>
+</code></pre></div><h2 id="floore方法">floor(E)方法</h2>
 <p>返回当前 Set 中<strong>小于或等于</strong>指定元素的<strong>最大元素</strong>，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">floor</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="ceilinge方法">ceiling(E)方法</h4>
+</code></pre></div><h2 id="ceilinge方法">ceiling(E)方法</h2>
 <p>返回当前 Set 中<strong>大于或等于</strong>指定元素的<strong>最小元素</strong>，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">ceiling</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="highere方法">higher(E)方法</h4>
+</code></pre></div><h2 id="highere方法">higher(E)方法</h2>
 <p>返回当前 Set 中<strong>大于</strong>指定元素的<strong>最小元素</strong>，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">higher</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="pollfirst方法">pollFirst()方法</h4>
+</code></pre></div><h2 id="pollfirst方法">pollFirst()方法</h2>
 <p>检索并删除**第一个（最低）**元素，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">pollFirst</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="polllast方法">pollLast()方法</h4>
+</code></pre></div><h2 id="polllast方法">pollLast()方法</h2>
 <p>检索并删除**最后一个（最高）**元素，如果没有这样的元素，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">pollLast</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="iterator方法">iterator()方法</h4>
+</code></pre></div><h2 id="iterator方法">iterator()方法</h2>
 <p>以<strong>升序</strong>返回当前 Set 中元素的迭代器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">iterator</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="descendingset方法">descendingSet()方法</h4>
+</code></pre></div><h2 id="descendingset方法">descendingSet()方法</h2>
 <ul>
 <li>返回当前 Set 中元素的<strong>降序</strong>视图。</li>
 <li>对当前 Set 的修改将反映在降序集中。</li>
@@ -295,24 +308,24 @@
 <li>表达式：<strong><code>s.descendingSet().descendingSet()</code></strong> 返回 s 的视图等效于 s。</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">NavigableSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">descendingSet</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="descendingiterator方法">descendingIterator()方法</h4>
+</code></pre></div><h2 id="descendingiterator方法">descendingIterator()方法</h2>
 <p>以<strong>降序</strong>返回当前 Set 中元素的迭代器。等效于 <strong><code>descendingSet().iterator()</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">descendingIterator</span><span style="color:#ff79c6">();</span>
 </code></pre></div><hr>
-<h2 id="三继承自-sortedset-的方法">三、继承自 SortedSet 的方法</h2>
-<h4 id="subset方法">subSet()方法</h4>
+<h1 id="三继承自-sortedset-的方法">三、继承自 SortedSet 的方法</h1>
+<h2 id="subset方法">subSet()方法</h2>
 <p>返回当前 Set 的部分视图，其元素范围从 <strong>fromElement</strong> 到 <strong>toElement</strong>；<strong>fromInclusive</strong>：是否包含头；<strong>toInclusive</strong>：是否包含尾。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 等效于 subSet(fromElement, true, toElement, false)
 </span><span style="color:#6272a4"></span>SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">subSet</span><span style="color:#ff79c6">(</span>E fromElement<span style="color:#ff79c6">,</span> E toElement<span style="color:#ff79c6">);</span>
 
 NavigableSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">subSet</span><span style="color:#ff79c6">(</span>E fromElement<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">boolean</span> fromInclusive<span style="color:#ff79c6">,</span> E toElement<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">boolean</span> toInclusive<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="headset方法">headSet()方法</h4>
+</code></pre></div><h2 id="headset方法">headSet()方法</h2>
 <p>返回当前 Set 的部分视图，其元素范围从 Set 起始至 <strong>toElement</strong>；<strong>inclusive</strong>：是否包含尾，即：控制是否包含元素 toElement 元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 等效于 headSet(toElement, false)
 </span><span style="color:#6272a4"></span>SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">headSet</span><span style="color:#ff79c6">(</span>E toElement<span style="color:#ff79c6">);</span>
 
 NavigableSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">headSet</span><span style="color:#ff79c6">(</span>E toElement<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">boolean</span> inclusive<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="tailset方法">tailSet()方法</h4>
+</code></pre></div><h2 id="tailset方法">tailSet()方法</h2>
 <p>返回当前 Set 的部分视图，其元素范围从 <strong>fromElement</strong> 至 Set 结尾；<strong>inclusive</strong>：是否包含头，即：控制是否包含元素 fromElement 元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 等效于 tailSet(fromElement, true)
 </span><span style="color:#6272a4"></span>SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">tailSet</span><span style="color:#ff79c6">(</span>E fromElement<span style="color:#ff79c6">);</span>

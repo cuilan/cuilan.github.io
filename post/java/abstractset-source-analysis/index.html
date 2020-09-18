@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,11 +238,13 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一abstractset特点或规范">一、AbstractSet特点或规范</a></li>
+    <li><a href="#二构造器">二、构造器</a></li>
+    <li><a href="#三实现方法">三、实现方法</a>
       <ul>
-        <li><a href="#一abstractset特点或规范">一、AbstractSet特点或规范</a></li>
-        <li><a href="#二构造器">二、构造器</a></li>
-        <li><a href="#三实现方法">三、实现方法</a></li>
+        <li><a href="#equalsobject-方法">equals(Object) 方法</a></li>
+        <li><a href="#hashcode-方法">hashCode() 方法</a></li>
+        <li><a href="#removeallcollection-方法">removeAll(Collection) 方法</a></li>
       </ul>
     </li>
   </ul>
@@ -256,20 +258,19 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一abstractset特点或规范">一、AbstractSet特点或规范</h2>
+<h1 id="一abstractset特点或规范">一、AbstractSet特点或规范</h1>
 <p><strong>AbstractSet</strong> 类提供了 <strong>Set</strong> 接口的基础实现，以最大限度地减少实现 <strong>Set</strong> 接口所需的工作量。</p>
 <ul>
 <li>子类通过此类实现集合 与 通过实现 <strong>AbstractCollection</strong> 类实现集合的过程相同，但必须遵循 <strong>Set</strong> 接口的规范。</li>
 <li>AbstractSet 类不会覆盖 AbstractCollection 类中的任何实现。</li>
 <li>只是添加了 <strong><code>equals()</code></strong> 和 <strong><code>hashCode()</code></strong> 的实现。</li>
 </ul>
-<h2 id="二构造器">二、构造器</h2>
+<h1 id="二构造器">二、构造器</h1>
 <p>唯一构造器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#50fa7b">AbstractSet</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h2 id="三实现方法">三、实现方法</h2>
-<h4 id="equalsobject-方法">equals(Object) 方法</h4>
+</code></pre></div><h1 id="三实现方法">三、实现方法</h1>
+<h2 id="equalsobject-方法">equals(Object) 方法</h2>
 <p>将指定对象与当前 Set 进行比较。</p>
 <ul>
 <li>如果指定对象也是一个集合，且与当前 Set 引用相同则返回 <strong><code>true</code></strong>。</li>
@@ -291,7 +292,7 @@
         <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="hashcode-方法">hashCode() 方法</h4>
+</code></pre></div><h2 id="hashcode-方法">hashCode() 方法</h2>
 <p>返回此 Set 的哈希值。Set 的哈希值是集合中所有元素的哈希值的 <strong>总和</strong>，其中空元素的哈希值为 <strong>0</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hashCode</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> h <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
@@ -303,7 +304,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> h<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removeallcollection-方法">removeAll(Collection) 方法</h4>
+</code></pre></div><h2 id="removeallcollection-方法">removeAll(Collection) 方法</h2>
 <p>从当前集合中删除指定集合中的所有元素。</p>
 <p><strong>注意</strong>，如果迭代器方法返回的迭代器未实现 <strong><code>remove()</code></strong> 方法，则此实现将抛出 <strong><code>UnsupportedOperationException</code></strong> 异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">removeAll</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>

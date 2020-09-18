@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,13 +238,16 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一linkedhashset特点或规范">一、LinkedHashSet特点或规范</a></li>
+    <li><a href="#二构造器">二、构造器</a>
       <ul>
-        <li><a href="#一linkedhashset特点或规范">一、LinkedHashSet特点或规范</a></li>
-        <li><a href="#二构造器">二、构造器</a></li>
-        <li><a href="#三其他方法">三、其他方法</a></li>
+        <li><a href="#空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</a></li>
+        <li><a href="#参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</a></li>
+        <li><a href="#指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</a></li>
+        <li><a href="#仅指定初始容量的构造器">仅指定初始容量的构造器</a></li>
       </ul>
     </li>
+    <li><a href="#三其他方法">三、其他方法</a></li>
   </ul>
 </nav>
                 
@@ -256,36 +259,35 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一linkedhashset特点或规范">一、LinkedHashSet特点或规范</h2>
+<h1 id="一linkedhashset特点或规范">一、LinkedHashSet特点或规范</h1>
 <p><strong><code>java.util.LinkedHashSet</code></strong> 类是 <strong>Set</strong> 接口的 <strong>哈希表</strong> 和 <strong>链表</strong> 双实现，保证迭代顺序。</p>
 <p>此实现与 HashSet 的不同之处在于它维护了一个双向链表。</p>
 <p>注意，如果将已存在的元素重新插入到集合中，不会影响插入顺序。</p>
 <hr>
-<h2 id="二构造器">二、构造器</h2>
-<h3 id="空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</h3>
+<h1 id="二构造器">二、构造器</h1>
+<h2 id="空参构造器遵循-collection-接口规范">空参构造器（遵循 Collection 接口规范）</h2>
 <p>调用父类构造器，使用 LinkedHashSet 实例，默认初始容量为 **16 **，默认加载因子为：<strong>0.75</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">LinkedHashSet</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">(</span>16<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">.</span><span style="color:#50fa7b">75f</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</h3>
+</code></pre></div><h2 id="参数为-collection-类型的构造器遵循-collection-接口规范">参数为 Collection 类型的构造器（遵循 Collection 接口规范）</h2>
 <p>调用父类构造器，使用 LinkedHashMap 实例，初始容量为：集合的 <strong>2倍</strong>，默认加载因子为：<strong>0.75</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">LinkedHashSet</span><span style="color:#ff79c6">(</span>Collection<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> E<span style="color:#ff79c6">&gt;</span> c<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">(</span>Math<span style="color:#ff79c6">.</span><span style="color:#50fa7b">max</span><span style="color:#ff79c6">(</span>2<span style="color:#ff79c6">*</span>c<span style="color:#ff79c6">.</span><span style="color:#50fa7b">size</span><span style="color:#ff79c6">(),</span> 11<span style="color:#ff79c6">),</span> <span style="color:#ff79c6">.</span><span style="color:#50fa7b">75f</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>
     addAll<span style="color:#ff79c6">(</span>c<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</h3>
+</code></pre></div><h2 id="指定初始容量和加载因子的构造器">指定初始容量和加载因子的构造器</h2>
 <p>构造一个空的 LinkedHashSet，调用父类构造器，使用 LinkedHashMap 实例，可指定 <strong>初始容量</strong> 和 <strong>加载因子</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">LinkedHashSet</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">float</span> loadFactor<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">(</span>initialCapacity<span style="color:#ff79c6">,</span> loadFactor<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="仅指定初始容量的构造器">仅指定初始容量的构造器</h3>
+</code></pre></div><h2 id="仅指定初始容量的构造器">仅指定初始容量的构造器</h2>
 <p>构造一个空的 LinkedHashSet，调用父类构造器，使用 LinkedHashMap 实例，仅支持指定 <strong>初始容量</strong>，加载因子默认为：<strong>0.75</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">LinkedHashSet</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">(</span>initialCapacity<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">.</span><span style="color:#50fa7b">75f</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="三其他方法">三、其他方法</h2>
+<h1 id="三其他方法">三、其他方法</h1>
 <p>获得一个 <strong>有序不可重复</strong> 的分割器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> Spliterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">spliterator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> Spliterators<span style="color:#ff79c6">.</span><span style="color:#50fa7b">spliterator</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">,</span> Spliterator<span style="color:#ff79c6">.</span><span style="color:#50fa7b">DISTINCT</span> <span style="color:#ff79c6">|</span> Spliterator<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ORDERED</span><span style="color:#ff79c6">);</span>

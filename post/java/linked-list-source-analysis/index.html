@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,33 +238,67 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一linkedlist简介">一、LinkedList简介</a>
       <ul>
-        <li><a href="#a-name1一linkedlist简介a"><!-- raw HTML omitted -->一、LinkedList简介<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name2二成员分析a"><!-- raw HTML omitted -->二、成员分析<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name3三链表实现a"><!-- raw HTML omitted -->三、链表实现<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name4四双端队列实现a"><!-- raw HTML omitted -->四、双端队列实现<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name5五队列实现a"><!-- raw HTML omitted -->五、队列实现<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name6六栈实现a"><!-- raw HTML omitted -->六、栈实现<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name7七列表实现a"><!-- raw HTML omitted -->七、列表实现<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name8八迭代器分割器a"><!-- raw HTML omitted -->八、迭代器、分割器<!-- raw HTML omitted --></a></li>
+        <li><a href="#11-linkedlist-继承关系图">1.1 LinkedList 继承关系图</a></li>
+        <li><a href="#12-linkedlist-的特性">1.2 LinkedList 的特性：</a></li>
+        <li><a href="#13-线程同步问题">1.3 线程同步问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#二成员分析">二、成员分析</a>
+      <ul>
+        <li><a href="#21-成员变量">2.1 成员变量</a></li>
+        <li><a href="#22-构造函数">2.2 构造函数</a></li>
+      </ul>
+    </li>
+    <li><a href="#三链表实现">三、链表实现</a>
+      <ul>
+        <li><a href="#31-node内部类">3.1 Node内部类</a></li>
+        <li><a href="#32-连接方法">3.2 连接方法</a></li>
+        <li><a href="#33-删除节点方法">3.3 删除节点方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#四双端队列实现">四、双端队列实现</a>
+      <ul>
+        <li><a href="#41-获取">4.1 获取</a></li>
+        <li><a href="#42-删除">4.2 删除</a></li>
+        <li><a href="#43-添加">4.3 添加</a></li>
+        <li><a href="#44-倒序迭代">4.4 倒序迭代</a></li>
+      </ul>
+    </li>
+    <li><a href="#五队列实现">五、队列实现</a>
+      <ul>
+        <li><a href="#51-获取">5.1 获取</a></li>
+        <li><a href="#52-删除">5.2 删除</a></li>
+        <li><a href="#53-添加">5.3 添加</a></li>
+      </ul>
+    </li>
+    <li><a href="#六栈实现">六、栈实现</a>
+      <ul>
+        <li><a href="#pushe-方法">push(E) 方法</a></li>
+        <li><a href="#pop-方法">pop() 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#七列表实现">七、列表实现</a>
+      <ul>
+        <li><a href="#71-元素操作">7.1 元素操作</a></li>
+        <li><a href="#72-索引操作">7.2 索引操作</a></li>
+        <li><a href="#73-元素搜索操作">7.3 元素搜索操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#八迭代器分割器">八、迭代器、分割器</a>
+      <ul>
+        <li><a href="#listitr">ListItr</a></li>
+        <li><a href="#descendingiterator">DescendingIterator</a></li>
+        <li><a href="#llspliterator">LLSpliterator</a></li>
       </ul>
     </li>
   </ul>
 </nav>
                 
-                <p><!-- raw HTML omitted -->一、LinkedList简介<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->二、成员分析<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->三、链表实现<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->四、双端队列实现<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->五、队列实现<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->六、栈实现<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->七、列表实现<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->八、迭代器、分割器<!-- raw HTML omitted --></p>
-<h2 id="a-name1一linkedlist简介a"><!-- raw HTML omitted -->一、LinkedList简介<!-- raw HTML omitted --></h2>
+                <h1 id="一linkedlist简介">一、LinkedList简介</h1>
 <p><strong><code>java.util.LinkedList</code></strong> 是 <strong><code>java.util.List</code></strong> 接口实现，是一个 <strong>链表</strong> 数据结构的实现，直接继承自 <strong><code>java.util.AbstractSequentialList</code></strong> 抽象有序集合，是一个有序的 List，同时实现了 <strong><code>java.util.List</code></strong> 、 <strong><code>java.util.Deque</code></strong> 接口，也具备 <strong>队列</strong> 、 <strong>双端队列</strong> 的功能。同时，LinkedList 也具有 <strong>栈</strong> 的数据结构。因此 LinkedList 可以满足多种使用场景，是一个功能齐全的集合。</p>
-<!-- raw HTML omitted -->
-<h3 id="11-linkedlist-继承关系图">1.1 LinkedList 继承关系图</h3>
+<h2 id="11-linkedlist-继承关系图">1.1 LinkedList 继承关系图</h2>
 <p>
   <figure>
     <img src="/images/javase/linked-list-source-analysis/linkedlist1.png" alt="LinkedList继承关系">
@@ -272,7 +306,7 @@
   </figure>
 
 </p>
-<h3 id="12-linkedlist-的特性">1.2 LinkedList 的特性：</h3>
+<h2 id="12-linkedlist-的特性">1.2 LinkedList 的特性：</h2>
 <ul>
 <li>实现了 <strong>双链表</strong> 结构</li>
 <li>实现了 <strong>Queue(队列)</strong> 与 <strong>Deque(双端队列)</strong> 结构</li>
@@ -284,12 +318,12 @@
 <li>查询慢、增删快</li>
 <li>底层通过 <strong>Node<!-- raw HTML omitted --></strong> 实现</li>
 </ul>
-<h3 id="13-线程同步问题">1.3 线程同步问题</h3>
+<h2 id="13-线程同步问题">1.3 线程同步问题</h2>
 <p>由于 LinkedList 出于性能的考虑，并没有实现同步，因此在多线程环境下操作时，可能会引发线程安全问题。最好的解决办法是在创建时使用集合工具类 <strong><code>Collections.synchronizedList()</code></strong> 方法进行包装，以防止意外对列表的非同步访问。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">List list <span style="color:#ff79c6">=</span> Collections<span style="color:#ff79c6">.</span><span style="color:#50fa7b">synchronizedList</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> LinkedList<span style="color:#ff79c6">(...));</span>
 </code></pre></div><hr>
-<h2 id="a-name2二成员分析a"><!-- raw HTML omitted -->二、成员分析<!-- raw HTML omitted --></h2>
-<h3 id="21-成员变量">2.1 成员变量</h3>
+<h1 id="二成员分析">二、成员分析</h1>
+<h2 id="21-成员变量">2.1 成员变量</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 集合大小
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">transient</span> <span style="color:#8be9fd">int</span> size <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
 
@@ -306,7 +340,7 @@
 </span><span style="color:#6272a4"> *            (last.next == null &amp;&amp; last.item != null)
 </span><span style="color:#6272a4"> */</span>
 <span style="color:#8be9fd;font-style:italic">transient</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> last<span style="color:#ff79c6">;</span>
-</code></pre></div><h3 id="22-构造函数">2.2 构造函数</h3>
+</code></pre></div><h2 id="22-构造函数">2.2 构造函数</h2>
 <p>遵循 <strong><code>java.util.Collection</code></strong> 规范。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 空参构造器
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">LinkedList</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
@@ -324,8 +358,8 @@
 </span><span style="color:#6272a4"></span>    addAll<span style="color:#ff79c6">(</span>c<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name3三链表实现a"><!-- raw HTML omitted -->三、链表实现<!-- raw HTML omitted --></h2>
-<h3 id="31-node内部类">3.1 Node内部类</h3>
+<h1 id="三链表实现">三、链表实现</h1>
+<h2 id="31-node内部类">3.1 Node内部类</h2>
 <p>内部类 Node 就是实际的节点，用于存放实际元素的地方。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 内部类 Node 节点
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Node</span><span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">{</span>
@@ -342,8 +376,8 @@
         <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">prev</span> <span style="color:#ff79c6">=</span> prev<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="32-连接方法">3.2 连接方法</h3>
-<h4 id="linkfirste-方法前">linkFirst(E) 方法：前</h4>
+</code></pre></div><h2 id="32-连接方法">3.2 连接方法</h2>
+<h3 id="linkfirste-方法前">linkFirst(E) 方法：前</h3>
 <p>创建并连接第一个元素。</p>
 <ul>
 <li>创建一个 Node 节点</li>
@@ -362,7 +396,7 @@
     size<span style="color:#ff79c6">++;</span>
     modCount<span style="color:#ff79c6">++;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="linklaste-方法后">linkLast(E) 方法：后</h4>
+</code></pre></div><h3 id="linklaste-方法后">linkLast(E) 方法：后</h3>
 <p>创建并连接最后一个元素。</p>
 <ul>
 <li>创建一个 Node 节点</li>
@@ -381,7 +415,7 @@
     size<span style="color:#ff79c6">++;</span>
     modCount<span style="color:#ff79c6">++;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="linkbeforee-node-方法中">linkBefore(E, Node) 方法：中</h4>
+</code></pre></div><h3 id="linkbeforee-node-方法中">linkBefore(E, Node) 方法：中</h3>
 <p>在**节点前（非空）**插入一个元素。</p>
 <ul>
 <li>获取 succ 节点的前节点</li>
@@ -401,8 +435,8 @@
     size<span style="color:#ff79c6">++;</span>
     modCount<span style="color:#ff79c6">++;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="33-删除节点方法">3.3 删除节点方法</h3>
-<h4 id="unlinkfirstnode-方法前">unlinkFirst(Node) 方法：前</h4>
+</code></pre></div><h2 id="33-删除节点方法">3.3 删除节点方法</h2>
+<h3 id="unlinkfirstnode-方法前">unlinkFirst(Node) 方法：前</h3>
 <p>删除并返回链表的第一个的节点（非空）。</p>
 <ul>
 <li>获取 f 节点的元素并返回</li>
@@ -426,7 +460,7 @@
     modCount<span style="color:#ff79c6">++;</span>
     <span style="color:#ff79c6">return</span> element<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="unlinklastnode-方法后">unlinkLast(Node) 方法：后</h4>
+</code></pre></div><h3 id="unlinklastnode-方法后">unlinkLast(Node) 方法：后</h3>
 <p>删除并返回链表的最后一个节点（非空）。</p>
 <ul>
 <li>获取 l 节点的元素并返回</li>
@@ -450,7 +484,7 @@
     modCount<span style="color:#ff79c6">++;</span>
     <span style="color:#ff79c6">return</span> element<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="unlinknode-方法中">unlink(Node) 方法：中</h4>
+</code></pre></div><h3 id="unlinknode-方法中">unlink(Node) 方法：中</h3>
 <p>删除并返回链表中的一个节点（非空）。</p>
 <ul>
 <li>获取 x 节点的元素并返回</li>
@@ -481,9 +515,9 @@
     <span style="color:#ff79c6">return</span> element<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name4四双端队列实现a"><!-- raw HTML omitted -->四、双端队列实现<!-- raw HTML omitted --></h2>
-<h3 id="41-获取">4.1 获取</h3>
-<h4 id="getfirst-方法头">getFirst() 方法：头</h4>
+<h1 id="四双端队列实现">四、双端队列实现</h1>
+<h2 id="41-获取">4.1 获取</h2>
+<h3 id="getfirst-方法头">getFirst() 方法：头</h3>
 <p>获取并返回第一个元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">getFirst</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
@@ -491,7 +525,7 @@
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> NoSuchElementException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">return</span> f<span style="color:#ff79c6">.</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="getlast-方法尾">getLast() 方法：尾</h4>
+</code></pre></div><h3 id="getlast-方法尾">getLast() 方法：尾</h3>
 <p>获取并返回最后一个元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">getLast</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> l <span style="color:#ff79c6">=</span> last<span style="color:#ff79c6">;</span>
@@ -499,20 +533,20 @@
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> NoSuchElementException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">return</span> l<span style="color:#ff79c6">.</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="peekfirst-方法头">peekFirst() 方法：头</h4>
+</code></pre></div><h3 id="peekfirst-方法头">peekFirst() 方法：头</h3>
 <p>获取并返回第一个元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">peekFirst</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>f <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> f<span style="color:#ff79c6">.</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="peeklast-方法尾">peekLast() 方法：尾</h4>
+</code></pre></div><h3 id="peeklast-方法尾">peekLast() 方法：尾</h3>
 <p>获取并返回最后一个元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">peekLast</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> l <span style="color:#ff79c6">=</span> last<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>l <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> l<span style="color:#ff79c6">.</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="42-删除">4.2 删除</h3>
-<h4 id="removefirst-方法头">removeFirst() 方法：头</h4>
+</code></pre></div><h2 id="42-删除">4.2 删除</h2>
+<h3 id="removefirst-方法头">removeFirst() 方法：头</h3>
 <p>删除并返回第一个元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">removeFirst</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
@@ -520,7 +554,7 @@
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> NoSuchElementException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">return</span> unlinkFirst<span style="color:#ff79c6">(</span>f<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removelast-方法尾">removeLast() 方法：尾</h4>
+</code></pre></div><h3 id="removelast-方法尾">removeLast() 方法：尾</h3>
 <p>删除并返回最后一个元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">removeLast</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> l <span style="color:#ff79c6">=</span> last<span style="color:#ff79c6">;</span>
@@ -528,24 +562,24 @@
         <span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> NoSuchElementException<span style="color:#ff79c6">();</span>
     <span style="color:#ff79c6">return</span> unlinkLast<span style="color:#ff79c6">(</span>l<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="pollfirst-方法头">pollFirst() 方法：头</h4>
+</code></pre></div><h3 id="pollfirst-方法头">pollFirst() 方法：头</h3>
 <p>删除并返回第一个元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">pollFirst</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>f <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> unlinkFirst<span style="color:#ff79c6">(</span>f<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="polllast-方法尾">pollLast() 方法：尾</h4>
+</code></pre></div><h3 id="polllast-方法尾">pollLast() 方法：尾</h3>
 <p>删除并返回最后一个元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">pollLast</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> l <span style="color:#ff79c6">=</span> last<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>l <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> unlinkLast<span style="color:#ff79c6">(</span>l<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removefirstoccurrenceobject-方法">removeFirstOccurrence(Object) 方法</h4>
+</code></pre></div><h3 id="removefirstoccurrenceobject-方法">removeFirstOccurrence(Object) 方法</h3>
 <p>从头至尾（<strong>正序</strong>）删除第一次出现的元素 Object，依赖 <strong><code>remove(Object)</code></strong> 方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">removeFirstOccurrence</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> remove<span style="color:#ff79c6">(</span>o<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removelastoccurrenceobject-方法">removeLastOccurrence(Object) 方法</h4>
+</code></pre></div><h3 id="removelastoccurrenceobject-方法">removeLastOccurrence(Object) 方法</h3>
 <p>从尾至头（<strong>倒序</strong>）删除第一次出现的元素 Object，依赖 <strong><code>unlink(Node)</code></strong> 方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">removeLastOccurrence</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>o <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span> <span style="color:#6272a4">// 非 null 元素
@@ -566,89 +600,89 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="43-添加">4.3 添加</h3>
-<h4 id="addfirste-方法头">addFirst(E) 方法：头</h4>
+</code></pre></div><h2 id="43-添加">4.3 添加</h2>
+<h3 id="addfirste-方法头">addFirst(E) 方法：头</h3>
 <p>在头部添加一个元素 E。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">addFirst</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#6272a4">// 链接第一个元素
 </span><span style="color:#6272a4"></span>    linkFirst<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="addlaste-方法尾">addLast(E) 方法：尾</h4>
+</code></pre></div><h3 id="addlaste-方法尾">addLast(E) 方法：尾</h3>
 <p>在尾部添加一个元素 E。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">addLast</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#6272a4">// 链接最后一个元素
 </span><span style="color:#6272a4"></span>    linkLast<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="offerfirste-方法头">offerFirst(E) 方法：头</h4>
+</code></pre></div><h3 id="offerfirste-方法头">offerFirst(E) 方法：头</h3>
 <p>在头部添加一个元素 E，并返回是否添加成功。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">offerFirst</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     addFirst<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="offerlaste-方法尾">offerLast(E) 方法：尾</h4>
+</code></pre></div><h3 id="offerlaste-方法尾">offerLast(E) 方法：尾</h3>
 <p>在尾部添加一个元素 E，并返回是否添加成功。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">offerLast</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     addLast<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="44-倒序迭代">4.4 倒序迭代</h3>
-<h4 id="descendingiterator-方法">descendingIterator() 方法</h4>
+</code></pre></div><h2 id="44-倒序迭代">4.4 倒序迭代</h2>
+<h3 id="descendingiterator-方法">descendingIterator() 方法</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> Iterator<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">descendingIterator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> DescendingIterator<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name5五队列实现a"><!-- raw HTML omitted -->五、队列实现<!-- raw HTML omitted --></h2>
-<h3 id="51-获取">5.1 获取</h3>
-<h4 id="element-方法">element() 方法</h4>
+<h1 id="五队列实现">五、队列实现</h1>
+<h2 id="51-获取">5.1 获取</h2>
+<h3 id="element-方法">element() 方法</h3>
 <p>获取头元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">element</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> getFirst<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="peek-方法">peek() 方法</h4>
+</code></pre></div><h3 id="peek-方法">peek() 方法</h3>
 <p>获取头元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">peek</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>f <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> f<span style="color:#ff79c6">.</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="52-删除">5.2 删除</h3>
-<h4 id="remove-方法">remove() 方法</h4>
+</code></pre></div><h2 id="52-删除">5.2 删除</h2>
+<h3 id="remove-方法">remove() 方法</h3>
 <p>删除头元素，如果为空抛出异常。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">remove</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> removeFirst<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="poll-方法">poll() 方法</h4>
+</code></pre></div><h3 id="poll-方法">poll() 方法</h3>
 <p>删除头元素，如果为空则返回 null。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">poll</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">final</span> Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> f <span style="color:#ff79c6">=</span> first<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>f <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">:</span> unlinkFirst<span style="color:#ff79c6">(</span>f<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="53-添加">5.3 添加</h3>
-<h4 id="offere-方法">offer(E) 方法</h4>
+</code></pre></div><h2 id="53-添加">5.3 添加</h2>
+<h3 id="offere-方法">offer(E) 方法</h3>
 <p>在末尾添加一个元素 E，依赖 <strong><code>add(E)</code></strong> 方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">offer</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> add<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="adde-方法">add(E) 方法</h4>
+</code></pre></div><h3 id="adde-方法">add(E) 方法</h3>
 <p>在末尾添加一个元素 E。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     linkLast<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">true</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name6六栈实现a"><!-- raw HTML omitted -->六、栈实现<!-- raw HTML omitted --></h2>
-<h4 id="pushe-方法">push(E) 方法</h4>
+<h1 id="六栈实现">六、栈实现</h1>
+<h2 id="pushe-方法">push(E) 方法</h2>
 <p>将元素 E 压入栈顶，即：将元素 E 添加至栈的头部。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">push</span><span style="color:#ff79c6">(</span>E e<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     addFirst<span style="color:#ff79c6">(</span>e<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="pop-方法">pop() 方法</h4>
+</code></pre></div><h2 id="pop-方法">pop() 方法</h2>
 <p>弹出栈顶元素，即：删除并返回栈的第一个元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">pop</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> removeFirst<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name7七列表实现a"><!-- raw HTML omitted -->七、列表实现<!-- raw HTML omitted --></h2>
-<h3 id="71-元素操作">7.1 元素操作</h3>
+<h1 id="七列表实现">七、列表实现</h1>
+<h2 id="71-元素操作">7.1 元素操作</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 是否包含元素 o
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">contains</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span> <span style="color:#ff79c6">return</span> indexOf<span style="color:#ff79c6">(</span>o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span> <span style="color:#ff79c6">}</span>
 
@@ -726,7 +760,7 @@
     size <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
     modCount<span style="color:#ff79c6">++;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="72-索引操作">7.2 索引操作</h3>
+</code></pre></div><h2 id="72-索引操作">7.2 索引操作</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> E <span style="color:#50fa7b">get</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> index<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     checkElementIndex<span style="color:#ff79c6">(</span>index<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> node<span style="color:#ff79c6">(</span>index<span style="color:#ff79c6">).</span><span style="color:#50fa7b">item</span><span style="color:#ff79c6">;</span>
@@ -787,8 +821,8 @@ Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</sp
         <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="73-元素搜索操作">7.3 元素搜索操作</h3>
-<h4 id="indexofobject-方法">indexOf(Object) 方法</h4>
+</code></pre></div><h2 id="73-元素搜索操作">7.3 元素搜索操作</h2>
+<h3 id="indexofobject-方法">indexOf(Object) 方法</h3>
 <p>返回此列表中第一次出现的指定元素的索引，如果此列表不包含该元素，则返回-1。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">indexOf</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> index <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
@@ -807,7 +841,7 @@ Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</sp
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="lastindexofobject-方法">lastIndexOf(Object) 方法</h4>
+</code></pre></div><h3 id="lastindexofobject-方法">lastIndexOf(Object) 方法</h3>
 <p>返回此列表中指定元素最后一次出现的索引，如果此列表不包含该元素，则返回-1。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">lastIndexOf</span><span style="color:#ff79c6">(</span>Object o<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> index <span style="color:#ff79c6">=</span> size<span style="color:#ff79c6">;</span>
@@ -827,12 +861,12 @@ Node<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</sp
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name8八迭代器分割器a"><!-- raw HTML omitted -->八、迭代器、分割器<!-- raw HTML omitted --></h2>
-<h3 id="listitr">ListItr</h3>
+<h1 id="八迭代器分割器">八、迭代器、分割器</h1>
+<h2 id="listitr">ListItr</h2>
 <p>略。</p>
-<h3 id="descendingiterator">DescendingIterator</h3>
+<h2 id="descendingiterator">DescendingIterator</h2>
 <p>略。</p>
-<h3 id="llspliterator">LLSpliterator</h3>
+<h2 id="llspliterator">LLSpliterator</h2>
 <p>略。</p>
 
 

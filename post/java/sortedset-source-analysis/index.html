@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,10 +238,21 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一sortedset接口特点或规范">一、SortedSet接口特点或规范</a>
       <ul>
-        <li><a href="#一sortedset接口特点或规范">一、SortedSet接口特点或规范</a></li>
-        <li><a href="#二方法描述">二、方法描述</a></li>
+        <li><a href="#实现规范">实现规范</a></li>
+        <li><a href="#构造器规范">构造器规范</a></li>
+      </ul>
+    </li>
+    <li><a href="#二方法描述">二、方法描述</a>
+      <ul>
+        <li><a href="#comparator方法">comparator()方法</a></li>
+        <li><a href="#subsete-e方法">subSet(E, E)方法</a></li>
+        <li><a href="#headsete方法">headSet(E)方法</a></li>
+        <li><a href="#tailsete方法">tailSet(E)方法</a></li>
+        <li><a href="#first方法">first()方法</a></li>
+        <li><a href="#last方法">last()方法</a></li>
+        <li><a href="#spliterator方法">spliterator()方法</a></li>
       </ul>
     </li>
   </ul>
@@ -255,9 +266,8 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<h2 id="一sortedset接口特点或规范">一、SortedSet接口特点或规范</h2>
-<h3 id="实现规范">实现规范</h3>
+<h1 id="一sortedset接口特点或规范">一、SortedSet接口特点或规范</h1>
+<h2 id="实现规范">实现规范</h2>
 <ul>
 <li>在 <strong><code>java.util.Set</code></strong> 基础上进一步提供其元素的总排序。元素按照 <strong>自然顺序</strong> 排序，或通过创建时提供的 <strong>比较器排序</strong>。</li>
 <li>迭代器将按 <strong>升序</strong> 顺序遍历集合。提供了几个额外的操作以利用订购。 （此接口是SortedMap的集合模拟。）</li>
@@ -266,7 +276,7 @@
 <li><strong>注意</strong>，如果 SortedSet 要正确实现 Set 接口，则由 SortedSet 维护的排序（无论是否提供显式比较器）必须与 <strong>equals()</strong> 方法一致。</li>
 </ul>
 <p>因为 Set 接口的不可重复性依赖于 <strong><code>equals()</code></strong> 方法，而 SortedSet 使用 <strong><code>compareTo()</code></strong> 方法进行所有元素的比较，</p>
-<h3 id="构造器规范">构造器规范</h3>
+<h2 id="构造器规范">构造器规范</h2>
 <p>所有 <strong><code>SortedSet</code></strong> 的实现类应提供 <strong>四个“标准”构造器</strong>：</p>
 <ol>
 <li><strong>无参构造器</strong>，它根据元素的<strong>自然顺序</strong>创建一个<strong>空</strong>的 SortedSet。（Collection规范）</li>
@@ -276,26 +286,26 @@
 </ol>
 <p>由于接口不能包含构造函数，因此无法强制执行此规范。</p>
 <hr>
-<h2 id="二方法描述">二、方法描述</h2>
-<h4 id="comparator方法">comparator()方法</h4>
+<h1 id="二方法描述">二、方法描述</h1>
+<h2 id="comparator方法">comparator()方法</h2>
 <p>获取当前 <strong><code>Set</code></strong> 对其元素进行排序的比较器，如果当前 Set 的元素排序为自然顺序，则返回 <strong><code>null</code></strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Comparator<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">comparator</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="subsete-e方法">subSet(E, E)方法</h4>
+</code></pre></div><h2 id="subsete-e方法">subSet(E, E)方法</h2>
 <p>返回当前 Set 的子集视图，其元素范围从 <strong>fromElement</strong>（包含）到 <strong>toElement</strong>（不包含）。如果fromElement和toElement相等，则返回的集合为空。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">subSet</span><span style="color:#ff79c6">(</span>E fromElement<span style="color:#ff79c6">,</span> E toElement<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="headsete方法">headSet(E)方法</h4>
+</code></pre></div><h2 id="headsete方法">headSet(E)方法</h2>
 <p>返回当前 Set 的子集视图，其元素范围从 Set 第一个元素到 <strong>toElement</strong>（不包含）。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">headSet</span><span style="color:#ff79c6">(</span>E toElement<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="tailsete方法">tailSet(E)方法</h4>
+</code></pre></div><h2 id="tailsete方法">tailSet(E)方法</h2>
 <p>返回当前 Set 的子集视图，其元素范围从 <strong>fromElement</strong>（包含）到 Set 最后一个元素（包含）。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">SortedSet<span style="color:#ff79c6">&lt;</span>E<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">tailSet</span><span style="color:#ff79c6">(</span>E fromElement<span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="first方法">first()方法</h4>
+</code></pre></div><h2 id="first方法">first()方法</h2>
 <p>返回当前 Set 中的第一个（最低）元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">first</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="last方法">last()方法</h4>
+</code></pre></div><h2 id="last方法">last()方法</h2>
 <p>返回当前 Set 中的最后一个（最高）元素。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">E <span style="color:#50fa7b">last</span><span style="color:#ff79c6">();</span>
-</code></pre></div><h4 id="spliterator方法">spliterator()方法</h4>
+</code></pre></div><h2 id="spliterator方法">spliterator()方法</h2>
 <p>在此有序集中的元素上创建Spliterator。</p>
 <ul>
 <li><strong><code>Spliterator.DISTINCT</code></strong></li>

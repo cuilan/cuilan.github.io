@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,12 +238,26 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一hashmap节点内部类">一、HashMap节点内部类</a></li>
+    <li><a href="#二链表-红黑树-相互转换的方法">二、链表-红黑树 相互转换的方法</a>
       <ul>
-        <li><a href="#一hashmap节点内部类">一、HashMap节点内部类</a></li>
-        <li><a href="#二链表-红黑树-相互转换的方法">二、链表-红黑树 相互转换的方法</a></li>
-        <li><a href="#三二叉树---font-colorred红font黑树">三、二叉树 - <!-- raw HTML omitted -->红<!-- raw HTML omitted -->黑树</a></li>
-        <li><a href="#四treenode实现代码">四、TreeNode实现代码</a></li>
+        <li><a href="#treeifybinnode-int-方法">treeifyBin(Node, int) 方法</a></li>
+        <li><a href="#newtreenodeint-k-v-node-方法">newTreeNode(int, K, V, Node) 方法</a></li>
+        <li><a href="#replacementnodenode-node-方法">replacementNode(Node, Node) 方法</a></li>
+        <li><a href="#replacementtreenodenode-node-方法">replacementTreeNode(Node, Node) 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#三二叉树---红黑树">三、二叉树 - 红黑树</a>
+      <ul>
+        <li><a href="#31-二叉树">3.1 二叉树</a></li>
+        <li><a href="#32-红黑树">3.2 红黑树</a></li>
+      </ul>
+    </li>
+    <li><a href="#四treenode实现代码">四、TreeNode实现代码</a>
+      <ul>
+        <li><a href="#41-成员属性">4.1 成员属性</a></li>
+        <li><a href="#42-构造器">4.2 构造器</a></li>
+        <li><a href="#43-核心方法分析">4.3 核心方法分析</a></li>
       </ul>
     </li>
   </ul>
@@ -272,18 +286,17 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
 <hr>
-<h2 id="一hashmap节点内部类">一、HashMap节点内部类</h2>
+<h1 id="一hashmap节点内部类">一、HashMap节点内部类</h1>
 <p>HashMap 中节点内部类有两种实现：</p>
 <ul>
 <li>链表节点：<strong><code>HashMap.Node</code></strong></li>
 <li>红黑树节点：<strong><code>HashMap.TreeNode</code></strong></li>
 </ul>
-<p>有关 HashMap 数据结构、方法分析、哈希冲突 及 链表实现等，见：<!-- raw HTML omitted --><strong>HashMap源码分析</strong><!-- raw HTML omitted -->。</p>
+<p>有关 HashMap 数据结构、方法分析、哈希冲突 及 链表实现等，见：<a href="/post/java/hashmap-source-analysis/"><strong>HashMap源码分析</strong></a>。</p>
 <hr>
-<h2 id="二链表-红黑树-相互转换的方法">二、链表-红黑树 相互转换的方法</h2>
-<h3 id="treeifybinnode-int-方法">treeifyBin(Node, int) 方法</h3>
+<h1 id="二链表-红黑树-相互转换的方法">二、链表-红黑树 相互转换的方法</h1>
+<h2 id="treeifybinnode-int-方法">treeifyBin(Node, int) 方法</h2>
 <p>转换为红黑树结构：根据 hash 值计算待转换的链表在 哈希表(<strong><code>table</code></strong>) 的位置，如果否满足转换为红黑树的条件，就进行转换。</p>
 <p><strong>执行过程分析：</strong></p>
 <ul>
@@ -322,24 +335,24 @@
             hd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">treeify</span><span style="color:#ff79c6">(</span>tab<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 转换为红黑树
 </span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="newtreenodeint-k-v-node-方法">newTreeNode(int, K, V, Node) 方法</h3>
+</code></pre></div><h2 id="newtreenodeint-k-v-node-方法">newTreeNode(int, K, V, Node) 方法</h2>
 <p>创建一个新的树节点。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">newTreeNode</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> hash<span style="color:#ff79c6">,</span> K key<span style="color:#ff79c6">,</span> V value<span style="color:#ff79c6">,</span> Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> next<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> TreeNode<span style="color:#ff79c6">&lt;&gt;(</span>hash<span style="color:#ff79c6">,</span> key<span style="color:#ff79c6">,</span> value<span style="color:#ff79c6">,</span> next<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="replacementnodenode-node-方法">replacementNode(Node, Node) 方法</h3>
+</code></pre></div><h2 id="replacementnodenode-node-方法">replacementNode(Node, Node) 方法</h2>
 <p>将树节点转换为链表节点。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">replacementNode</span><span style="color:#ff79c6">(</span>Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> p<span style="color:#ff79c6">,</span> Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> next<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> Node<span style="color:#ff79c6">&lt;&gt;(</span>p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hash</span><span style="color:#ff79c6">,</span> p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">key</span><span style="color:#ff79c6">,</span> p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">value</span><span style="color:#ff79c6">,</span> next<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="replacementtreenodenode-node-方法">replacementTreeNode(Node, Node) 方法</h3>
+</code></pre></div><h2 id="replacementtreenodenode-node-方法">replacementTreeNode(Node, Node) 方法</h2>
 <p>将链表节点转换为树节点。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">replacementTreeNode</span><span style="color:#ff79c6">(</span>Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> p<span style="color:#ff79c6">,</span> Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> next<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> TreeNode<span style="color:#ff79c6">&lt;&gt;(</span>p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">hash</span><span style="color:#ff79c6">,</span> p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">key</span><span style="color:#ff79c6">,</span> p<span style="color:#ff79c6">.</span><span style="color:#50fa7b">value</span><span style="color:#ff79c6">,</span> next<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="三二叉树---font-colorred红font黑树">三、二叉树 - <!-- raw HTML omitted -->红<!-- raw HTML omitted -->黑树</h2>
-<h3 id="31-二叉树">3.1 二叉树</h3>
+<h1 id="三二叉树---红黑树">三、二叉树 - 红黑树</h1>
+<h2 id="31-二叉树">3.1 二叉树</h2>
 <p><strong>二叉树</strong> 又叫二叉排序树、二叉查找树。
 性能：</p>
 <ul>
@@ -354,7 +367,7 @@
 
 </p>
 <p>二叉树的缺陷就在于不能实现<strong>自平衡</strong>。</p>
-<h3 id="32-红黑树">3.2 红黑树</h3>
+<h2 id="32-红黑树">3.2 红黑树</h2>
 <p>红黑树是一种 <strong>自平衡二叉查找树</strong>，它满足 <strong>五条规则</strong>：</p>
 <ul>
 <li>每个节点必须是红色或黑色；</li>
@@ -370,10 +383,10 @@
   </figure>
 
 </p>
-<p>红黑树是通过 <strong>变色、<!-- raw HTML omitted -->左旋<!-- raw HTML omitted -->、<!-- raw HTML omitted -->右旋<!-- raw HTML omitted --></strong> 来保持自平衡的。</p>
+<p>红黑树是通过 <strong>变色、<a href="/post/java/hashmap-treenode/#rotateleft-%E5%B7%A6%E6%97%8B">左旋</a>、<a href="/post/java/hashmap-treenode/#rotateright-%E5%8F%B3%E6%97%8B">右旋</a></strong> 来保持自平衡的。</p>
 <hr>
-<h2 id="四treenode实现代码">四、TreeNode实现代码</h2>
-<h3 id="41-成员属性">4.1 成员属性</h3>
+<h1 id="四treenode实现代码">四、TreeNode实现代码</h1>
+<h2 id="41-成员属性">4.1 成员属性</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 继承 LinkedHashMap.Entry
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">TreeNode</span><span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd;font-style:italic">extends</span> LinkedHashMap<span style="color:#ff79c6">.</span><span style="color:#50fa7b">Entry</span><span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">{</span>
     TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> parent<span style="color:#ff79c6">;</span> <span style="color:#6272a4">// 链接父节点
@@ -382,12 +395,12 @@
 </span><span style="color:#6272a4"></span>    TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> prev<span style="color:#ff79c6">;</span> <span style="color:#6272a4">// 链接前一个节点，转换为链表时需要
 </span><span style="color:#6272a4"></span>    <span style="color:#8be9fd">boolean</span> red<span style="color:#ff79c6">;</span> <span style="color:#6272a4">// 红黑树颜色
 </span><span style="color:#6272a4"></span><span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="42-构造器">4.2 构造器</h3>
+</code></pre></div><h2 id="42-构造器">4.2 构造器</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TreeNode<span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> hash<span style="color:#ff79c6">,</span> K key<span style="color:#ff79c6">,</span> V val<span style="color:#ff79c6">,</span> Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> next<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd;font-style:italic">super</span><span style="color:#ff79c6">(</span>hash<span style="color:#ff79c6">,</span> key<span style="color:#ff79c6">,</span> val<span style="color:#ff79c6">,</span> next<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="43-核心方法分析">4.3 核心方法分析</h3>
-<h4 id="root-根节点">root() 根节点</h4>
+</code></pre></div><h2 id="43-核心方法分析">4.3 核心方法分析</h2>
+<h3 id="root-根节点">root() 根节点</h3>
 <p>根节点，其父节点 parent 必须为空。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">final</span> TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">root</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">(</span>TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> r <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">,</span> p<span style="color:#ff79c6">;;)</span> <span style="color:#ff79c6">{</span>
@@ -396,7 +409,7 @@
         r <span style="color:#ff79c6">=</span> p<span style="color:#ff79c6">;</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="a-nameleftrotateleft-左旋a"><!-- raw HTML omitted -->rotateLeft() 左旋<!-- raw HTML omitted --></h4>
+</code></pre></div><h3 id="rotateleft-左旋">rotateLeft() 左旋</h3>
 <p>
   <figure>
     <img src="/images/javase/HashMap-TreeNode/RotateLeft.png" alt="左旋">
@@ -441,7 +454,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> root<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="a-namerightrotateright-右旋a"><!-- raw HTML omitted -->rotateRight() 右旋<!-- raw HTML omitted --></h4>
+</code></pre></div><h3 id="rotateright-右旋">rotateRight() 右旋</h3>
 <p>
   <figure>
     <img src="/images/javase/HashMap-TreeNode/RotateRight.png" alt="右旋">
@@ -486,7 +499,7 @@
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> root<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="gettreenode--find-查找">getTreeNode() &amp; find() 查找</h4>
+</code></pre></div><h3 id="gettreenode--find-查找">getTreeNode() &amp; find() 查找</h3>
 <p>从树中查找元素，广度优先搜索。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">final</span> TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">getTreeNode</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> h<span style="color:#ff79c6">,</span> Object k<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">((</span>parent <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">?</span> root<span style="color:#ff79c6">()</span> <span style="color:#ff79c6">:</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">).</span><span style="color:#50fa7b">find</span><span style="color:#ff79c6">(</span>h<span style="color:#ff79c6">,</span> k<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">);</span>
@@ -518,7 +531,7 @@
     <span style="color:#ff79c6">}</span> <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">(</span>p <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="puttreeval--balanceinsertion">putTreeVal() &amp; balanceInsertion()</h4>
+</code></pre></div><h3 id="puttreeval--balanceinsertion">putTreeVal() &amp; balanceInsertion()</h3>
 <p><strong><code>putTreeVal()</code></strong>：插入新树节点，通过比较决定放置在左节点还是右节点，<strong>同时维护了链表的结构</strong>。</p>
 <p><strong><code>balanceInsertion()</code></strong>：平衡树的结构，<strong>变色</strong>、<strong>左旋</strong> 或 <strong>右旋</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">balanceInsertion</span><span style="color:#ff79c6">(</span>TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> root<span style="color:#ff79c6">,</span> TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> x<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -574,7 +587,7 @@
         <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removetreenode--balancedeletion">removeTreeNode() &amp; balanceDeletion()</h4>
+</code></pre></div><h3 id="removetreenode--balancedeletion">removeTreeNode() &amp; balanceDeletion()</h3>
 <p><strong><code>removeTreeNode()</code></strong>：删除节点，<strong>同时维护了链表的结构</strong>。</p>
 <p><strong><code>balanceDeletion()</code></strong>：平衡树的结构，<strong>变色</strong>、<strong>左旋</strong> 或 <strong>右旋</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">balanceDeletion</span><span style="color:#ff79c6">(</span>TreeNode<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> root<span style="color:#ff79c6">,</span>
@@ -668,7 +681,7 @@
         <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="treeify--untreeify">treeify() &amp; untreeify()</h4>
+</code></pre></div><h3 id="treeify--untreeify">treeify() &amp; untreeify()</h3>
 <p><strong><code>treeify()</code></strong>：由链表结构转换为红黑树结构。</p>
 <p><strong><code>untreeify()</code></strong>：由红黑树结构转换为链表结构。</p>
 

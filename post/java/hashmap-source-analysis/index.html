@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,19 +238,51 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一hashmap特点或规范">一、HashMap特点或规范</a>
       <ul>
-        <li><a href="#a-name1一hashmap特点或规范a"><!-- raw HTML omitted -->一、HashMap特点或规范<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name2二成员属性a"><!-- raw HTML omitted -->二、成员属性<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name3三构造器a"><!-- raw HTML omitted -->三、构造器<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name4四内部类node即mapentrya"><!-- raw HTML omitted -->四、内部类：Node，即：Map.Entry<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name5五继承自abstractmap的方法a"><!-- raw HTML omitted -->五、继承自AbstractMap的方法<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name6六实现自map接口的方法a"><!-- raw HTML omitted -->六、实现自Map接口的方法<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name7七hashmap静态工具方法a"><!-- raw HTML omitted -->七、HashMap静态工具方法<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name8八其他主要方法a"><!-- raw HTML omitted -->八、其他主要方法<!-- raw HTML omitted --></a></li>
-        <li><a href="#a-name9九迭代器a"><!-- raw HTML omitted -->九、迭代器<!-- raw HTML omitted --></a></li>
+        <li><a href="#11-与hashtable的区别">1.1 与Hashtable的区别</a></li>
+        <li><a href="#12-性能">1.2 性能</a></li>
+        <li><a href="#13-容量capacity--加载因子loadfactor">1.3 容量capacity &amp; 加载因子loadFactor</a></li>
+        <li><a href="#14-hashmap的数据结构">1.4 HashMap的数据结构</a></li>
+        <li><a href="#15-hashmap不同步">1.5 HashMap不同步</a></li>
+        <li><a href="#16-fail-fast快速失败机制">1.6 fail-fast快速失败机制</a></li>
       </ul>
     </li>
+    <li><a href="#二成员属性">二、成员属性</a></li>
+    <li><a href="#三构造器">三、构造器</a>
+      <ul>
+        <li><a href="#31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</a></li>
+        <li><a href="#32-hashmap自身构造器">3.2 HashMap自身构造器</a></li>
+      </ul>
+    </li>
+    <li><a href="#四内部类node即mapentry">四、内部类：Node，即：Map.Entry</a></li>
+    <li><a href="#五继承自abstractmap的方法">五、继承自AbstractMap的方法</a>
+      <ul>
+        <li><a href="#51-基础操作">5.1 基础操作</a></li>
+        <li><a href="#52-转换为单列集合视图">5.2 转换为单列集合视图</a></li>
+      </ul>
+    </li>
+    <li><a href="#六实现自map接口的方法">六、实现自Map接口的方法</a>
+      <ul>
+        <li><a href="#61-覆盖扩展自-jdk8-map-的默认方法">6.1 覆盖扩展自 JDK8 Map 的默认方法。</a></li>
+      </ul>
+    </li>
+    <li><a href="#七hashmap静态工具方法">七、HashMap静态工具方法</a>
+      <ul>
+        <li><a href="#71-hashobject-方法">7.1 hash(Object) 方法</a></li>
+        <li><a href="#72-tablesizeforint-方法">7.2 tableSizeFor(int) 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#八其他主要方法">八、其他主要方法</a>
+      <ul>
+        <li><a href="#putmapentriesmap-boolean">putMapEntries(Map, boolean)</a></li>
+        <li><a href="#getnodeint-object">getNode(int, Object)</a></li>
+        <li><a href="#putvalint-k-v-boolean-boolean-方法">putVal(int, K, V, boolean, boolean) 方法</a></li>
+        <li><a href="#resize-方法">resize() 方法</a></li>
+        <li><a href="#removenodeint-object-object-boolean-boolean-方法">removeNode(int, Object, Object, boolean, boolean) 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#九迭代器">九、迭代器</a></li>
   </ul>
 </nav>
                 
@@ -262,21 +294,10 @@
   </figure>
 
 </p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->一、HashMap特点或规范<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->二、成员属性<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->三、构造器<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->四、内部类：Node，即：Map.Entry<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->五、继承自AbstractMap的方法<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->六、实现自Map接口的方法<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><strong>七、静态工具方法</strong><!-- raw HTML omitted -->
-<!-- raw HTML omitted --><strong>八、其他主要方法</strong><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->九、迭代器<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><strong>十、<!-- raw HTML omitted -->红<!-- raw HTML omitted --><!-- raw HTML omitted -->黑<!-- raw HTML omitted -->树</strong><!-- raw HTML omitted --></p>
 <hr>
-<h2 id="a-name1一hashmap特点或规范a"><!-- raw HTML omitted -->一、HashMap特点或规范<!-- raw HTML omitted --></h2>
+<h1 id="一hashmap特点或规范">一、HashMap特点或规范</h1>
 <p><strong>HashMap</strong> 是基于 <strong>哈希表</strong> 的 Map 接口实现。<strong>无序</strong> 且不保证顺序永远保持不变。</p>
-<h3 id="11-与hashtable的区别">1.1 与Hashtable的区别</h3>
+<h2 id="11-与hashtable的区别">1.1 与Hashtable的区别</h2>
 <table>
 <thead>
 <tr>
@@ -299,13 +320,13 @@
 </tr>
 </tbody>
 </table>
-<h3 id="12-性能">1.2 性能</h3>
+<h2 id="12-性能">1.2 性能</h2>
 <ul>
 <li>通常情况下，<strong><code>hash(Object)</code></strong> 方法计算得出的哈希值都均匀的分布在 <strong>哈希桶</strong> 之间，这样可以保证 <strong><code>get(K)</code></strong> 和 <strong><code>put(K, V)</code></strong> 基本操作方法的性能为恒定时间。</li>
 <li>对集合视图：<strong><code>keySet()</code></strong>，<strong><code>values()</code></strong>，<strong><code>entrySet()</code></strong> 的 <strong>迭代时间</strong>，与 HashMap实例的容量（桶的数量）加上其大小（K-V Node 的数量）成比例的时间。因此，如果迭代性能有较高要求，则不要将 初始容量设置得太高 或 负载因子设置得太低。</li>
 <li>影响 HashMap 性能的两个因素：<strong>初始容量</strong> 和 <strong>负载因子</strong>。</li>
 </ul>
-<h3 id="13-容量capacity--加载因子loadfactor">1.3 容量capacity &amp; 加载因子loadFactor</h3>
+<h2 id="13-容量capacity--加载因子loadfactor">1.3 容量capacity &amp; 加载因子loadFactor</h2>
 <ul>
 <li><strong>容量</strong>：哈希表中的桶数，初始容量只是创建 HashMap 时的容量。</li>
 <li><strong>加载因子</strong>：是一个比例值，即：已被分布的哈希桶数 / 容量；也可以描述为：<strong>扩容操作之前允许哈希桶中已被分布的桶的数量</strong>。</li>
@@ -314,10 +335,10 @@
 <p>默认加载因子为：<strong>0.75</strong>，这个值在时间和空间成本之间提供了良好的权衡。
 较高的值会减少空间开销，但会增加查找成本。在设置初始容量时，应考虑 Map 中的预期 Entry 数及加载因子，以避免多次扩容带来的性能损耗。
 如果要将一个包含多个 Entry 的 Map 存储在 HashMap 中，应使用足够大的初始容量来创建，否则 HashMap 自身的扩容机制会多次进行扩容，严重影响性能。</p>
-<h3 id="14-hashmap的数据结构">1.4 HashMap的数据结构</h3>
-<h5 id="141-hash算法">1.4.1 hash算法</h5>
-<p>HashMap 是通过对 key 进行 hash() 计算得出该节点（Node） 在 table 中的位置。详情：<!-- raw HTML omitted --><strong>hash(Object)方法</strong><!-- raw HTML omitted -->。</p>
-<h5 id="142-hash冲突及常见解决办法">1.4.2 hash冲突及常见解决办法</h5>
+<h2 id="14-hashmap的数据结构">1.4 HashMap的数据结构</h2>
+<h3 id="141-hash算法">1.4.1 hash算法</h3>
+<p>HashMap 是通过对 key 进行 hash() 计算得出该节点（Node） 在 table 中的位置。详情：<a href="/post/java/hashmap-source-analysis/#71-hashobject-%E6%96%B9%E6%B3%95"><strong>hash(Object)方法</strong></a>。</p>
+<h3 id="142-hash冲突及常见解决办法">1.4.2 hash冲突及常见解决办法</h3>
 <p>当 HashMap 中节点过多时，不可避免的会出现 hash 冲突的问题，常见解决办法有两类：</p>
 <ul>
 <li><strong>开放定址法</strong>：又有两种：
@@ -340,8 +361,8 @@
 </ul>
 </li>
 </ul>
-<h5 id="143-font-colorred红font黑树">1.4.3 <!-- raw HTML omitted -->红<!-- raw HTML omitted -->黑树</h5>
-<p>当哈希表某一位置处的链表达到 8 个以上，并且哈希表的长度大于 64，该位置的链表会转换为一种 <strong>平衡二叉树</strong>：<!-- raw HTML omitted --><strong>红黑树</strong><!-- raw HTML omitted -->。</p>
+<h3 id="143-红黑树">1.4.3 红黑树</h3>
+<p>当哈希表某一位置处的链表达到 8 个以上，并且哈希表的长度大于 64，该位置的链表会转换为一种 <strong>平衡二叉树</strong>：<a href="/post/java/hashmap-treenode/"><strong>红黑树</strong></a>。</p>
 <p>
   <figure>
     <img src="/images/javase/HashMap-source-analysis/HashMap-Tree.png" alt="HashMap数据结构">
@@ -349,14 +370,14 @@
   </figure>
 
 </p>
-<h3 id="15-hashmap不同步">1.5 HashMap不同步</h3>
+<h2 id="15-hashmap不同步">1.5 HashMap不同步</h2>
 <p>如果多个线程并发访问 <strong>HashMap</strong>，并且至少有一个线程在结构上进行了修改，则必须在外部进行同步。<strong>结构修改</strong> 是指 <strong>添加</strong>或 <strong>删除</strong> 一个或多个 <strong><code>Entry</code></strong> 的任何操作，仅修改 <strong><code>Entry</code></strong> 的值不是结构修改。这通常通过同步自然封装映射的某个对象来完成。</p>
 <p>正确的同步方式：</p>
 <p><strong><code>Map m = Collections.synchronizedMap(new HashMap(...));</code></strong></p>
-<h3 id="16-fail-fast快速失败机制">1.6 fail-fast快速失败机制</h3>
+<h2 id="16-fail-fast快速失败机制">1.6 fail-fast快速失败机制</h2>
 <p><strong>HashMap</strong> 的所有“集合视图方法”返回的迭代器都是 <strong><em>fail-fast</em></strong> 的：如果在创建迭代器之后的任何时候对 Map 进行结构修改，除了通过迭代器自己的 <strong><code>remove()</code></strong> 方法之外，迭代器将抛出 <strong><code>ConcurrentModificationException</code></strong> 异常。因此，在并发修改的情况下，迭代器可快速地失败。</p>
 <hr>
-<h2 id="a-name2二成员属性a"><!-- raw HTML omitted -->二、成员属性<!-- raw HTML omitted --></h2>
+<h1 id="二成员属性">二、成员属性</h1>
 <p>默认初始容量，必须是2的幂。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> DEFAULT_INITIAL_CAPACITY <span style="color:#ff79c6">=</span> 1 <span style="color:#ff79c6">&lt;&lt;</span> 4<span style="color:#ff79c6">;</span> <span style="color:#6272a4">// 16
 </span></code></pre></div><p>最大容量，2的30次幂。</p>
@@ -382,8 +403,8 @@
 </code></pre></div><p>加载因子</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">float</span> loadFactor<span style="color:#ff79c6">;</span>
 </code></pre></div><hr>
-<h2 id="a-name3三构造器a"><!-- raw HTML omitted -->三、构造器<!-- raw HTML omitted --></h2>
-<h3 id="31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</h3>
+<h1 id="三构造器">三、构造器</h1>
+<h2 id="31-遵循map接口的构造器规范">3.1 遵循Map接口的构造器规范</h2>
 <p><strong><code>java.util.Map</code></strong> 接口的构造器规范，提供一个 <strong>无参构造器</strong>，一个 <strong>参数类型为 Map</strong> 的构造器。初始加载因子为默认值：0.75，其余值都为默认值。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashMap</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">loadFactor</span> <span style="color:#ff79c6">=</span> DEFAULT_LOAD_FACTOR<span style="color:#ff79c6">;</span>
@@ -393,7 +414,7 @@
     <span style="color:#6272a4">// 批量放入
 </span><span style="color:#6272a4"></span>    putMapEntries<span style="color:#ff79c6">(</span>m<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="32-hashmap自身构造器">3.2 HashMap自身构造器</h3>
+</code></pre></div><h2 id="32-hashmap自身构造器">3.2 HashMap自身构造器</h2>
 <p>支持指定 <strong>初始容量</strong>，加载因子为默认值：<strong>0.75</strong></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">HashMap</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> initialCapacity<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#ff79c6">this</span><span style="color:#ff79c6">(</span>initialCapacity<span style="color:#ff79c6">,</span> DEFAULT_LOAD_FACTOR<span style="color:#ff79c6">);</span>
@@ -413,7 +434,7 @@
     <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">threshold</span> <span style="color:#ff79c6">=</span> tableSizeFor<span style="color:#ff79c6">(</span>initialCapacity<span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name4四内部类node即mapentrya"><!-- raw HTML omitted -->四、内部类：Node，即：Map.Entry<!-- raw HTML omitted --></h2>
+<h1 id="四内部类node即mapentry">四、内部类：Node，即：Map.Entry</h1>
 <p>
   <figure>
     <img src="/images/javase/HashMap-source-analysis/HashMap-Node.png" alt="HashMap.Node结构">
@@ -464,8 +485,8 @@
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name5五继承自abstractmap的方法a"><!-- raw HTML omitted -->五、继承自AbstractMap的方法<!-- raw HTML omitted --></h2>
-<h3 id="51-基础操作">5.1 基础操作</h3>
+<h1 id="五继承自abstractmap的方法">五、继承自AbstractMap的方法</h1>
+<h2 id="51-基础操作">5.1 基础操作</h2>
 <p>对 HashMap 的基础操作，依赖于 <strong><code>hash() / getNode() / putVal() / putMapEntries() / removeNode()</code></strong> 方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 返回 HashMap 的大小
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">size</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span> <span style="color:#ff79c6">return</span> size<span style="color:#ff79c6">;</span> <span style="color:#ff79c6">}</span>
@@ -529,7 +550,7 @@
     result<span style="color:#ff79c6">.</span><span style="color:#50fa7b">putMapEntries</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">false</span><span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> result<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h3 id="52-转换为单列集合视图">5.2 转换为单列集合视图</h3>
+</code></pre></div><h2 id="52-转换为单列集合视图">5.2 转换为单列集合视图</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 返回 HashMap.KeySet
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> Set<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">keySet</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
     Set<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">&gt;</span> ks<span style="color:#ff79c6">;</span>
@@ -546,8 +567,8 @@
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">(</span>es <span style="color:#ff79c6">=</span> entrySet<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">?</span> <span style="color:#ff79c6">(</span>entrySet <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> EntrySet<span style="color:#ff79c6">())</span> <span style="color:#ff79c6">:</span> es<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name6六实现自map接口的方法a"><!-- raw HTML omitted -->六、实现自Map接口的方法<!-- raw HTML omitted --></h2>
-<h3 id="61-覆盖扩展自-jdk8-map-的默认方法">6.1 覆盖扩展自 JDK8 Map 的默认方法。</h3>
+<h1 id="六实现自map接口的方法">六、实现自Map接口的方法</h1>
+<h2 id="61-覆盖扩展自-jdk8-map-的默认方法">6.1 覆盖扩展自 JDK8 Map 的默认方法。</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 返回指定 key 的 value，如果不包含 key 的映射，则返回 defaultValue
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">public</span> V <span style="color:#50fa7b">getOrDefault</span><span style="color:#ff79c6">(</span>Object key<span style="color:#ff79c6">,</span> V defaultValue<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{}</span>
 <span style="color:#6272a4">// 如果 value 不存在才放入
@@ -568,35 +589,35 @@
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">put</span><span style="color:#ff79c6">(</span>1<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;a&#34;</span><span style="color:#ff79c6">);</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">put</span><span style="color:#ff79c6">(</span>2<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;b&#34;</span><span style="color:#ff79c6">);</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">put</span><span style="color:#ff79c6">(</span>3<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;c&#34;</span><span style="color:#ff79c6">);</span>
-</code></pre></div><h4 id="computeifabsent">computeIfAbsent()</h4>
+</code></pre></div><h3 id="computeifabsent">computeIfAbsent()</h3>
 <p>如果 key 存在，则不进行计算，输出旧值。
 如果 key 不存在，否则根据 key 计算新值，设置并返回。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> V <span style="color:#50fa7b">computeIfAbsent</span><span style="color:#ff79c6">(</span>K key<span style="color:#ff79c6">,</span> Function<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> K<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">extends</span> V<span style="color:#ff79c6">&gt;</span> mappingFunction<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{}</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">computeIfAbsent</span><span style="color:#ff79c6">(</span>3<span style="color:#ff79c6">,</span> key <span style="color:#ff79c6">-&gt;</span> key<span style="color:#ff79c6">.</span><span style="color:#50fa7b">toString</span><span style="color:#ff79c6">());</span> <span style="color:#6272a4">// 结果为：c
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">computeIfAbsent</span><span style="color:#ff79c6">(</span>4<span style="color:#ff79c6">,</span> key <span style="color:#ff79c6">-&gt;</span> key<span style="color:#ff79c6">.</span><span style="color:#50fa7b">toString</span><span style="color:#ff79c6">());</span> <span style="color:#6272a4">// 结果为：4
-</span></code></pre></div><h4 id="computeifpresent">computeIfPresent()</h4>
+</span></code></pre></div><h3 id="computeifpresent">computeIfPresent()</h3>
 <p>如果 key 存在，则根据 key/value 计算新的值，设置并返回，如果计算结果为 null，则删除 Node。
 如果 key 不存在，不进行计算。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> V <span style="color:#50fa7b">computeIfPresent</span><span style="color:#ff79c6">(</span>K key<span style="color:#ff79c6">,</span> BiFunction<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> K<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">super</span> V<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">extends</span> V<span style="color:#ff79c6">&gt;</span> remappingFunction<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{}</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">computeIfPresent</span><span style="color:#ff79c6">(</span>3<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>key<span style="color:#ff79c6">,</span> value<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> key <span style="color:#ff79c6">+</span> value<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 结果为：3c
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">computeIfPresent</span><span style="color:#ff79c6">(</span>4<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>key<span style="color:#ff79c6">,</span> value<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> key <span style="color:#ff79c6">+</span> value<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 无结果
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">computeIfPresent</span><span style="color:#ff79c6">(</span>2<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>key<span style="color:#ff79c6">,</span> value<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 将 key 为2的 Node 删除
-</span></code></pre></div><h4 id="compute">compute()</h4>
+</span></code></pre></div><h3 id="compute">compute()</h3>
 <p><strong><code>compute()</code></strong> 方法是 <strong><code>computeIfAbsent()</code></strong> 和 <strong><code>computeIfPresent()</code></strong> 方法的合体。
 无论 key 是否存在，都根据 key/value 计算新值，如果计算结果为 null，则删除 Node。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> V <span style="color:#50fa7b">compute</span><span style="color:#ff79c6">(</span>K key<span style="color:#ff79c6">,</span> BiFunction<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> K<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">super</span> V<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">extends</span> V<span style="color:#ff79c6">&gt;</span> remappingFunction<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{}</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">compute</span><span style="color:#ff79c6">(</span>3<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>k<span style="color:#ff79c6">,</span> v<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> k <span style="color:#ff79c6">+</span> v<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 结果为：3c
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">compute</span><span style="color:#ff79c6">(</span>4<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>k<span style="color:#ff79c6">,</span> v<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> k <span style="color:#ff79c6">+</span> v<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 结果为：4null
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">compute</span><span style="color:#ff79c6">(</span>2<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>k<span style="color:#ff79c6">,</span> v<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 将 key 为2的 Node 删除
-</span></code></pre></div><h4 id="merge">merge()</h4>
+</span></code></pre></div><h3 id="merge">merge()</h3>
 <p>无论 key 是否存在，都根据 <strong>旧值</strong> 与 <strong>新值</strong> 进行计算，设置并返回计算结果，如果计算结果为 null，则删除 Node。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> V <span style="color:#50fa7b">merge</span><span style="color:#ff79c6">(</span>K key<span style="color:#ff79c6">,</span> V value<span style="color:#ff79c6">,</span> BiFunction<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">super</span> V<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">super</span> V<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">extends</span> V<span style="color:#ff79c6">&gt;</span> remappingFunction<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{}</span>
 map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">merge</span><span style="color:#ff79c6">(</span>3<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;ccc&#34;</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>oldV<span style="color:#ff79c6">,</span> newV<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> oldV <span style="color:#ff79c6">+</span> newV<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 结果为：cccc
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">merge</span><span style="color:#ff79c6">(</span>4<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;ddd&#34;</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>oldV<span style="color:#ff79c6">,</span> newV<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> oldV <span style="color:#ff79c6">+</span> newV<span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 结果为：ddd
 </span><span style="color:#6272a4"></span>map<span style="color:#ff79c6">.</span><span style="color:#50fa7b">merge</span><span style="color:#ff79c6">(</span>2<span style="color:#ff79c6">,</span> <span style="color:#f1fa8c">&#34;bbb&#34;</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">(</span>oldV<span style="color:#ff79c6">,</span> newV<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">);</span> <span style="color:#6272a4">// 将 key 为2的 Node 删除
 </span></code></pre></div><hr>
-<h2 id="a-name7七hashmap静态工具方法a"><!-- raw HTML omitted -->七、HashMap静态工具方法<!-- raw HTML omitted --></h2>
-<h3 id="a-namehash71-hashobject-方法a"><!-- raw HTML omitted -->7.1 hash(Object) 方法<!-- raw HTML omitted --></h3>
+<h1 id="七hashmap静态工具方法">七、HashMap静态工具方法</h1>
+<h2 id="71-hashobject-方法">7.1 hash(Object) 方法</h2>
 <p>对 key 计算 hashCode 计算，int 类型的 hashCode 占 32 位，<strong><code>h &gt;&gt;&gt; 16</code></strong> 将 hashCode 右移16位，再与 hashCode 进行异或运算。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hash</span><span style="color:#ff79c6">(</span>Object key<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> h<span style="color:#ff79c6">;</span>
@@ -618,7 +639,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
 </span><span style="color:#6272a4"></span>1111 1111 1111 1111 1111 0101 1100 0101       <span style="color:#6272a4">// (n - 1) &amp; hash
 </span><span style="color:#6272a4"></span>0000 0000 0000 0000 0000 0000 0000 0101       <span style="color:#6272a4">// 计算结果为：101 -&gt; 5
 </span></code></pre></div><p>只有最低的4位参与了计算，<strong>该 key 在 table 的 tab[5] 位置</strong>。</p>
-<h3 id="72-tablesizeforint-方法">7.2 tableSizeFor(int) 方法</h3>
+<h2 id="72-tablesizeforint-方法">7.2 tableSizeFor(int) 方法</h2>
 <p>此方法保证返回值是大于等于给定参数 cap 最小的2的幂次方的数值。具体算法是分别进行多次 <strong>右移</strong>，每次进行 <strong>或等运算</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">tableSizeFor</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span> cap<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> n <span style="color:#ff79c6">=</span> cap <span style="color:#ff79c6">-</span> 1<span style="color:#ff79c6">;</span>
@@ -655,8 +676,8 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
 </span><span style="color:#6272a4"></span>
 0001 0000      <span style="color:#6272a4">// 最后结果 n = n + 1 = 16
 </span></code></pre></div><hr>
-<h2 id="a-name8八其他主要方法a"><!-- raw HTML omitted -->八、其他主要方法<!-- raw HTML omitted --></h2>
-<h4 id="putmapentriesmap-boolean">putMapEntries(Map, boolean)</h4>
+<h1 id="八其他主要方法">八、其他主要方法</h1>
+<h2 id="putmapentriesmap-boolean">putMapEntries(Map, boolean)</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 批量放入
 </span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">putMapEntries</span><span style="color:#ff79c6">(</span>Map<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> K<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">?</span> <span style="color:#8be9fd;font-style:italic">extends</span> V<span style="color:#ff79c6">&gt;</span> m<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">boolean</span> evict<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
     <span style="color:#8be9fd">int</span> s <span style="color:#ff79c6">=</span> m<span style="color:#ff79c6">.</span><span style="color:#50fa7b">size</span><span style="color:#ff79c6">();</span>
@@ -677,7 +698,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
         <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">}</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="getnodeint-object">getNode(int, Object)</h4>
+</code></pre></div><h2 id="getnodeint-object">getNode(int, Object)</h2>
 <p><strong>执行过程分析：</strong></p>
 <p>根据 <strong><code>(tab.length - 1) &amp; hash</code></strong> 计算出元素在 table 中的索引位置，优先判断第一个：</p>
 <ul>
@@ -708,7 +729,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="putvalint-k-v-boolean-boolean-方法">putVal(int, K, V, boolean, boolean) 方法</h4>
+</code></pre></div><h2 id="putvalint-k-v-boolean-boolean-方法">putVal(int, K, V, boolean, boolean) 方法</h2>
 <p><strong>执行过程分析：</strong></p>
 <ol>
 <li>先判断 table 是否为空，如果为空，进行扩容。</li>
@@ -772,7 +793,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
     afterNodeInsertion<span style="color:#ff79c6">(</span>evict<span style="color:#ff79c6">);</span>
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="resize-方法">resize() 方法</h4>
+</code></pre></div><h2 id="resize-方法">resize() 方法</h2>
 <p><strong>执行过程分析：</strong></p>
 <ol>
 <li>先判断旧容量是否大于 0：</li>
@@ -886,7 +907,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
     <span style="color:#ff79c6">}</span>
     <span style="color:#ff79c6">return</span> newTab<span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h4 id="removenodeint-object-object-boolean-boolean-方法">removeNode(int, Object, Object, boolean, boolean) 方法</h4>
+</code></pre></div><h2 id="removenodeint-object-object-boolean-boolean-方法">removeNode(int, Object, Object, boolean, boolean) 方法</h2>
 <p>核心删除方法，其他 remove 方法都依赖于此方法。
 <strong>执行过程分析：</strong></p>
 <ol>
@@ -939,7 +960,7 @@ tab<span style="color:#ff79c6">[(</span>n <span style="color:#ff79c6">-</span> 1
     <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">;</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="a-name9九迭代器a"><!-- raw HTML omitted -->九、迭代器<!-- raw HTML omitted --></h2>
+<h1 id="九迭代器">九、迭代器</h1>
 <p><strong><code>keySet()</code></strong>，<strong><code>values()</code></strong>，<strong><code>entrySet()</code></strong> 三个视图方法中的迭代器都为 <strong><code>HashIterator</code></strong> 抽象类的实例。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">HashIterator</span> <span style="color:#ff79c6">{</span>
     Node<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">,</span>V<span style="color:#ff79c6">&gt;</span> next<span style="color:#ff79c6">;</span>        <span style="color:#6272a4">// 链接下一个 Node

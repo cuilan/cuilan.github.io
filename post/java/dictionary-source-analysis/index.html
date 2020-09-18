@@ -123,13 +123,13 @@
                             <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
                         </li>
                         
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
                     
                     
 		    
-                        <li><a href="/top/books/">BOOKS</a></li>
-                    
-                        <li><a href="/top/about/">ABOUT</a></li>
-                    
 
                     
 		    <li>
@@ -238,27 +238,22 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
-      <ul>
-        <li><a href="#一dictionary特点或规范">一、Dictionary特点或规范</a></li>
-        <li><a href="#二构造器">二、构造器</a></li>
-        <li><a href="#三方法描述">三、方法描述</a></li>
-      </ul>
-    </li>
+    <li><a href="#一dictionary特点或规范">一、Dictionary特点或规范</a></li>
+    <li><a href="#二构造器">二、构造器</a></li>
+    <li><a href="#三方法描述">三、方法描述</a></li>
   </ul>
 </nav>
                 
-                <h2 id="一dictionary特点或规范">一、Dictionary特点或规范</h2>
+                <h1 id="一dictionary特点或规范">一、Dictionary特点或规范</h1>
 <p>Dictionary 抽象类形式上等同于一个接口，其全部方法都是抽象方法。它是 Hashtable 的父类，它将 键 映射到 值。每个键和每个值都是一个对象。在任何一个 Dictionary 对象中，每个键最多与一个值相关联。给定一个 Dictionary 和一个键，可以查找关联的元素。任何非 null 对象都可以用作键和值。通常，此类的实现应使用 <strong><code>equals()</code></strong> 方法来确定两个键是否相同。</p>
-<p><!-- raw HTML omitted -->注意<!-- raw HTML omitted -->：此类已过时。</p>
-<!-- raw HTML omitted -->
+<p><strong>注意</strong>：此类已过时。</p>
 <hr>
-<h2 id="二构造器">二、构造器</h2>
+<h1 id="二构造器">二、构造器</h1>
 <p>唯一空参构造器。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">Dictionary</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
 <span style="color:#ff79c6">}</span>
 </code></pre></div><hr>
-<h2 id="三方法描述">三、方法描述</h2>
+<h1 id="三方法描述">三、方法描述</h1>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">size</span><span style="color:#ff79c6">();</span>
 <span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">isEmpty</span><span style="color:#ff79c6">();</span>
 <span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">public</span> Enumeration<span style="color:#ff79c6">&lt;</span>K<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">keys</span><span style="color:#ff79c6">();</span>
