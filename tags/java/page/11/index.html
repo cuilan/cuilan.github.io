@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://cuilan.github.io//img/tag-bg.jpg">
-    <meta property="twitter:image" content="https://cuilan.github.io//img/tag-bg.jpg" />
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
     
 
     
@@ -174,7 +174,7 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-coffee.jpeg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
@@ -205,14 +205,98 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-memory-exceptions/">
+    <a href="https://cuilan.github.io/post/jvm/jvm-gc-log/">
         <h2 class="post-title">
-            一、Java内存区域与内存溢出异常
+            七、理解GC日志
         </h2>
 	
         <div class="post-content-preview">
 	
-            1、概述 Java虚拟机自动内存管理机制，不需要为每一个new操作去写配对的delete/free代码，不容易出现内存泄露和内存溢出的问题，由
+            每一种收集器的日志形式都是由它们自身的实现所决定的，换而言之，每个收集器的日志格式都可以不一样。但虚拟机设计者为了方便用户阅读，将各个收集器
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Thursday, November 8, 2018
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/jvm/jvm-garbage-collector/">
+        <h2 class="post-title">
+            六、垃圾收集器
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            收集算法是内存回收的方法论，而 垃圾收集器就是内存回收的具体实现 。Java虚拟机规范中对垃圾收集器应该如何实现并没有任何规定，因此不同的厂商、
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Thursday, November 8, 2018
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/jvm/jvm-hotspot-algorithm/">
+        <h2 class="post-title">
+            五、HotSpot的算法实现
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            枚举根节点 以可达性分析中从GC Roots节点找引用链这个操作为例， 可作为GC Roots的节点主要在全局性的引用（如常量或类静态属性）与执行上
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Thursday, November 8, 2018
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/jvm/jvm-gc-algorithm/">
+        <h2 class="post-title">
+            四、垃圾回收算法
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            标记-清除算法 最基础的收集算法是“ 标记-清除 ”（Mark-Sweep）算法，如同它的名字一样，算法分为“标记”和“清除”两个阶段： 首先标记出
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Thursday, November 8, 2018
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/jvm/jvm-gc-memory-strategy/">
+        <h2 class="post-title">
+            三、垃圾收集器与内存分配策略
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            1、概述 第一门正真使用内存动态分配和垃圾回收技术的语言是Lisp语言。 在Java各内存区域中，程序计数器、虚拟机栈、本地方法区3个区域随线程
        
         </div>
     </a>
@@ -235,6 +319,10 @@
         <a href="/tags/java/page/10/">&larr; Newer Posts</a>
     </li>
     
+    
+    <li class="next">
+        <a href="/tags/java/page/12/">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -268,6 +356,12 @@
                 
                     <a href="/tags/nginx" title="nginx">
                         nginx
+                    </a>
+                
+            
+                
+                    <a href="/tags/springioc" title="springioc">
+                        springioc
                     </a>
                 
             

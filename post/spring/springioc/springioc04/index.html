@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="CUILAN">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
+    
+
+    
+    <meta name="title" content="AnnotationConfigApplicationContext启动入口" />
+    <meta property="og:title" content="AnnotationConfigApplicationContext启动入口" />
+    <meta property="twitter:title" content="AnnotationConfigApplicationContext启动入口" />
+    
+
+    
+    <meta name="description" content="Java程序员">
+    <meta property="og:description" content="Java程序员" />
+    <meta property="twitter:description" content="Java程序员" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>AnnotationConfigApplicationContext启动入口-EchoGreen</title>
+
+    <link rel="canonical" href="/post/spring/springioc/springioc04/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CUILAN</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java%E8%99%9A%E6%8B%9F%E6%9C%BA">java虚拟机</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6">中间件</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B">并发编程</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/tag-bg.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        <a class="tag" href="/tags/springioc" title="SpringIOC">
+                            SpringIOC
+                        </a>
+                        
+                    </div>
+                    <h1>AnnotationConfigApplicationContext启动入口</h1>
+                    <h2 class="subheading">SpringIOC源码分析一，AnnotationConfigApplicationContext启动入口，BeanFactory</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                CUILAN
+                         
+                        on 
+                        Saturday, September 19, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一annotationconfigapplicationcontext-入口">一、AnnotationConfigApplicationContext 入口</a></li>
+    <li><a href="#二annotationconfigapplicationcontext-构造方法">二、AnnotationConfigApplicationContext 构造方法</a>
+      <ul>
+        <li><a href="#21-初始化-annotatedbeandefinitionreader">2.1 初始化 AnnotatedBeanDefinitionReader</a></li>
+        <li><a href="#22-初始化-classpathbeandefinitionscanner">2.2 初始化 ClassPathBeanDefinitionScanner</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h1 id="一annotationconfigapplicationcontext-入口">一、AnnotationConfigApplicationContext 入口</h1>
+<p>依赖于 Spring5.X 版本，目前大多数项目已放弃基于 XML 配置的方式，所以本文基于 <strong>JavaConfig</strong> 注解配置的方式理解 Spring 上下文启动的流程。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">AnnotationConfigApplicationContext context <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> AnnotationConfigApplicationContext<span style="color:#ff79c6">(</span>Config<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+<span style="color:#6272a4">// 或
+</span><span style="color:#6272a4"></span>AnnotationConfigApplicationContext context <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> AnnotationConfigApplicationContext<span style="color:#ff79c6">();</span>
+</code></pre></div><h1 id="二annotationconfigapplicationcontext-构造方法">二、AnnotationConfigApplicationContext 构造方法</h1>
+<p>无论通过哪种方式最终都会调用默认构造器。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">AnnotationConfigApplicationContext</span><span style="color:#ff79c6">(</span>Class<span style="color:#ff79c6">&lt;?&gt;...</span> componentClasses<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#6272a4">// 先调用当前类的构造器，初始化BeanDefinition的读取器、扫描器
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">this</span><span style="color:#ff79c6">();</span>
+	<span style="color:#6272a4">// 注册配置类，本身也作为一个BeanDefinition被注册
+</span><span style="color:#6272a4"></span>	register<span style="color:#ff79c6">(</span>componentClasses<span style="color:#ff79c6">);</span>
+	<span style="color:#6272a4">// 刷新方法
+</span><span style="color:#6272a4"></span>	refresh<span style="color:#ff79c6">();</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><p><strong>默认构造器</strong>，优先调用父类 <code>GenericApplicationContext</code> 的构造器。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">AnnotationConfigApplicationContext</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#6272a4">// 优先调用父类的构造器，GenericApplicationContext，初始化BeanFactory
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// 初始化被注解的BeanDefinition读取器
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">reader</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> AnnotatedBeanDefinitionReader<span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">);</span>
+	<span style="color:#6272a4">// 初始化ClassPath下BeanDefinition的扫描器
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// 这里的 scanner 仅仅是提供给程序员外部调用的，Spring 内部扫描包使用的是下面方法中的 scanner
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// org.springframework.context.annotation.ComponentScanAnnotationParser#parse
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">scanner</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ClassPathBeanDefinitionScanner<span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">);</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">GenericApplicationContext</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanFactory</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> DefaultListableBeanFactory<span style="color:#ff79c6">();</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><p>AnnotationConfigApplicationContext 默认构造器中做了两件事：</p>
+<ul>
+<li>初始化 <code>AnnotatedBeanDefinitionReader</code> BeanDefinition读取器</li>
+<li>初始化 <code>ClassPathBeanDefinitionScanner</code> 仅供程序员外部调用，并不是 Spring 内部扫描包的类</li>
+</ul>
+<h2 id="21-初始化-annotatedbeandefinitionreader">2.1 初始化 AnnotatedBeanDefinitionReader</h2>
+<h3 id="为-beanfactory-注册后置处理器">为 BeanFactory 注册后置处理器</h3>
+<p>实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils，
+registerAnnotationConfigProcessors 方法很重要，在这个方法中为容器注册一系列内部的 BeanPostProcessor 后置处理器（6个）。</p>
+<ul>
+<li><strong>ConfigurationClassPostProcessor</strong>: 提供 Java 配置类处理能力。</li>
+<li><strong>AutowiredAnnotationBeanPostProcessor</strong>: 提供 Autowired 注解的Bean后置处理器功能。</li>
+<li><strong>CommonAnnotationBeanPostProcessor</strong>: 提供 JSR250 标准的通用注解处理器功能，Resource 注解，@@PostConstruct，@PreDestroy 等。</li>
+<li><strong>PersistenceAnnotationBeanPostProcessor</strong>: 提供 JPA 相关支持。</li>
+<li><strong>DefaultEventListenerFactory</strong></li>
+<li><strong>EventListenerMethodProcessor</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> Set<span style="color:#ff79c6">&lt;</span>BeanDefinitionHolder<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">registerAnnotationConfigProcessors</span><span style="color:#ff79c6">(</span>
+		BeanDefinitionRegistry registry<span style="color:#ff79c6">,</span> @Nullable Object source<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+	DefaultListableBeanFactory beanFactory <span style="color:#ff79c6">=</span> unwrapDefaultListableBeanFactory<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>beanFactory <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		<span style="color:#6272a4">// AnnotationAwareOrderComparator 的主要功能是解析 @Order 注解和 @Priority
+</span><span style="color:#6272a4"></span>		<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!(</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getDependencyComparator</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">instanceof</span> AnnotationAwareOrderComparator<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+			beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setDependencyComparator</span><span style="color:#ff79c6">(</span>AnnotationAwareOrderComparator<span style="color:#ff79c6">.</span><span style="color:#50fa7b">INSTANCE</span><span style="color:#ff79c6">);</span>
+		<span style="color:#ff79c6">}</span>
+		<span style="color:#6272a4">// ContextAnnotationAutowireCandidateResolver 提供处理延迟加载的功能
+</span><span style="color:#6272a4"></span>		<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!(</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getAutowireCandidateResolver</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">instanceof</span> ContextAnnotationAutowireCandidateResolver<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+			beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setAutowireCandidateResolver</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> ContextAnnotationAutowireCandidateResolver<span style="color:#ff79c6">());</span>
+		<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// BeanDefinitionHolder 是对beanName和BeanDefinition的封装
+</span><span style="color:#6272a4"></span>	Set<span style="color:#ff79c6">&lt;</span>BeanDefinitionHolder<span style="color:#ff79c6">&gt;</span> beanDefs <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> LinkedHashSet<span style="color:#ff79c6">&lt;&gt;(</span>8<span style="color:#ff79c6">);</span>
+	<span style="color:#6272a4">// ConfigurationClassPostProcessor 的类型是 BeanDefinitionRegistryPostProcessor
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// BeanDefinitionRegistryPostProcessor 是 BeanFactoryPostProcessor 的子接口
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">(</span>ConfigurationClassPostProcessor<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// AutowiredAnnotationBeanPostProcessor 提供 Autowired 注解的Bean后置处理器功能
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">(</span>AutowiredAnnotationBeanPostProcessor<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// CommonAnnotationBeanPostProcessor 提供 JSR250 标准的通用注解处理器功能，Resource 注解
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>jsr250Present <span style="color:#ff79c6">&amp;&amp;</span> <span style="color:#ff79c6">!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>COMMON_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">(</span>CommonAnnotationBeanPostProcessor<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> COMMON_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// PersistenceAnnotationBeanPostProcessor 提供 JPA 相关支持
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// Check for JPA support, and if present add the PersistenceAnnotationBeanPostProcessor.
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>jpaPresent <span style="color:#ff79c6">&amp;&amp;</span> <span style="color:#ff79c6">!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">();</span>
+		<span style="color:#ff79c6">try</span> <span style="color:#ff79c6">{</span>
+			def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setBeanClass</span><span style="color:#ff79c6">(</span>ClassUtils<span style="color:#ff79c6">.</span><span style="color:#50fa7b">forName</span><span style="color:#ff79c6">(</span>PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME<span style="color:#ff79c6">,</span>
+					AnnotationConfigUtils<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">getClassLoader</span><span style="color:#ff79c6">()));</span>
+		<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">catch</span> <span style="color:#ff79c6">(</span>ClassNotFoundException ex<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+			<span style="color:#ff79c6">throw</span> <span style="color:#ff79c6">new</span> IllegalStateException<span style="color:#ff79c6">(</span>
+					<span style="color:#f1fa8c">&#34;Cannot load optional framework class: &#34;</span> <span style="color:#ff79c6">+</span> PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME<span style="color:#ff79c6">,</span> ex<span style="color:#ff79c6">);</span>
+		<span style="color:#ff79c6">}</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>EVENT_LISTENER_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">(</span>EventListenerMethodProcessor<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> EVENT_LISTENER_PROCESSOR_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBeanDefinition</span><span style="color:#ff79c6">(</span>EVENT_LISTENER_FACTORY_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		RootBeanDefinition def <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> RootBeanDefinition<span style="color:#ff79c6">(</span>DefaultEventListenerFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		def<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setSource</span><span style="color:#ff79c6">(</span>source<span style="color:#ff79c6">);</span>
+		beanDefs<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>registerPostProcessor<span style="color:#ff79c6">(</span>registry<span style="color:#ff79c6">,</span> def<span style="color:#ff79c6">,</span> EVENT_LISTENER_FACTORY_BEAN_NAME<span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">return</span> beanDefs<span style="color:#ff79c6">;</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><h3 id="beanpostprocessor-后置处理器">BeanPostProcessor 后置处理器</h3>
+<p>BeanPostProcessor 是 Spring 框架的一个扩展点（不止一个，5个扩展点），通过实现 BeanPostProcessor 接口，
+程序员可以干预 Bean 的实例化的过程，从而减轻了 BeanFactory 的负担，这个接口可以设置多个，会形成一个列表，然后依次执行。
+比如，AOP 就是在 Bean 实例化后期将切面逻辑织入 Bean 实例中的，AOP 也正是通过 BeanPostProcessor 和 IOC 容器建立联系的
+（由 Spring 提供的默认的 PostProcessor，Spring 提供了很多默认的 PostProcessor 的实现类）。</p>
+<p>BeanPostProcessor 常用实现类：</p>
+<ol>
+<li>ApplicationContextAwareProcessor</li>
+<li>InitDestroyAnnotationBeanPostProcessor</li>
+<li>InstantiationAwareBeanPostProcessor</li>
+<li>CommonAnnotationBeanPostProcessor</li>
+<li>AutowiredAnnotationBeanPostProcessor</li>
+<li>RequiredAnnotationBeanPostProcessor</li>
+<li>BeanValidationPostProcessor</li>
+<li>AbstractAutoProxyCreator</li>
+<li>BeanFactoryPostProcessor</li>
+<li>ConfigurableListableBeanFactory</li>
+</ol>
+<h2 id="22-初始化-classpathbeandefinitionscanner">2.2 初始化 ClassPathBeanDefinitionScanner</h2>
+<p>初始化ClassPath下BeanDefinition的扫描器，这里的 scanner 仅仅是提供给程序员外部调用的，Spring 内部扫描包使用的是下面方法中的 scanner</p>
+<p><strong>org.springframework.context.annotation.ComponentScanAnnotationParser#parse()</strong></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://cuilan.github.io/"><img src="/img/favicon.png" />CUILAN</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/spring/springioc/springioc02/" data-toggle="tooltip" data-placement="top" title="AOP&amp;切面表达式">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/spring/springioc/springioc05/" data-toggle="tooltip" data-placement="top" title="Spring注册Bean的流程">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/nginx" title="nginx">
+                            nginx
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springioc" title="springioc">
+                            springioc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springmvc" title="springmvc">
+                            springmvc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" title="多线程">
+                            多线程
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91" title="并发">
+                            并发
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA" title="概率论">
+                            概率论
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
+                            目录
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6" title="统计学">
+                            统计学
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA" title="虚拟机">
+                            虚拟机
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6" title="集合框架">
+                            集合框架
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:17746598041@163.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/mengdond24">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuilan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; CUILAN 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

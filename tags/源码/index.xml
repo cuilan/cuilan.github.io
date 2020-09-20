@@ -6,7 +6,61 @@
     <description>Recent content in 源码 on CUILAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 Nov 2019 15:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/tags/%E6%BA%90%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 20 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/tags/%E6%BA%90%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring注册Bean的流程</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc05/</link>
+      <pubDate>Sun, 20 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc05/</guid>
+      <description>Spring注册Bean的流程 一、register方法 使用 register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。 // 注册普遍Bean</description>
+    </item>
+    
+    <item>
+      <title>AnnotationConfigApplicationContext启动入口</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc04/</link>
+      <pubDate>Sat, 19 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc04/</guid>
+      <description>一、AnnotationConfigApplicationContext 入口 依赖于 Spring5.X 版本，目前大多数项目已放弃基于 XML 配置的方式，所以本文基于</description>
+    </item>
+    
+    <item>
+      <title>AOP&amp;切面表达式</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc02/</link>
+      <pubDate>Fri, 18 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc02/</guid>
+      <description>一. 什么是AOP？ AOP（Aspect Oriented Programming）面向切面编程，是相对OOP而言的，AOP关注的是切面，是程序的横切点通用性问</description>
+    </item>
+    
+    <item>
+      <title>IOC容器&amp;Bean的注入</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc01/</link>
+      <pubDate>Fri, 18 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc01/</guid>
+      <description>一. 为什么要使用Spring 1. 什么是控制翻转（IOC）？ IOC：Inversion of control，控制翻转，是一种设计思想 2. 控制翻转的几种</description>
+    </item>
+    
+    <item>
+      <title>代理模式Proxy</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc03/</link>
+      <pubDate>Fri, 18 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc03/</guid>
+      <description>一. 什么是代理 代理的名词： 目标对象：被代理对象 代理对象：增强后的代理对象 二. Java实现代理的两种方式 1. 静态代理 1) 继承 代理对象继承目标对象，</description>
+    </item>
+    
+    <item>
+      <title>SpringIOC容器源码分析</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc/</link>
+      <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc/</guid>
+      <description>目录 Spring-Core 应用 IOC容器&amp;amp;Bean的注入 AOP&amp;amp;切面表达式 代理模式Proxy Spring-Core &amp;amp; Spring-Context 源码分析 SpringIOC源码分析一 AnnotationConfigApplicationContext 启动入口</description>
+    </item>
+    
     <item>
       <title>3.SpringMVC的请求如何分发？</title>
       <link>https://cuilan.github.io/post/spring/springmvc/springmvc-03/</link>

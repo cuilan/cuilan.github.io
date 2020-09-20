@@ -11,8 +11,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://cuilan.github.io//img/tag-bg.jpg">
-    <meta property="twitter:image" content="https://cuilan.github.io//img/tag-bg.jpg" />
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
     
 
     
@@ -175,7 +175,7 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-coffee.jpeg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
@@ -206,19 +206,19 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%BA%8C/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9B%9B/">
         <h2 class="post-title">
-            Java并发机制的底层实现原理（synchronized）
+            Java内存模型四（volatile内存语义）
         </h2>
 	
         <div class="post-content-preview">
 	
-            synchronized 一般称之为重量级锁，在Java1.6中对 synchronized 进行了各种优化，在有些情况下它并不那么重了。 利用synchronized实现同步的基础 在Java
+            1、volatile的特性 可见性：对一个 volatile 变量的读，总是能看到（任意线程）对这个 volatile 变量最后的写入。 原子性：对任意单个 volatile 变量的读/写具有原子性
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Thursday, March 21, 2019
+    Posted by CUILAN Thursday, May 30, 2019
     
     
     </p>
@@ -227,19 +227,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/java/java-object-head/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%89/">
         <h2 class="post-title">
-            Java对象头详解
+            Java内存模型三（顺序一致性）
         </h2>
 	
         <div class="post-content-preview">
 	
-            由于Java面向对象的思想，在JVM中需要大量存储对象，存储时为了实现一些额外的功能，需要在对象中添加一些标记字段用于增强对象功能，这些标记
+            顺序一致性内存模型 是一个理论参考模型。处理器的内存模型 和 编程语言的内存模型 都会以其作为参考。 1、数据竞争与顺序一致性 Java内存模型规范对 数
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Friday, March 15, 2019
+    Posted by CUILAN Wednesday, May 29, 2019
     
     
     </p>
@@ -248,19 +248,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%80/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%BA%8C/">
         <h2 class="post-title">
-            Java并发机制的底层实现原理（volatile）
+            Java内存模型二（重排序）
         </h2>
 	
         <div class="post-content-preview">
 	
-            Java中所使用的并发机制依赖于JVM的实现和CPU的指令。在多线程并发编程中 synchronized 和 volatile 都扮演着重要的角色。 volatile的应用 volatile 是轻量级的 s
+            重排序：指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。 1、数据依赖性 如果两个操作访问同一个变量，且这两个操作中有一个为
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Tuesday, March 5, 2019
+    Posted by CUILAN Monday, May 27, 2019
     
     
     </p>
@@ -269,19 +269,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%80/">
         <h2 class="post-title">
-            Java并发解决方案
+            Java内存模型一（基础）
         </h2>
 	
         <div class="post-content-preview">
 	
-            Java并发编程的缺陷 上下文切换带来的CPU开销 死锁 物理硬件的限制 软件资源的限制 为什么需要并发？ 并发其实是一种解耦合的策略，这种策略帮助我们
+            Java内存模型的基础：主要介绍内存模型相关的基本概念 Java内存模型中的顺序一致性：主要介绍 重排序 与 顺序一致性内存模型 同步原语：主要介绍3
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Monday, March 4, 2019
+    Posted by CUILAN Wednesday, May 22, 2019
     
     
     </p>
@@ -290,54 +290,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E6%9D%82%E9%A1%B9/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/%E4%BA%8C%E9%9A%8F%E6%9C%BA%E4%BA%8B%E4%BB%B6%E9%97%B4%E7%9A%84%E8%BF%90%E7%AE%97%E5%BE%8B/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%89/">
         <h2 class="post-title">
-            二、随机事件间的运算律
+            Java并发机制的底层实现原理（原子操作）
         </h2>
 	
         <div class="post-content-preview">
 	
-            <h2 id="基本定律">基本定律：</h2>
-<p><strong>幂等律</strong>：A∪A = A，A∩A = A
-<strong>交换律</strong>：A∪B = B∪A，A∩B = B∩A
-<strong>结合律</strong>：(A∪B)∪C = A∪(B∪C)，(A∩B)∩C = A∩(B∩C)
-<strong>分配律</strong>：A∩(B∪C) = (A∩B)∪(A∩C)，A∪(B∩C) = (A∪B)∩(A∪C)</p>
-<h2 id="demorgan德摩根定律">De·Morgan（德·摩根）定律：</h2>
-<p>非(A且B) = 非A或非B
-
-  <figure>
-    <img src="/images/%e6%9d%82%e9%a1%b9/%e4%ba%8c%e3%80%81%e9%9a%8f%e6%9c%ba%e4%ba%8b%e4%bb%b6%e9%97%b4%e7%9a%84%e8%bf%90%e7%ae%97%e5%be%8b/1.png" alt="德·摩根">
-    <center><figcaption>德·摩根</figcaption></center>
-  </figure>
-
-</p>
-<p>非(A或B) = 非A且非B
-
-  <figure>
-    <img src="/images/%e6%9d%82%e9%a1%b9/%e4%ba%8c%e3%80%81%e9%9a%8f%e6%9c%ba%e4%ba%8b%e4%bb%b6%e9%97%b4%e7%9a%84%e8%bf%90%e7%ae%97%e5%be%8b/2.png" alt="德·摩根">
-    <center><figcaption>德·摩根</figcaption></center>
-  </figure>
-
-</p>
-<p>
-  <figure>
-    <img src="/images/%e6%9d%82%e9%a1%b9/%e4%ba%8c%e3%80%81%e9%9a%8f%e6%9c%ba%e4%ba%8b%e4%bb%b6%e9%97%b4%e7%9a%84%e8%bf%90%e7%ae%97%e5%be%8b/3.png" alt="德·摩根">
-    <center><figcaption>德·摩根</figcaption></center>
-  </figure>
-
-</p>
-<p>
-  <figure>
-    <img src="/images/%e6%9d%82%e9%a1%b9/%e4%ba%8c%e3%80%81%e9%9a%8f%e6%9c%ba%e4%ba%8b%e4%bb%b6%e9%97%b4%e7%9a%84%e8%bf%90%e7%ae%97%e5%be%8b/4.png" alt="德·摩根">
-    <center><figcaption>德·摩根</figcaption></center>
-  </figure>
-
-</p>
+            原子操作：不可被中断的一个或一系列操作。 一、处理器如何实现原子操作 使用总线锁保证原子性 第一个机制是通过总线锁保证原子性。如果多个处理器同时对
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Wednesday, January 9, 2019
+    Posted by CUILAN Monday, April 1, 2019
     
     
     </p>
@@ -392,6 +357,12 @@
                 
                     <a href="/tags/nginx" title="nginx">
                         nginx
+                    </a>
+                
+            
+                
+                    <a href="/tags/springioc" title="springioc">
+                        springioc
                     </a>
                 
             

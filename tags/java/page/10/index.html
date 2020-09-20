@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://cuilan.github.io//img/tag-bg.jpg">
-    <meta property="twitter:image" content="https://cuilan.github.io//img/tag-bg.jpg" />
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
     
 
     
@@ -174,7 +174,7 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-coffee.jpeg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
@@ -205,19 +205,19 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-garbage-collector/">
+    <a href="https://cuilan.github.io/post/java/java-object-head/">
         <h2 class="post-title">
-            六、垃圾收集器
+            Java对象头详解
         </h2>
 	
         <div class="post-content-preview">
 	
-            收集算法是内存回收的方法论，而 垃圾收集器就是内存回收的具体实现 。Java虚拟机规范中对垃圾收集器应该如何实现并没有任何规定，因此不同的厂商、
+            由于Java面向对象的思想，在JVM中需要大量存储对象，存储时为了实现一些额外的功能，需要在对象中添加一些标记字段用于增强对象功能，这些标记
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Thursday, November 8, 2018
+    Posted by CUILAN Friday, March 15, 2019
     
     
     </p>
@@ -226,19 +226,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-hotspot-algorithm/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%80/">
         <h2 class="post-title">
-            五、HotSpot的算法实现
+            Java并发机制的底层实现原理（volatile）
         </h2>
 	
         <div class="post-content-preview">
 	
-            枚举根节点 以可达性分析中从GC Roots节点找引用链这个操作为例， 可作为GC Roots的节点主要在全局性的引用（如常量或类静态属性）与执行上
+            Java中所使用的并发机制依赖于JVM的实现和CPU的指令。在多线程并发编程中 synchronized 和 volatile 都扮演着重要的角色。 volatile的应用 volatile 是轻量级的 s
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Thursday, November 8, 2018
+    Posted by CUILAN Tuesday, March 5, 2019
     
     
     </p>
@@ -247,19 +247,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-gc-algorithm/">
+    <a href="https://cuilan.github.io/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
         <h2 class="post-title">
-            四、垃圾回收算法
+            Java并发解决方案
         </h2>
 	
         <div class="post-content-preview">
 	
-            标记-清除算法 最基础的收集算法是“ 标记-清除 ”（Mark-Sweep）算法，如同它的名字一样，算法分为“标记”和“清除”两个阶段： 首先标记出
+            Java并发编程的缺陷 上下文切换带来的CPU开销 死锁 物理硬件的限制 软件资源的限制 为什么需要并发？ 并发其实是一种解耦合的策略，这种策略帮助我们
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Thursday, November 8, 2018
+    Posted by CUILAN Monday, March 4, 2019
     
     
     </p>
@@ -268,19 +268,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-gc-memory-strategy/">
+    <a href="https://cuilan.github.io/post/java/linked-list-source-analysis/">
         <h2 class="post-title">
-            三、垃圾收集器与内存分配策略
+            LinkedList源码分析
         </h2>
 	
         <div class="post-content-preview">
 	
-            1、概述 第一门正真使用内存动态分配和垃圾回收技术的语言是Lisp语言。 在Java各内存区域中，程序计数器、虚拟机栈、本地方法区3个区域随线程
+            一、LinkedList简介 java.util.LinkedList 是 java.util.List 接口实现，是一个 链表 数据结构的实现，直接继承自 java.util.AbstractSequentialList 抽象有序集合，是一个有序的 List，同时实现了 java.util.List 、 java.util.Deque 接口，
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Wednesday, November 7, 2018
+    Posted by CUILAN Thursday, December 6, 2018
     
     
     </p>
@@ -289,19 +289,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-object-model/">
+    <a href="https://cuilan.github.io/post/java/array-list-source-analysis/">
         <h2 class="post-title">
-            二、HotSpot虚拟机对象模型
+            ArrayList源码分析
         </h2>
 	
         <div class="post-content-preview">
 	
-            虚拟机内部细节，各虚拟机厂商的实现略有差异，因此以主流的Oracle HotSpot虚拟机为例分析。 1、对象的创建 Java是一门面向对象的编程
+            一、ArrayList 的特性 有序 可重复 线程不安全 允许插入 null 值 查询快、增删慢 底层通过 Object[] 数组实现 二、ArrayList继承关系 java.util.ArrayList 继承 java.u
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Wednesday, November 7, 2018
+    Posted by CUILAN Thursday, November 15, 2018
     
     
     </p>
@@ -356,6 +356,12 @@
                 
                     <a href="/tags/nginx" title="nginx">
                         nginx
+                    </a>
+                
+            
+                
+                    <a href="/tags/springioc" title="springioc">
+                        springioc
                     </a>
                 
             
