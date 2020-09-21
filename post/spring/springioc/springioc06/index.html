@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="SpringIOC容器源码分析" />
-    <meta property="og:title" content="SpringIOC容器源码分析" />
-    <meta property="twitter:title" content="SpringIOC容器源码分析" />
+    <meta name="title" content="refresh方法-刷新前的准备工作" />
+    <meta property="og:title" content="refresh方法-刷新前的准备工作" />
+    <meta property="twitter:title" content="refresh方法-刷新前的准备工作" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>SpringIOC容器源码分析-EchoGreen</title>
+    <title>refresh方法-刷新前的准备工作-EchoGreen</title>
 
-    <link rel="canonical" href="/post/spring/springioc/springioc/">
+    <link rel="canonical" href="/post/spring/springioc/springioc06/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -199,20 +199,16 @@
                             SpringIOC
                         </a>
                         
-                        <a class="tag" href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
-                            目录
-                        </a>
-                        
                     </div>
-                    <h1>SpringIOC容器源码分析</h1>
-                    <h2 class="subheading">Spring IOC 容器，源码分析</h2>
+                    <h1>refresh方法-刷新前的准备工作</h1>
+                    <h2 class="subheading">SpringIOC源码分析三，refresh方法</h2>
                     <span class="meta">
                         Posted by 
                         
                                 CUILAN
                          
                         on 
-                        Thursday, September 17, 2020
+                        Monday, September 21, 2020
                         
                         
                         
@@ -240,31 +236,9 @@
                 <header>
                     <h2>TOC</h2>
                 </header>
-                <nav id="TableOfContents">
-  <ul>
-    <li><a href="#目录">目录</a>
-      <ul>
-        <li><a href="#spring-core-应用">Spring-Core 应用</a></li>
-        <li><a href="#spring-core--spring-context-源码分析">Spring-Core &amp; Spring-Context 源码分析</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
+                <nav id="TableOfContents"></nav>
                 
-                <h1 id="目录">目录</h1>
-<h2 id="spring-core-应用">Spring-Core 应用</h2>
-<ol>
-<li><a href="/post/spring/springioc/springioc01">IOC容器&amp;Bean的注入</a></li>
-<li><a href="/post/spring/springioc/springioc02">AOP&amp;切面表达式</a></li>
-<li><a href="/post/spring/springioc/springioc03">代理模式Proxy</a></li>
-</ol>
-<h2 id="spring-core--spring-context-源码分析">Spring-Core &amp; Spring-Context 源码分析</h2>
-<ol>
-<li><a href="/post/spring/springioc/springioc04">SpringIOC源码分析一</a> AnnotationConfigApplicationContext 启动入口</li>
-<li><a href="/post/spring/springioc/springioc05">SpringIOC源码分析二</a> Spring 注册 Bean 的流程</li>
-<li><a href="/post/spring/springioc/springioc06">SpringIOC源码分析三</a> refresh 方法，刷新前的准备工作</li>
-</ol>
-
+                
 
                 
                 
@@ -312,15 +286,10 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/spring/springmvc/springmvc-03/" data-toggle="tooltip" data-placement="top" title="3.SpringMVC的请求如何分发？">&larr;
+                        <a href="/post/spring/springioc/springioc05/" data-toggle="tooltip" data-placement="top" title="Spring注册Bean的流程">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/spring/springioc/springioc03/" data-toggle="tooltip" data-placement="top" title="代理模式Proxy">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 

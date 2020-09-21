@@ -238,10 +238,15 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li><a href="#一register方法">一、register方法</a>
+    <li><a href="#一register方法">一、register方法</a></li>
+    <li><a href="#二准备beandefinition">二、准备BeanDefinition</a>
       <ul>
-        <li><a href="#使用">使用</a></li>
-        <li><a href="#准备beandefinition">准备BeanDefinition</a></li>
+        <li><a href="#1-创建-beandefinition">1. 创建 BeanDefinition</a></li>
+        <li><a href="#2-设置-scope单例或原型等">2. 设置 Scope，单例或原型等</a></li>
+        <li><a href="#3-生成-bean-的名称">3. 生成 Bean 的名称</a></li>
+        <li><a href="#4-设置-bean-的属性">4. 设置 Bean 的属性</a></li>
+        <li><a href="#5-注册-beandefinition">5. 注册 BeanDefinition</a></li>
+        <li><a href="#6-defaultlistablebeanfactory-的核心注册方法">6. DefaultListableBeanFactory 的核心注册方法</a></li>
       </ul>
     </li>
   </ul>
@@ -255,7 +260,6 @@
 
 </p>
 <h1 id="一register方法">一、register方法</h1>
-<h2 id="使用">使用</h2>
 <p>register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 注册普遍Bean
 </span><span style="color:#6272a4"></span>context<span style="color:#ff79c6">.</span><span style="color:#50fa7b">register</span><span style="color:#ff79c6">(</span>Test<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
@@ -268,7 +272,7 @@
 	<span style="color:#6272a4">// 刷新方法
 </span><span style="color:#6272a4"></span>	refresh<span style="color:#ff79c6">();</span>
 <span style="color:#ff79c6">}</span>
-</code></pre></div><h2 id="准备beandefinition">准备BeanDefinition</h2>
+</code></pre></div><h1 id="二准备beandefinition">二、准备BeanDefinition</h1>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">doRegisterBean</span><span style="color:#ff79c6">(</span>Class<span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> beanClass<span style="color:#ff79c6">,</span> @Nullable String name<span style="color:#ff79c6">,</span>
 								@Nullable Class<span style="color:#ff79c6">&lt;?</span> <span style="color:#8be9fd;font-style:italic">extends</span> Annotation<span style="color:#ff79c6">&gt;[]</span> qualifiers<span style="color:#ff79c6">,</span> @Nullable Supplier<span style="color:#ff79c6">&lt;</span>T<span style="color:#ff79c6">&gt;</span> supplier<span style="color:#ff79c6">,</span>
 								@Nullable BeanDefinitionCustomizer<span style="color:#ff79c6">[]</span> customizers<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
@@ -313,6 +317,86 @@
 	<span style="color:#6272a4">// 注册BeanDefinition，this.registry = GenericApplicationContext
 </span><span style="color:#6272a4"></span>	BeanDefinitionReaderUtils<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerBeanDefinition</span><span style="color:#ff79c6">(</span>definitionHolder<span style="color:#ff79c6">,</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">registry</span><span style="color:#ff79c6">);</span>
 <span style="color:#ff79c6">}</span>
+</code></pre></div><h2 id="1-创建-beandefinition">1. 创建 BeanDefinition</h2>
+<h2 id="2-设置-scope单例或原型等">2. 设置 Scope，单例或原型等</h2>
+<h2 id="3-生成-bean-的名称">3. 生成 Bean 的名称</h2>
+<p>可实现 BeanNameGenerator 接口，自定义 Bean 名称生成策略可以实现该接口。</p>
+<h2 id="4-设置-bean-的属性">4. 设置 Bean 的属性</h2>
+<p>注解配置静态工具类，处理通用 BeanDefinition 的注解，懒加载、是否为主类、设置依赖、设置权限、描述等信息。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">AnnotationConfigUtils<span style="color:#ff79c6">.</span><span style="color:#50fa7b">processCommonDefinitionAnnotations</span><span style="color:#ff79c6">(</span>abd<span style="color:#ff79c6">);</span>
+
+<span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">processCommonDefinitionAnnotations</span><span style="color:#ff79c6">(</span>AnnotatedBeanDefinition abd<span style="color:#ff79c6">,</span> AnnotatedTypeMetadata metadata<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#6272a4">// 判断是否懒加载
+</span><span style="color:#6272a4"></span>	AnnotationAttributes lazy <span style="color:#ff79c6">=</span> attributesFor<span style="color:#ff79c6">(</span>metadata<span style="color:#ff79c6">,</span> Lazy<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>lazy <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setLazyInit</span><span style="color:#ff79c6">(</span>lazy<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBoolean</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;value&#34;</span><span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getMetadata</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">!=</span> metadata<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		lazy <span style="color:#ff79c6">=</span> attributesFor<span style="color:#ff79c6">(</span>abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getMetadata</span><span style="color:#ff79c6">(),</span> Lazy<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+		<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>lazy <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+			abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setLazyInit</span><span style="color:#ff79c6">(</span>lazy<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBoolean</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;value&#34;</span><span style="color:#ff79c6">));</span>
+		<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// 是否为主类
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>metadata<span style="color:#ff79c6">.</span><span style="color:#50fa7b">isAnnotated</span><span style="color:#ff79c6">(</span>Primary<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">getName</span><span style="color:#ff79c6">()))</span> <span style="color:#ff79c6">{</span>
+		abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setPrimary</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">true</span><span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// 设置依赖
+</span><span style="color:#6272a4"></span>	AnnotationAttributes dependsOn <span style="color:#ff79c6">=</span> attributesFor<span style="color:#ff79c6">(</span>metadata<span style="color:#ff79c6">,</span> DependsOn<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>dependsOn <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setDependsOn</span><span style="color:#ff79c6">(</span>dependsOn<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getStringArray</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;value&#34;</span><span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// 设置权限
+</span><span style="color:#6272a4"></span>	AnnotationAttributes role <span style="color:#ff79c6">=</span> attributesFor<span style="color:#ff79c6">(</span>metadata<span style="color:#ff79c6">,</span> Role<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>role <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setRole</span><span style="color:#ff79c6">(</span>role<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getNumber</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;value&#34;</span><span style="color:#ff79c6">).</span><span style="color:#50fa7b">intValue</span><span style="color:#ff79c6">());</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// 设置描述
+</span><span style="color:#6272a4"></span>	AnnotationAttributes description <span style="color:#ff79c6">=</span> attributesFor<span style="color:#ff79c6">(</span>metadata<span style="color:#ff79c6">,</span> Description<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>description <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		abd<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setDescription</span><span style="color:#ff79c6">(</span>description<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getString</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;value&#34;</span><span style="color:#ff79c6">));</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><h2 id="5-注册-beandefinition">5. 注册 BeanDefinition</h2>
+<p>BeanDefinitionHolder 仅仅是对 BeanDefinition 与 BeanName 的封装，registry 当前是 <code>DefaultListableBeanFactory</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">registerBeanDefinition</span><span style="color:#ff79c6">(</span>
+		BeanDefinitionHolder definitionHolder<span style="color:#ff79c6">,</span> BeanDefinitionRegistry registry<span style="color:#ff79c6">)</span>
+		<span style="color:#8be9fd;font-style:italic">throws</span> BeanDefinitionStoreException <span style="color:#ff79c6">{</span>
+
+	<span style="color:#6272a4">// Register bean definition under primary name.
+</span><span style="color:#6272a4"></span>	String beanName <span style="color:#ff79c6">=</span> definitionHolder<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBeanName</span><span style="color:#ff79c6">();</span>
+	<span style="color:#6272a4">// 注册BeanDefinition，registry -&gt; GenericApplicationContext
+</span><span style="color:#6272a4"></span>	registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerBeanDefinition</span><span style="color:#ff79c6">(</span>beanName<span style="color:#ff79c6">,</span> definitionHolder<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBeanDefinition</span><span style="color:#ff79c6">());</span>
+
+	<span style="color:#6272a4">// 处理Bean的别名
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// Register aliases for bean name, if any.
+</span><span style="color:#6272a4"></span>	String<span style="color:#ff79c6">[]</span> aliases <span style="color:#ff79c6">=</span> definitionHolder<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getAliases</span><span style="color:#ff79c6">();</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>aliases <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		<span style="color:#ff79c6">for</span> <span style="color:#ff79c6">(</span>String alias <span style="color:#ff79c6">:</span> aliases<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+			registry<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerAlias</span><span style="color:#ff79c6">(</span>beanName<span style="color:#ff79c6">,</span> alias<span style="color:#ff79c6">);</span>
+		<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><h2 id="6-defaultlistablebeanfactory-的核心注册方法">6. DefaultListableBeanFactory 的核心注册方法</h2>
+<ul>
+<li>首先，从 IOC 核心容器 <strong><code>beanDefinitionMap</code></strong> 中获取 Bean，防止重复注册。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 判断是否已存在，防止重复注册
+</span><span style="color:#6272a4"></span>BeanDefinition existingDefinition <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanDefinitionMap</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">get</span><span style="color:#ff79c6">(</span>beanName<span style="color:#ff79c6">);</span>
+</code></pre></div><ul>
+<li>放入IOC核心容器</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 放入IOC核心容器
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanDefinitionMap</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">put</span><span style="color:#ff79c6">(</span>beanName<span style="color:#ff79c6">,</span> beanDefinition<span style="color:#ff79c6">);</span>
+</code></pre></div><ul>
+<li>容量自增，并将原先的所有的 Bean 放入其中，再将当前 Bean 放入其中，保证注册顺序。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 容量自增
+</span><span style="color:#6272a4"></span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> updatedDefinitions <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">&lt;&gt;(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanDefinitionNames</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">size</span><span style="color:#ff79c6">()</span> <span style="color:#ff79c6">+</span> 1<span style="color:#ff79c6">);</span>
+<span style="color:#6272a4">// 将原先的beanDefinitionNames全部放入
+</span><span style="color:#6272a4"></span>updatedDefinitions<span style="color:#ff79c6">.</span><span style="color:#50fa7b">addAll</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanDefinitionNames</span><span style="color:#ff79c6">);</span>
+<span style="color:#6272a4">// 将beanName单独放入ArrayList，保证注册顺序
+</span><span style="color:#6272a4"></span>updatedDefinitions<span style="color:#ff79c6">.</span><span style="color:#50fa7b">add</span><span style="color:#ff79c6">(</span>beanName<span style="color:#ff79c6">);</span>
+<span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanDefinitionNames</span> <span style="color:#ff79c6">=</span> updatedDefinitions<span style="color:#ff79c6">;</span>
 </code></pre></div>
 
                 
@@ -365,6 +449,11 @@
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/spring/springioc/springioc06/" data-toggle="tooltip" data-placement="top" title="refresh方法-刷新前的准备工作">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 

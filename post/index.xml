@@ -8,12 +8,21 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 02 Mar 2020 12:00:00 -0500</lastBuildDate><atom:link href="https://cuilan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>refresh方法-刷新前的准备工作</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc06/</link>
+      <pubDate>Mon, 21 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc06/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Spring注册Bean的流程</title>
       <link>https://cuilan.github.io/post/spring/springioc/springioc05/</link>
       <pubDate>Sun, 20 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/spring/springioc/springioc05/</guid>
-      <description>Spring注册Bean的流程 一、register方法 使用 register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。 // 注册普遍Bean</description>
+      <description>Spring注册Bean的流程 一、register方法 register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。 // 注册普遍Bean context.register(Test.class); public</description>
     </item>
     
     <item>
