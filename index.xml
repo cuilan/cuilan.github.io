@@ -13,7 +13,7 @@
       <pubDate>Mon, 21 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/spring/springioc/springioc06/</guid>
-      <description></description>
+      <description>refresh() 方法 public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Spring 上下文容器刷新前的准备 prepareRefresh(); // 获得BeanFactory，DefaultListableBeanFactory ConfigurableListableBeanFactory beanFactory</description>
     </item>
     
     <item>

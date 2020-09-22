@@ -236,9 +236,147 @@
                 <header>
                     <h2>TOC</h2>
                 </header>
-                <nav id="TableOfContents"></nav>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#refresh-方法">refresh() 方法</a></li>
+    <li><a href="#preparerefresh">prepareRefresh</a></li>
+    <li><a href="#获得-beanfactory">获得 BeanFactory</a>
+      <ul>
+        <li><a href="#创建-beanfactory">创建 BeanFactory</a></li>
+        <li><a href="#获得-beanfactory-1">获得 BeanFactory</a></li>
+      </ul>
+    </li>
+    <li><a href="#preparebeanfactorybeanfactory">prepareBeanFactory(beanFactory)</a></li>
+    <li><a href="#postprocessbeanfactorybeanfactory">postProcessBeanFactory(beanFactory)</a></li>
+  </ul>
+</nav>
                 
-                
+                <h1 id="refresh-方法">refresh() 方法</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">refresh</span><span style="color:#ff79c6">()</span> <span style="color:#8be9fd;font-style:italic">throws</span> BeansException<span style="color:#ff79c6">,</span> IllegalStateException <span style="color:#ff79c6">{</span>
+	<span style="color:#8be9fd;font-style:italic">synchronized</span> <span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">startupShutdownMonitor</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		<span style="color:#6272a4">// Spring 上下文容器刷新前的准备
+</span><span style="color:#6272a4"></span>		prepareRefresh<span style="color:#ff79c6">();</span>
+
+		<span style="color:#6272a4">// 获得BeanFactory，DefaultListableBeanFactory
+</span><span style="color:#6272a4"></span>		ConfigurableListableBeanFactory beanFactory <span style="color:#ff79c6">=</span> obtainFreshBeanFactory<span style="color:#ff79c6">();</span>
+
+		<span style="color:#6272a4">// 准备BeanFactory，设置属性、添加BeanPostProcessor、注册依赖、忽略依赖接口
+</span><span style="color:#6272a4"></span>		prepareBeanFactory<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">);</span>
+
+		<span style="color:#ff79c6">try</span> <span style="color:#ff79c6">{</span>
+			<span style="color:#6272a4">// 目前没有任何实现，允许子类对上下文 beanFactory 的后置处理
+</span><span style="color:#6272a4"></span>		    postProcessBeanFactory<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">);</span>
+
+		    <span style="color:#6272a4">// 调用 BeanFactoryPostProcessors，调用 BeanDefinitionRegistryPostProcessor
+</span><span style="color:#6272a4"></span>		    invokeBeanFactoryPostProcessors<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">);</span>
+
+		    <span style="color:#6272a4">// 至此，BeanFactory 初始化完成
+</span><span style="color:#6272a4"></span>
+		    <span style="color:#6272a4">// 注册 BeanPostProcessor，bean 的后置处理器
+</span><span style="color:#6272a4"></span>		    registerBeanPostProcessors<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">);</span>
+
+		    <span style="color:#6272a4">// 初始化消息源、国际化等，不重要
+</span><span style="color:#6272a4"></span>	    	initMessageSource<span style="color:#ff79c6">();</span>
+
+		    <span style="color:#6272a4">// 初始化事件广播，不重要
+</span><span style="color:#6272a4"></span>		    initApplicationEventMulticaster<span style="color:#ff79c6">();</span>
+
+		    <span style="color:#6272a4">// 目前没有任何实现，供子类扩展
+</span><span style="color:#6272a4"></span>		    onRefresh<span style="color:#ff79c6">();</span>
+
+		    <span style="color:#6272a4">// 检查监听器并注册
+</span><span style="color:#6272a4"></span>		    registerListeners<span style="color:#ff79c6">();</span>
+
+		    <span style="color:#6272a4">// 完成 BeanFactory 中所有非延迟加载的 bean 的实例化
+</span><span style="color:#6272a4"></span>		    finishBeanFactoryInitialization<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">);</span>
+
+			finishRefresh<span style="color:#ff79c6">();</span>
+		<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">catch</span> <span style="color:#ff79c6">(</span>BeansException ex<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+			destroyBeans<span style="color:#ff79c6">();</span>
+			cancelRefresh<span style="color:#ff79c6">(</span>ex<span style="color:#ff79c6">);</span>
+			<span style="color:#ff79c6">throw</span> ex<span style="color:#ff79c6">;</span>
+		<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">finally</span> <span style="color:#ff79c6">{</span>
+			resetCommonCaches<span style="color:#ff79c6">();</span>
+		<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><h1 id="preparerefresh">prepareRefresh</h1>
+<p>Spring 上下文容器刷新前的准备</p>
+<ul>
+<li>设置启动时间</li>
+<li>是否激活标志位</li>
+<li>初始化属性源配置</li>
+</ul>
+<h1 id="获得-beanfactory">获得 BeanFactory</h1>
+<p>获得 BeanFactory，<code>DefaultListableBeanFactory</code></p>
+<h2 id="创建-beanfactory">创建 BeanFactory</h2>
+<p><code>refreshBeanFactory()</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6272a4">// 创建 BeanFactory
+</span><span style="color:#6272a4"></span>DefaultListableBeanFactory beanFactory <span style="color:#ff79c6">=</span> createBeanFactory<span style="color:#ff79c6">();</span>
+
+<span style="color:#6272a4">// createBeanFactory() 方法
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">return</span> <span style="color:#ff79c6">new</span> DefaultListableBeanFactory<span style="color:#ff79c6">(</span>getInternalParentBeanFactory<span style="color:#ff79c6">());</span>
+</code></pre></div><h2 id="获得-beanfactory-1">获得 BeanFactory</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">DefaultListableBeanFactory beanFactory <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">beanFactory</span><span style="color:#ff79c6">;</span>
+<span style="color:#ff79c6">return</span> beanFactory<span style="color:#ff79c6">;</span>
+</code></pre></div><h1 id="preparebeanfactorybeanfactory">prepareBeanFactory(beanFactory)</h1>
+<p>准备 BeanFactory，设置属性、添加 <code>BeanPostProcessor</code>、注册依赖、忽略依赖接口</p>
+<ol>
+<li>添加 ClassLoader</li>
+<li>添加 bean 表达式解析器，为了能让 beanFactory 解析 bean 表达式</li>
+<li>添加一个 BeanPostProcessor</li>
+<li>忽略一些 Aware 及子类</li>
+<li>注册一些特殊的依赖，替换依赖</li>
+<li>添加一个 BeanPostProcessor -&gt; ApplicationListenerDetector</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd;font-style:italic">protected</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">prepareBeanFactory</span><span style="color:#ff79c6">(</span>ConfigurableListableBeanFactory beanFactory<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#6272a4">// 1.添加 ClassLoader
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// Tell the internal bean factory to use the context&#39;s class loader etc.
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setBeanClassLoader</span><span style="color:#ff79c6">(</span>getClassLoader<span style="color:#ff79c6">());</span>
+	<span style="color:#6272a4">// 2.添加 bean 表达式解析器，为了能让 beanFactory 解析 bean 表达式
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setBeanExpressionResolver</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> StandardBeanExpressionResolver<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBeanClassLoader</span><span style="color:#ff79c6">()));</span>
+	<span style="color:#6272a4">// 对象与 String 类型的转换 -&gt; ref=&#34;dao&#34;
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">addPropertyEditorRegistrar</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> ResourceEditorRegistrar<span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">,</span> getEnvironment<span style="color:#ff79c6">()));</span>
+	<span style="color:#6272a4">// Configure the bean factory with context callbacks.
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// 3.添加一个 BeanPostProcessor
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">addBeanPostProcessor</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> ApplicationContextAwareProcessor<span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">));</span>
+	<span style="color:#6272a4">// 4.忽略一些 Aware 及子类
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>EnvironmentAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>EmbeddedValueResolverAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>ResourceLoaderAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>ApplicationEventPublisherAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>MessageSourceAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">ignoreDependencyInterface</span><span style="color:#ff79c6">(</span>ApplicationContextAware<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">);</span>
+	<span style="color:#6272a4">// 5.注册一些特殊的依赖，替换依赖
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// BeanFactory interface not registered as resolvable type in a plain factory.
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// MessageSource registered (and found for autowiring) as a bean.
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerResolvableDependency</span><span style="color:#ff79c6">(</span>BeanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">,</span> beanFactory<span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerResolvableDependency</span><span style="color:#ff79c6">(</span>ResourceLoader<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerResolvableDependency</span><span style="color:#ff79c6">(</span>ApplicationEventPublisher<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">);</span>
+	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerResolvableDependency</span><span style="color:#ff79c6">(</span>ApplicationContext<span style="color:#ff79c6">.</span><span style="color:#50fa7b">class</span><span style="color:#ff79c6">,</span> <span style="color:#ff79c6">this</span><span style="color:#ff79c6">);</span>
+	<span style="color:#6272a4">// 6.添加一个 BeanPostProcessor -&gt; ApplicationListenerDetector
+</span><span style="color:#6272a4"></span>	<span style="color:#6272a4">// Register early post-processor for detecting inner beans as ApplicationListeners.
+</span><span style="color:#6272a4"></span>	beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">addBeanPostProcessor</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> ApplicationListenerDetector<span style="color:#ff79c6">(</span><span style="color:#ff79c6">this</span><span style="color:#ff79c6">));</span>
+	<span style="color:#6272a4">// Detect a LoadTimeWeaver and prepare for weaving, if found.
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsBean</span><span style="color:#ff79c6">(</span>LOAD_TIME_WEAVER_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">addBeanPostProcessor</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> LoadTimeWeaverAwareProcessor<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">));</span>
+		<span style="color:#6272a4">// Set a temporary ClassLoader for type matching.
+</span><span style="color:#6272a4"></span>		beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">setTempClassLoader</span><span style="color:#ff79c6">(</span><span style="color:#ff79c6">new</span> ContextTypeMatchClassLoader<span style="color:#ff79c6">(</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">getBeanClassLoader</span><span style="color:#ff79c6">()));</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#6272a4">// Register default environment beans.
+</span><span style="color:#6272a4"></span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsLocalBean</span><span style="color:#ff79c6">(</span>ENVIRONMENT_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerSingleton</span><span style="color:#ff79c6">(</span>ENVIRONMENT_BEAN_NAME<span style="color:#ff79c6">,</span> getEnvironment<span style="color:#ff79c6">());</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsLocalBean</span><span style="color:#ff79c6">(</span>SYSTEM_PROPERTIES_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerSingleton</span><span style="color:#ff79c6">(</span>SYSTEM_PROPERTIES_BEAN_NAME<span style="color:#ff79c6">,</span> getEnvironment<span style="color:#ff79c6">().</span><span style="color:#50fa7b">getSystemProperties</span><span style="color:#ff79c6">());</span>
+	<span style="color:#ff79c6">}</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(!</span>beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">containsLocalBean</span><span style="color:#ff79c6">(</span>SYSTEM_ENVIRONMENT_BEAN_NAME<span style="color:#ff79c6">))</span> <span style="color:#ff79c6">{</span>
+		beanFactory<span style="color:#ff79c6">.</span><span style="color:#50fa7b">registerSingleton</span><span style="color:#ff79c6">(</span>SYSTEM_ENVIRONMENT_BEAN_NAME<span style="color:#ff79c6">,</span> getEnvironment<span style="color:#ff79c6">().</span><span style="color:#50fa7b">getSystemEnvironment</span><span style="color:#ff79c6">());</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><h1 id="postprocessbeanfactorybeanfactory">postProcessBeanFactory(beanFactory)</h1>
+<p>目前没有任何实现，允许子类对上下文 beanFactory 的后置处理</p>
+
 
                 
                 
