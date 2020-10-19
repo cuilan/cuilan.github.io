@@ -6,7 +6,34 @@
     <description>Recent content in SPRING on CUILAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/spring/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 19 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>refresh 方法后续方法，bean 的实例化</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc09/</link>
+      <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc09/</guid>
+      <description>refresh 方法，至此，BeanFactory 初始化已完成。 一、注册 BeanPostProcessor，bean 的后置处理器 二、初始化消息源、国际化等</description>
+    </item>
+    
+    <item>
+      <title>Spring容器初始化流程</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc08/</link>
+      <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc08/</guid>
+      <description>Spring容器初始化流程 // 父类构造器，实例化一个 BeanFactory -&amp;gt; DefaultListableBeanFactory org.springframework.context.support.GenericApplicationContext#GenericApplicationContext() // 入口 org.springframework.context.annotation.AnnotationConfigApplicationContext#AnnotationConfigApplicationContext() // 1. 实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils org.springframework.context.annotation.AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader() // 设置 AnnotationAwareOrderComparator 对象，提供依赖的排序功能 // 设置 ContextAnnotationAutowireCandidateResolver 对象，提供</description>
+    </item>
+    
+    <item>
+      <title>BeanFactoryPostProcessors 后置处理器</title>
+      <link>https://cuilan.github.io/post/spring/springioc/springioc07/</link>
+      <pubDate>Wed, 23 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/spring/springioc/springioc07/</guid>
+      <description>一、invokeBeanFactoryPostProcessors 方法 invokeBeanFactoryPostProcessors 方法，调用各种后置处理器。 继承关系 BeanFactoryPostProcessors BeanDefinitionRegistryPostProcessor 获得 BeanFactoryPostProcessors invokeBeanFactoryPostProcessors 方法中先获得 BeanFactoryPostProcessors 注意：g</description>
+    </item>
+    
     <item>
       <title>refresh方法-刷新前的准备工作</title>
       <link>https://cuilan.github.io/post/spring/springioc/springioc06/</link>
