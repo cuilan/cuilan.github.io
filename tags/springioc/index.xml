@@ -13,7 +13,7 @@
       <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/spring/springioc/springioc09/</guid>
-      <description>refresh 方法，至此，BeanFactory 初始化已完成。 一、注册 BeanPostProcessor，bean 的后置处理器 二、初始化消息源、国际化等</description>
+      <description>refresh 方法，至此，BeanFactory 初始化已完成。 一、registerBeanPostProcessors 注册 BeanPostProcess</description>
     </item>
     
     <item>
