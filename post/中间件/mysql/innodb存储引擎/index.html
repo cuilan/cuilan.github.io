@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="CUILAN">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
+    
+
+    
+    <meta name="title" content="InnoDb存储引擎" />
+    <meta property="og:title" content="InnoDb存储引擎" />
+    <meta property="twitter:title" content="InnoDb存储引擎" />
+    
+
+    
+    <meta name="description" content="Java程序员">
+    <meta property="og:description" content="Java程序员" />
+    <meta property="twitter:description" content="Java程序员" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>InnoDb存储引擎-EchoGreen</title>
+
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CUILAN</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java%E8%99%9A%E6%8B%9F%E6%9C%BA">java虚拟机</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6">中间件</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B">并发编程</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        <a class="tag" href="/tags/mysql" title="MySQL">
+                            MySQL
+                        </a>
+                        
+                    </div>
+                    <h1>InnoDb存储引擎</h1>
+                    <h2 class="subheading">InnoDb存储引擎，InnoDb行格式，数据页的结构</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                CUILAN
+                         
+                        on 
+                        Thursday, October 22, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#innodb-数据页的结构">InnoDB 数据页的结构</a></li>
+    <li><a href="#innodb-行格式">InnoDB 行格式</a>
+      <ul>
+        <li><a href="#compact-行格式">Compact 行格式</a></li>
+        <li><a href="#dynamic-和-compressed-行格式">Dynamic 和 Compressed 行格式</a></li>
+      </ul>
+    </li>
+    <li><a href="#索引">索引</a>
+      <ul>
+        <li><a href="#聚簇索引">聚簇索引</a></li>
+        <li><a href="#二级索引复制索引">二级索引（复制索引）</a></li>
+        <li><a href="#联合索引">联合索引</a></li>
+        <li><a href="#目录项记录的唯一性">目录项记录的唯一性</a></li>
+        <li><a href="#b树索引总结">B+树索引总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h1 id="innodb-数据页的结构">InnoDB 数据页的结构</h1>
+<p>操作系统的局部性原理。操作系统一般的页大小为 4kb。</p>
+<p>在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： <strong>16kb = 16384字节</strong>。</p>
+<p>查看 InnoDB 存储引擎的默认页大小：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#ff79c6">SHOW</span> GLOBAL STATUS <span style="color:#ff79c6">LIKE</span> <span style="color:#f1fa8c">&#39;Innodb_page_size&#39;</span>;
+</code></pre></div><p>一个 InnoDB 数据页的存储空间大致被划分为7个部分，有的部分占用的字节数是确定的，有的部分占用的字节数是不确定的。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">中文名</th>
+<th style="text-align:center">占用空间大小</th>
+<th style="text-align:center">简单描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>File Header</strong></td>
+<td style="text-align:center">文件头部</td>
+<td style="text-align:center"><strong>38</strong>字节</td>
+<td style="text-align:center">页的一些通用信息</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Page Header</strong></td>
+<td style="text-align:center">页面头部</td>
+<td style="text-align:center"><strong>56</strong>字节</td>
+<td style="text-align:center">数据页专有的一些信息</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Infimum + Supremum</strong></td>
+<td style="text-align:center">最小记录和最大记录</td>
+<td style="text-align:center"><strong>26</strong>字节</td>
+<td style="text-align:center">两个虚拟的行记录</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>User Records</strong></td>
+<td style="text-align:center">用户记录</td>
+<td style="text-align:center">不确定</td>
+<td style="text-align:center">实际存储的行记录内容</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Free Space</strong></td>
+<td style="text-align:center">空闲空间</td>
+<td style="text-align:center">不确定</td>
+<td style="text-align:center">页中尚未使用的空间</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Page Directory</strong></td>
+<td style="text-align:center">页面目录</td>
+<td style="text-align:center">不确定</td>
+<td style="text-align:center">页中的某些记录的相对位置</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>File Trailer</strong></td>
+<td style="text-align:center">文件尾部</td>
+<td style="text-align:center"><strong>8</strong>字节</td>
+<td style="text-align:center">校验页是否完整</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="innodb-行格式">InnoDB 行格式</h1>
+<p>一行记录可以以不同的格式存在 InnoDB 中，行格式分别是 <strong>Compact</strong>、<strong>Redundant</strong>、<strong>Dynamic</strong>、<strong>Compressed</strong> 行格式。</p>
+<p>可以在创建或修改表语句中指定行格式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#ff79c6">CREATE</span> <span style="color:#ff79c6">TABLE</span> 表名 (列的信息) ROW_FORMAT <span style="color:#ff79c6">=</span> 行格式名称;
+<span style="color:#ff79c6">ALTER</span> <span style="color:#ff79c6">TABLE</span> 表名 ROW_FROMAT <span style="color:#ff79c6">=</span> 行格式名称;
+</code></pre></div><h2 id="compact-行格式">Compact 行格式</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">变长字段长度列表</th>
+<th style="text-align:center">NULL标志位</th>
+<th style="text-align:center">记录头信息</th>
+<th style="text-align:center">列1数据</th>
+<th style="text-align:center">列2数据</th>
+<th style="text-align:center">&hellip;&hellip;</th>
+</tr>
+</thead>
+</table>
+<h3 id="记录的额外信息">记录的额外信息</h3>
+<p>这部分信息是服务器为了描述这条记录而不得不额外添加的一些信息，这些额外信息分为3类：</p>
+<ul>
+<li>变长字段长度列表</li>
+<li>NULL 值列表</li>
+<li>记录头信息</li>
+</ul>
+<h3 id="变长字段长度列表">变长字段长度列表</h3>
+<p>MySQL 支持一些变长的数据类型，比如：<code>VARCHAR(M)</code>、<code>VARBINARY(M)</code>、<code>TEXT</code>、<code>BLOB</code> 类型，这些数据类型叙事列成为变长字段，
+变长字段中存储多少字节的数据不是固定的，所以在存储正式数据的时候需要顺便把这些数据占用的字节数页存起来。</p>
+<p>在 Compact 行格式中，把所有变长字段的真是数据占用的字节长度都存在记录的开头部位，从而形成一个变长字段长度列表。</p>
+<blockquote>
+<p>CHAR 是一种固定长度的类型，VARCHAR 则是一种可变长度的类型。</p>
+<p>VARCHAR(M)，M 代表最大能存多少个字符，（MySQL5.0.3）以前是字节，以后就是字符。</p>
+</blockquote>
+<h3 id="null-值列表">NULL 值列表</h3>
+<p>Compact 行格式会把可以 NULL 的列表统一管理起来，存一个标记位在 NULL 值列表中，如果表中没有允许存储 NULL 的列，则 NULL 值列表页不存在了。</p>
+<ul>
+<li>二进制位的值为 <strong>1</strong> 时，代表该列的值 <strong>为 NULL</strong>。</li>
+<li>二进制位的值为 <strong>0</strong> 时，代表该列的值 <strong>不为 NULL</strong>。</li>
+</ul>
+<h3 id="记录头信息">记录头信息</h3>
+<p>除了变长字段长度列表、NULL 值列表之外，还有一个用于描述记录的记录头信息，它是由固定的 <strong>5</strong> 个字节组成。5个字节也就是 <strong>40个二进制位</strong>，不同的位代表不同的意思，如下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">大小（bit）</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">预留位1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">没有使用</td>
+</tr>
+<tr>
+<td style="text-align:center">预留位2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">没有使用</td>
+</tr>
+<tr>
+<td style="text-align:center">delete_mask</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">标记该记录是否被删除</td>
+</tr>
+<tr>
+<td style="text-align:center">min_rec_mask</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">B+ 数的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td style="text-align:center">n_owned</td>
+<td style="text-align:center">4</td>
+<td style="text-align:left">表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td style="text-align:center">heap_on</td>
+<td style="text-align:center">13</td>
+<td style="text-align:left">表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td style="text-align:center">record_type</td>
+<td style="text-align:center">3</td>
+<td style="text-align:left">表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+</tr>
+<tr>
+<td style="text-align:center">next_record</td>
+<td style="text-align:center">16</td>
+<td style="text-align:left">表示下一条记录的相对位置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="记录真实数据">记录真实数据</h3>
+<p>记录的真实数据除了自己定义的列的数据以外，还有三个隐藏列，如下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">列名</th>
+<th style="text-align:center">是否必须</th>
+<th style="text-align:center">占用空间</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">row_id</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">6字节</td>
+<td style="text-align:left">行id，唯一标识一条记录</td>
+</tr>
+<tr>
+<td style="text-align:center">transaction_id</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">6字节</td>
+<td style="text-align:left">事务id</td>
+</tr>
+<tr>
+<td style="text-align:center">roll_pointer</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">7字节</td>
+<td style="text-align:left">回滚指针</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>实际上这几个列的真正名称其实是：<strong>DB_ROW_ID</strong>、<strong>DB_TRX_ID</strong>、<strong>DB_ROLL_PTR</strong>。</p>
+<p>一个表没有手动定义主键，则会选取一个 <strong>Unique</strong> 键作为主键，如果连 <strong>Unique</strong> 键都没有定义，则会为该表默认添加一个名为 <strong>row_id</strong> 的隐藏列作为主键。
+所以 <strong>row_id</strong> 是在没有自定义主键以及 <strong>Unique</strong> 键的情况下才会存在的。</p>
+</blockquote>
+<h3 id="行溢出数据">行溢出数据</h3>
+<p>VARCHAR(M) 类型的列最多可以占用 65535个字节。其中的 M 代表该类型最多存储的字符数量，如果我们使用 ASCII 字符集的话，一个字符就代表一个字节。</p>
+<p>测试：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#ff79c6">CREATE</span> <span style="color:#ff79c6">TABLE</span> <span style="color:#50fa7b">varchar_size_test</span> (
+   c <span style="color:#8be9fd">VARCHAR</span>(<span style="color:#bd93f9">56535</span>)
+) <span style="color:#ff79c6">CHARSET</span><span style="color:#ff79c6">=</span>ASCII ROW_FORMAT<span style="color:#ff79c6">=</span>Compact;
+
+ERROR <span style="color:#bd93f9">1118</span> (<span style="color:#bd93f9">42000</span>): Row size too large.
+</code></pre></div><p>报错信息：MySQL 对一条记录占用的最大存储空间是有限制的，除 BLOB 或者 TEXT 类型的列之外，其他所有的列（不包括隐藏列和记录头信息）占用的字符长度加起来不能超过65535个字节。
+这个65535个字节除了列本身的数据之外，还包括一些其他的数据，比如说为了存储一个 VARCHAR(M) 类型的列，其实需要占用3部分存储空间：</p>
+<ol>
+<li>真实数据</li>
+<li>变长字段真实数据的长度</li>
+<li>NULL 值标识</li>
+</ol>
+<p>如果该 VARCHAR 类型的列没有 NOT NULL 属性，那最多只能存储65532个字节的数据，因为变长字段的长度占用2个字节，NUL 值标识需要占用1个字节。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#ff79c6">CREATE</span> <span style="color:#ff79c6">TABLE</span> <span style="color:#50fa7b">varchar_size_test</span> (
+   c <span style="color:#8be9fd">VARCHAR</span>(<span style="color:#bd93f9">65532</span>)
+) <span style="color:#ff79c6">CHARSET</span><span style="color:#ff79c6">=</span>ASCII ROW_FORMAT<span style="color:#ff79c6">=</span>Compact;
+
+Query OK, <span style="color:#bd93f9">0</span> rows <span style="color:#50fa7b">affected</span> (<span style="color:#bd93f9">0</span>.<span style="color:#bd93f9">02</span> sec)
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#ff79c6">CREATE</span> <span style="color:#ff79c6">TABLE</span> <span style="color:#50fa7b">varchar_size_test</span> (
+   c <span style="color:#8be9fd">VARCHAR</span>(<span style="color:#bd93f9">65532</span>) <span style="color:#ff79c6">NOT</span> NULL
+) <span style="color:#ff79c6">CHARSET</span><span style="color:#ff79c6">=</span>ASCII ROW_FORMAT<span style="color:#ff79c6">=</span>Compact;
+
+Query OK, <span style="color:#bd93f9">0</span> rows <span style="color:#50fa7b">affected</span> (<span style="color:#bd93f9">0</span>.<span style="color:#bd93f9">02</span> sec)
+</code></pre></div><h3 id="记录中的数据太多产生的溢出">记录中的数据太多产生的溢出</h3>
+<p>一个页的大小一般是 <strong>16KB</strong> ，页就是 <strong>16384字节</strong> ，而一个 VARCHAR(M) 类型的列就最多可以存储 <strong>65533个字节</strong> ，这样就可能出现一个页存放不了一条记录。</p>
+<p>在 Compact 和 Reduntant 行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的一部分数据，把剩余的数据分散存储在几个其他的页中，
+然而记录的真实数据处用 <strong>20个字节</strong> 存储指向这些页的地址（当然这20个字节还包括这些分散在其他页面中的数据的占用的字节数），从而可以找到剩余数据所在的页。</p>
+<h2 id="dynamic-和-compressed-行格式">Dynamic 和 Compressed 行格式</h2>
+<p>这两种行格式类似于 Compact 行格式，仅在处理行溢出数据时有所不同，它们不会在记录的真是数据处存储一部分数据，而是把所有的数据都存储到其他页面中，只在记录的真是数据处存储其他页面的地址。
+另外，Compressed 行格式会采用压缩算法对页面进行压缩。</p>
+<hr>
+<h1 id="索引">索引</h1>
+<p>产生过程</p>
+<h2 id="聚簇索引">聚簇索引</h2>
+<p>聚簇索引的特点：</p>
+<ol>
+<li>按主键值的大小进行记录和页的排序：
+<ul>
+<li>数据页（叶子节点）里的记录是按照主键值从小到大排序的一个单向链表。</li>
+<li>数据页（叶子节点）之间也是按照主键值从小到大排序的一个双向链表。</li>
+<li>B+ 树中同一个层的页目录也是按照主键值从小到大排序的一个双向链表。</li>
+</ul>
+</li>
+<li>B+ 树的叶子节点存储的是完整的用户记录，就是指这个记录中存储里所有列的值（包括隐藏列）。</li>
+</ol>
+<p>具有这两种特性的 B+树成为 <strong>聚簇索引</strong> ，所有完整的用户记录都存放在这个聚簇索引的叶子节点处。这种聚簇索引并不需要我们在 MySQL 语句中国显式的使用 <strong>Index</strong> 语法去创建。
+InnoDB 存储引擎会自动的为我们创建聚簇索引。在 InnoDB 存储引擎中，聚簇索引就是数据的存储方式（所有的用户记录都存储在叶子节点），页即使所谓的索引即数据，数据即索引。</p>
+<h2 id="二级索引复制索引">二级索引（复制索引）</h2>
+<p>聚簇索引只能在搜索条件是主键值时才能发挥作用，因为 B+树中的数据都是按照主键进行排序的。当以别的列作为搜索条件时可以多建几棵 B+树，不同的 B+ 树中的数据采用不同的排序规则。</p>
+<p>二级索引与聚簇索引的不同：</p>
+<ol>
+<li>按指定索引列的值来进行排序。</li>
+<li>叶子节点存储的不是完整的用户记录，而只是索引列 + 主键。</li>
+<li>目录项记录中不是主键 + 页号，变成了索引列 + 页号。</li>
+<li>在对二级索引进行查找数据时，需要根据主键值去聚簇索引中再去查找一遍完整的用户记录，这个过程叫做 <strong>回表</strong> 。</li>
+</ol>
+<h2 id="联合索引">联合索引</h2>
+<p>以多个列的大小为排序规则建立的 B+ 树称为联合索引，本质上也是一个二级索引。</p>
+<h2 id="目录项记录的唯一性">目录项记录的唯一性</h2>
+<p>我们需要保证在 B+ 树的同一层内节点的目录项记录除页号这个字段以外是唯一的。所以对于二级索引的内节点的目录项记录的内容实际上是由三个部分构成的：</p>
+<ul>
+<li>索引列的值</li>
+<li>主键值</li>
+<li>页号</li>
+</ul>
+<h2 id="b树索引总结">B+树索引总结</h2>
+<ol>
+<li>每个索引都对应一棵 B+ 树。用户记录都存储在 B+ 树的叶子节点，所有目录记录都存储在非叶子节点。</li>
+<li>InnoDB 存储引擎会自动为主键（如果没有它会自动帮我们创建）建立聚簇索引，聚簇索引的叶子节点包含完整的用户记录。</li>
+<li>可以为指定的列建立二级索引，二级索引的叶子节点包含的用户记录由索引列 + 主键组成，所以如果想通过二级索引来查找完整的用户记录的话，
+需要通过回表操作，也就是在通过二级索引找到主键值之后再到聚簇索引中查找完整的用户记录。</li>
+<li>B+ 树中每层节点都是按照索引列值从小到大的顺序排序组成列双向链表，而且每个页内的记录（不论是用户记录还是目录记录）都是按照索引列的值从小到大的顺序而形成列一个单向链表。
+如果是联合索引的话，则页面和记录先按照联合索引前边的列排序，如果该列值相同，再按照联合索引后边的列排序。</li>
+<li>通过索引查找记录是从 B+ 树根节点开始，一层一层向下搜索。由于每个页面都按照索引列的值建立了页目录，所以在这些页面中的查找非常快。</li>
+</ol>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://cuilan.github.io/"><img src="/img/favicon.png" />CUILAN</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/spring/springioc/springioc09/" data-toggle="tooltip" data-placement="top" title="refresh 方法后续方法，bean 的实例化">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nginx" title="nginx">
+                            nginx
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springioc" title="springioc">
+                            springioc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springmvc" title="springmvc">
+                            springmvc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" title="多线程">
+                            多线程
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91" title="并发">
+                            并发
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA" title="概率论">
+                            概率论
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
+                            目录
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6" title="统计学">
+                            统计学
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA" title="虚拟机">
+                            虚拟机
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6" title="集合框架">
+                            集合框架
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:17746598041@163.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/mengdond24">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuilan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; CUILAN 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

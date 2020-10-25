@@ -8,6 +8,15 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 02 Mar 2020 12:00:00 -0500</lastBuildDate><atom:link href="https://cuilan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>InnoDb存储引擎</title>
+      <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</link>
+      <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</guid>
+      <description>InnoDB 数据页的结构 操作系统的局部性原理。操作系统一般的页大小为 4kb。 在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： 16kb = 1</description>
+    </item>
+    
+    <item>
       <title>refresh 方法后续方法，bean 的实例化</title>
       <link>https://cuilan.github.io/post/spring/springioc/springioc09/</link>
       <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
