@@ -206,6 +206,81 @@
             
 
 <div class="post-preview">
+    <a href="https://cuilan.github.io/post/spring/springioc/springioc08/">
+        <h2 class="post-title">
+            Spring容器初始化流程
+        </h2>
+	
+        <h3 class="post-subtitle">
+            SpringIOC源码分析五
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            Spring容器初始化流程 // 父类构造器，实例化一个 BeanFactory -&gt; DefaultListableBeanFactory org.springframework.context.support.GenericApplicationContext#GenericApplicationContext() // 入口 org.springframework.context.annotation.AnnotationConfigApplicationContext#AnnotationConfigApplicationContext() // 1. 实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils org.springframework.context.annotation.AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader() // 设置 AnnotationAwareOrderComparator 对象，提供依赖的排序功能 // 设置 ContextAnnotationAutowireCandidateResolver 对象，提供
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Monday, October 19, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/spring/springioc/springioc07/">
+        <h2 class="post-title">
+            BeanFactoryPostProcessors 后置处理器
+        </h2>
+	
+        <h3 class="post-subtitle">
+            SpringIOC源码分析四，invokeBeanFactoryPostProcessors方法，BeanFactoryPostProcessors，BeanDefinitionRegistryPostProcessor
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            一、invokeBeanFactoryPostProcessors 方法 invokeBeanFactoryPostProcessors 方法，调用各种后置处理器。 继承关系 BeanFactoryPostProcessors BeanDefinitionRegistryPostProcessor 获得 BeanFactoryPostProcessors invokeBeanFactoryPostProcessors 方法中先获得 BeanFactoryPostProcessors 注意：g
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Wednesday, September 23, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/spring/springioc/springioc06/">
+        <h2 class="post-title">
+            refresh方法-刷新前的准备工作
+        </h2>
+	
+        <h3 class="post-subtitle">
+            SpringIOC源码分析三，refresh方法
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            refresh() 方法 public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Spring 上下文容器刷新前的准备 prepareRefresh(); // 获得BeanFactory，DefaultListableBeanFactory ConfigurableListableBeanFactory beanFactory
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Monday, September 21, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://cuilan.github.io/post/spring/springioc/springioc05/">
         <h2 class="post-title">
             Spring注册Bean的流程
@@ -248,81 +323,6 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Saturday, September 19, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc02/">
-        <h2 class="post-title">
-            AOP&amp;切面表达式
-        </h2>
-	
-        <h3 class="post-subtitle">
-            AOP概念，SpringAOP对AspecJ的支持，环绕通知
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            一. 什么是AOP？ AOP（Aspect Oriented Programming）面向切面编程，是相对OOP而言的，AOP关注的是切面，是程序的横切点通用性问
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Friday, September 18, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc01/">
-        <h2 class="post-title">
-            IOC容器&amp;Bean的注入
-        </h2>
-	
-        <h3 class="post-subtitle">
-            Spring IOC 容器，Bean的注入，Bean的注入方式
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            一. 为什么要使用Spring 1. 什么是控制翻转（IOC）？ IOC：Inversion of control，控制翻转，是一种设计思想 2. 控制翻转的几种
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Friday, September 18, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc03/">
-        <h2 class="post-title">
-            代理模式Proxy
-        </h2>
-	
-        <h3 class="post-subtitle">
-            设计模式，JDK静态代理，JDK动态代理，SpringAOP基于代理模式实现的原理
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            一. 什么是代理 代理的名词： 目标对象：被代理对象 代理对象：增强后的代理对象 二. Java实现代理的两种方式 1. 静态代理 1) 继承 代理对象继承目标对象，
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Friday, September 18, 2020
     
     
     </p>
@@ -374,6 +374,10 @@
                     </a>
                 
             
+                
+                    <a href="/tags/mysql" title="mysql">
+                        mysql
+                    </a>
                 
             
                 

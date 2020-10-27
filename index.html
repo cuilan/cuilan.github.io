@@ -206,9 +206,59 @@
             
 
 <div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
+        <h2 class="post-title">
+            三、Explain插叙优化器
+        </h2>
+	
+        <h3 class="post-subtitle">
+            Explain插叙优化器，Explain关键字，查询优化原理分析
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。 优化分为： 条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Monday, October 26, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b&#43;%E6%A0%91%E7%B4%A2%E5%BC%95/">
+        <h2 class="post-title">
+            二、B&#43;树索引
+        </h2>
+	
+        <h3 class="post-subtitle">
+            B&#43;树索引优化
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            索引的代价 空间上的代价 一个索引都对应一棵 B+ 树，树中每一个节点都是一个数据页，一个页默认会占用 16KB 的存储空间，所以一个索引也是会占用磁盘空间的。
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Sunday, October 25, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
         <h2 class="post-title">
-            InnoDb存储引擎
+            一、InnoDb存储引擎
         </h2>
 	
         <h3 class="post-subtitle">
@@ -223,6 +273,31 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Thursday, October 22, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/mysql%E4%BC%98%E5%8C%96%E7%9B%AE%E5%BD%95/">
+        <h2 class="post-title">
+            MySQL优化
+        </h2>
+	
+        <h3 class="post-subtitle">
+            MySQL优化，InnoDb存储引擎，B&#43;树原理，索引
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            MySQL 优化 一、InnoDb存储引擎 二、B+树索引 三、Explain插叙优化器
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Wednesday, October 21, 2020
     
     
     </p>
@@ -248,81 +323,6 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Monday, October 19, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc08/">
-        <h2 class="post-title">
-            Spring容器初始化流程
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析五
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            Spring容器初始化流程 // 父类构造器，实例化一个 BeanFactory -&gt; DefaultListableBeanFactory org.springframework.context.support.GenericApplicationContext#GenericApplicationContext() // 入口 org.springframework.context.annotation.AnnotationConfigApplicationContext#AnnotationConfigApplicationContext() // 1. 实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils org.springframework.context.annotation.AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader() // 设置 AnnotationAwareOrderComparator 对象，提供依赖的排序功能 // 设置 ContextAnnotationAutowireCandidateResolver 对象，提供
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Monday, October 19, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc07/">
-        <h2 class="post-title">
-            BeanFactoryPostProcessors 后置处理器
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析四，invokeBeanFactoryPostProcessors方法，BeanFactoryPostProcessors，BeanDefinitionRegistryPostProcessor
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            一、invokeBeanFactoryPostProcessors 方法 invokeBeanFactoryPostProcessors 方法，调用各种后置处理器。 继承关系 BeanFactoryPostProcessors BeanDefinitionRegistryPostProcessor 获得 BeanFactoryPostProcessors invokeBeanFactoryPostProcessors 方法中先获得 BeanFactoryPostProcessors 注意：g
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Wednesday, September 23, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc06/">
-        <h2 class="post-title">
-            refresh方法-刷新前的准备工作
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析三，refresh方法
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            refresh() 方法 public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Spring 上下文容器刷新前的准备 prepareRefresh(); // 获得BeanFactory，DefaultListableBeanFactory ConfigurableListableBeanFactory beanFactory
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Monday, September 21, 2020
     
     
     </p>
@@ -370,6 +370,10 @@
                     </a>
                 
             
+                
+                    <a href="/tags/mysql" title="mysql">
+                        mysql
+                    </a>
                 
             
                 
