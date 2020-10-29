@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
+	<meta name="generator" content="Hugo 0.75.1" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,15 +16,15 @@
     
 
     
-    <meta name="title" content="中间件" />
-    <meta property="og:title" content="中间件" />
-    <meta property="twitter:title" content="中间件" />
+    <meta name="title" content="CUILAN" />
+    <meta property="og:title" content="CUILAN" />
+    <meta property="twitter:title" content="CUILAN" />
     
 
     
-    <meta name="description" content="Java程序员">
-    <meta property="og:description" content="Java程序员" />
-    <meta property="twitter:description" content="Java程序员" />
+    <meta name="description" content="Let the cat out of the bag.">
+    <meta property="og:description" content="Let the cat out of the bag." />
+    <meta property="twitter:description" content="Let the cat out of the bag." />
     
 
     
@@ -34,9 +35,9 @@
     <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>中间件-EchoGreen</title>
+    <title>CUILAN-EchoGreen</title>
 
-    <link rel="canonical" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+    <link rel="canonical" href="/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -205,23 +206,19 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/">
+    <a href="https://cuilan.github.io/post/jvm/jvm-object-model/">
         <h2 class="post-title">
-            五、关于子查询的优化
+            二、HotSpot虚拟机对象模型
         </h2>
-	
-        <h3 class="post-subtitle">
-            子查询分类，子查询执行原理，子查询优化
-        </h3>
 	
         <div class="post-content-preview">
 	
-            子查询分类 两种写法： SELECT * FROM t1 WHERE a IN (SELECT a FROM t2); SELECT * FROM (SELECT * FROM t1) AS t; 按返回结果集区分 1. 标量子查询 只返回一个单一值的子查询称之为标量子查询。 SELECT * FROM t1 WHERE
+            虚拟机内部细节，各虚拟机厂商的实现略有差异，因此以主流的Oracle HotSpot虚拟机为例分析。 1、对象的创建 Java是一门面向对象的编程
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Thursday, October 29, 2020
+    Posted by CUILAN Wednesday, November 7, 2018
     
     
     </p>
@@ -230,98 +227,19 @@
 <hr>
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96/">
+    <a href="https://cuilan.github.io/post/jvm/jvm-memory-exceptions/">
         <h2 class="post-title">
-            四、关于JOIN的优化
+            一、Java内存区域与内存溢出异常
         </h2>
-	
-        <h3 class="post-subtitle">
-            JOIN优化
-        </h3>
 	
         <div class="post-content-preview">
 	
-            JOIN 连接 内连接 以下三种写法都是内连接： SELECT * FROM t1 JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 INNER JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 CROSS JOIN t2 ON t1.a = t2.b; 左连接、右连接 左连接 SELECT * FROM t1 LEFT JOIN t2 ON t1.a =
+            1、概述 Java虚拟机自动内存管理机制，不需要为每一个new操作去写配对的delete/free代码，不容易出现内存泄露和内存溢出的问题，由
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by CUILAN Wednesday, October 28, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
-        <h2 class="post-title">
-            三、查询优化器
-        </h2>
-	
-        <h3 class="post-subtitle">
-            查询优化器，查询优化器日志，查询优化原理分析
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。 优化步骤： 条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Monday, October 26, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b&#43;%E6%A0%91%E7%B4%A2%E5%BC%95/">
-        <h2 class="post-title">
-            二、B&#43;树索引
-        </h2>
-	
-        <h3 class="post-subtitle">
-            B&#43;树索引优化
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            索引的代价 空间上的代价 一个索引都对应一棵 B+ 树，树中每一个节点都是一个数据页，一个页默认会占用 16KB 的存储空间，所以一个索引也是会占用磁盘空间的。
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Sunday, October 25, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
-        <h2 class="post-title">
-            一、InnoDb存储引擎
-        </h2>
-	
-        <h3 class="post-subtitle">
-            InnoDb存储引擎，InnoDb行格式，数据页的结构
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            InnoDB 数据页的结构 操作系统的局部性原理。操作系统一般的页大小为 4kb。 在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： 16kb = 1
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Thursday, October 22, 2020
+    Posted by CUILAN Wednesday, November 7, 2018
     
     
     </p>
@@ -335,10 +253,10 @@
 
 <ul class="pager">
     
-    
-    <li class="next">
-        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/page/2/">Older Posts &rarr;</a>
+    <li class="previous">
+        <a href="/page/14/">&larr; Newer Posts</a>
     </li>
+    
     
 </ul>
 

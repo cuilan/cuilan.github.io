@@ -205,18 +205,68 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/">
         <h2 class="post-title">
-            三、Explain插叙优化器
+            五、关于子查询的优化
         </h2>
 	
         <h3 class="post-subtitle">
-            Explain插叙优化器，Explain关键字，查询优化原理分析
+            子查询分类，子查询执行原理，子查询优化
         </h3>
 	
         <div class="post-content-preview">
 	
-            对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。 优化分为： 条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的
+            子查询分类 两种写法： SELECT * FROM t1 WHERE a IN (SELECT a FROM t2); SELECT * FROM (SELECT * FROM t1) AS t; 按返回结果集区分 1. 标量子查询 只返回一个单一值的子查询称之为标量子查询。 SELECT * FROM t1 WHERE
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Thursday, October 29, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96/">
+        <h2 class="post-title">
+            四、关于JOIN的优化
+        </h2>
+	
+        <h3 class="post-subtitle">
+            JOIN优化
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            JOIN 连接 内连接 以下三种写法都是内连接： SELECT * FROM t1 JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 INNER JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 CROSS JOIN t2 ON t1.a = t2.b; 左连接、右连接 左连接 SELECT * FROM t1 LEFT JOIN t2 ON t1.a =
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Wednesday, October 28, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
+        <h2 class="post-title">
+            三、查询优化器
+        </h2>
+	
+        <h3 class="post-subtitle">
+            查询优化器，查询优化器日志，查询优化原理分析
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。 优化步骤： 条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的
        
         </div>
     </a>
@@ -279,34 +329,18 @@
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/mysql%E4%BC%98%E5%8C%96%E7%9B%AE%E5%BD%95/">
-        <h2 class="post-title">
-            MySQL优化
-        </h2>
-	
-        <h3 class="post-subtitle">
-            MySQL优化，InnoDb存储引擎，B&#43;树原理，索引
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            MySQL 优化 一、InnoDb存储引擎 二、B+树索引 三、Explain插叙优化器
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Wednesday, October 21, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
 
             
 
+
+<ul class="pager">
+    
+    
+    <li class="next">
+        <a href="/tags/mysql/page/2/">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
 
 
        	</div>

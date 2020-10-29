@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="CUILAN">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
+    
+
+    
+    <meta name="title" content="三、查询优化器" />
+    <meta property="og:title" content="三、查询优化器" />
+    <meta property="twitter:title" content="三、查询优化器" />
+    
+
+    
+    <meta name="description" content="Java程序员">
+    <meta property="og:description" content="Java程序员" />
+    <meta property="twitter:description" content="Java程序员" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>三、查询优化器-EchoGreen</title>
+
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CUILAN</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java%E8%99%9A%E6%8B%9F%E6%9C%BA">java虚拟机</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6">中间件</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B">并发编程</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        <a class="tag" href="/tags/mysql" title="MySQL">
+                            MySQL
+                        </a>
+                        
+                    </div>
+                    <h1>三、查询优化器</h1>
+                    <h2 class="subheading">查询优化器，查询优化器日志，查询优化原理分析</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                CUILAN
+                         
+                        on 
+                        Monday, October 26, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#开启查询优化器日志">开启查询优化器日志</a></li>
+    <li><a href="#理解查询优化器日志">理解查询优化器日志</a>
+      <ul>
+        <li><a href="#1-join_preparation-准备阶段">1. join_preparation 准备阶段</a></li>
+        <li><a href="#2-join_optimization-优化阶段">2. join_optimization 优化阶段</a></li>
+        <li><a href="#3-join_explain-优化结果展示阶段">3. join_explain 优化结果展示阶段</a></li>
+      </ul>
+    </li>
+    <li><a href="#优化步骤">优化步骤</a>
+      <ul>
+        <li><a href="#1-根据搜索条件找出所有可能使用的索引">1. 根据搜索条件，找出所有可能使用的索引</a></li>
+        <li><a href="#2-计算全表扫描的成本">2. 计算全表扫描的成本</a></li>
+        <li><a href="#3-计算-primary-需要的成本">3. 计算 PRIMARY 需要的成本</a></li>
+        <li><a href="#4-计算二级索引需要的成本">4. 计算二级索引需要的成本</a></li>
+        <li><a href="#5-比较并选出最优">5. 比较并选出最优</a></li>
+        <li><a href="#6-null-值的处理">6. NULL 值的处理</a></li>
+        <li><a href="#7-控制执行计划">7. 控制执行计划</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <blockquote>
+<p>对于一个 SQL 语句，查询优化器先看是不是能转换成 <strong>JOIN</strong> ，再将 <strong>JOIN</strong> 进行优化。</p>
+</blockquote>
+<blockquote>
+<p>优化步骤：</p>
+<ol>
+<li>条件优化</li>
+<li>计算全表扫描成本</li>
+<li>找出所有能用到的索引</li>
+<li>针对每个索引计算不同的访问方式的成本</li>
+<li>选出成本最小的索引以及访问方式</li>
+</ol>
+</blockquote>
+<h1 id="开启查询优化器日志">开启查询优化器日志</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#6272a4">-- 开启查询优化器日志
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SET</span> optimizer_trace<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;enabled=on&#34;</span>;
+
+<span style="color:#6272a4">-- 执行sql
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> <span style="color:#ff79c6">table</span> <span style="color:#ff79c6">WHERE</span> ......;
+
+<span style="color:#6272a4">-- 查看优化器日志信息
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> information_schema.OPTIMIZER_TRACE;
+
+<span style="color:#6272a4">-- 关闭查询优化器日志
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SET</span> optimizer_trace<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;enabled=off&#34;</span>;
+</code></pre></div><hr>
+<h1 id="理解查询优化器日志">理解查询优化器日志</h1>
+<h2 id="1-join_preparation-准备阶段">1. join_preparation 准备阶段</h2>
+<p>这步主要是进行准备工作，翻译语句工作，美化 SQL ，格式化等，如：将 <code>SELECT * FROM t1;</code> 转换为 <code>SELECT t1.a, t1.b, ...</code> 等。</p>
+<h2 id="2-join_optimization-优化阶段">2. join_optimization 优化阶段</h2>
+<p>最重要的一步，对 SQL 进行优化。</p>
+<h3 id="21-条件传递condition_processing">2.1 条件传递（condition_processing）</h3>
+<h4 id="等值传递equality_propagation">等值传递（equality_propagation）</h4>
+<p>优化相等变量的的值。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> b <span style="color:#ff79c6">AND</span> b <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">c</span> <span style="color:#ff79c6">AND</span> <span style="color:#ff79c6">c</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">5</span>;
+</code></pre></div><p>上面这个 SQL 可以转换为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">5</span> <span style="color:#ff79c6">AND</span> b <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">5</span> <span style="color:#ff79c6">AND</span> <span style="color:#ff79c6">c</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">5</span>;
+</code></pre></div><h4 id="常量传递constant_propagation">常量传递（constant_propagation）</h4>
+<p>优化常量，简化条件。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">AND</span> b <span style="color:#ff79c6">&gt;</span> a;
+</code></pre></div><p>上面这个 SQL 可以转换为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">AND</span> b <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">1</span>;
+</code></pre></div><h4 id="移除无用的条件trivial_condition_removal">移除无用的条件（trivial_condition_removal）</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">AND</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</code></pre></div><p>上面这个 SQL 可以转换为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</code></pre></div><h3 id="22-替换虚拟生成列substitute_generated_columns">2.2 替换虚拟生成列（substitute_generated_columns）</h3>
+<h3 id="23-表依赖详情table_dependencies">2.3 表依赖详情（table_dependencies）</h3>
+<p>分析表之间的依赖关系。</p>
+<h3 id="24-列出可用索引ref_optimizer_key_uses">2.4 列出可用索引（ref_optimizer_key_uses）</h3>
+<p>列出可用的索引，包括主键聚簇索引、二级索引等。</p>
+<h3 id="25-行估算成本rows_estimation">2.5 行估算成本（rows_estimation）</h3>
+<p>一个查询可以有不同的执行方案，可以选择某个索引进行查询，也可以选择全表扫描，查询优化器会选择其中成本最低的方案去执行查询。</p>
+<h4 id="io成本">I/O成本</h4>
+<p>InnoDB存储引擎都是将数据和索引都存储到磁盘上的，当我们想查询表中的记录时，需要先把数据或者索引加载到内存中然后再操作。这个从磁盘到内存这个加载的过程损耗的时间称之为I/O成本。</p>
+<h4 id="cpu成本">CPU成本</h4>
+<p>读取以及检测记录是否满足对应的搜索条件、对结果集进行排序等这些操作损耗的时间称之为CPU成本。</p>
+<blockquote>
+<p>InnoDB存储引擎规定 <strong>读取一个页花费的成本默认是 1.0，读取及检测一条记录是否符合搜索条件的成本默认是 0.2</strong>。</p>
+</blockquote>
+<h3 id="26-对比执行计划considered_execution_plans">2.6 对比执行计划（considered_execution_plans）</h3>
+<p>对比各个执行计划的开销，选择最优的执行计划。</p>
+<h3 id="27-附加条件attaching_conditions_to_tables">2.7 附加条件（attaching_conditions_to_tables）</h3>
+<p>基于 considered_execution_plans 中选择的最优执行计划，改造原有 WHERE 条件，并针对表增加适当的附加条件，以便于单表数据的筛选。</p>
+<h3 id="28-最终优化finalizing_table_conditions">2.8 最终优化（finalizing_table_conditions）</h3>
+<h3 id="29-改善执行计划refine_plan">2.9 改善执行计划（refine_plan）</h3>
+<h2 id="3-join_explain-优化结果展示阶段">3. join_explain 优化结果展示阶段</h2>
+<p>生成优化器优化后的结果。</p>
+<hr>
+<h1 id="优化步骤">优化步骤</h1>
+<p>在一条单表查询语句真正执行之前，MySQL的查询优化器会找出执行该语句所有可能使用的方案，对比之后找出成本最低的方案，
+这个成本最低的方案就是所谓的 <strong>执行计划</strong>，之后才会调用存储引擎提供的接口真正的执行查询。</p>
+<p>下面以一个实例来分析这些优化步骤，单表查询语句如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> employees.titles <span style="color:#ff79c6">WHERE</span> emp_no <span style="color:#ff79c6">&gt;</span> <span style="color:#f1fa8c">&#39;10101&#39;</span> <span style="color:#ff79c6">AND</span> emp_no <span style="color:#ff79c6">&lt;</span> <span style="color:#f1fa8c">&#39;20000&#39;</span> <span style="color:#ff79c6">AND</span> to_date <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;1991-10-10&#39;</span>;
+</code></pre></div><h2 id="1-根据搜索条件找出所有可能使用的索引">1. 根据搜索条件，找出所有可能使用的索引</h2>
+<ul>
+<li><code>emp_no &gt; '10101'</code> ，这个搜索条件可以使用主键索引 <code>PRIMARY</code>。</li>
+<li><code>to_date = '1991-10-10'</code> ，这个搜索条件可以使用二级索引 <code>idx_titles_to_date</code>。</li>
+</ul>
+<p>上边的查询语句可能用到的索引，也就是 possible keys 只有 <code>PRIMARY</code> 和 <code>idx_titles_to_date</code>。</p>
+<h2 id="2-计算全表扫描的成本">2. 计算全表扫描的成本</h2>
+<p>对于InnoDB存储引擎来说，全表扫描就是把 <strong>聚簇索引</strong> 中的记录依次 与 给定的搜索条件 做比较，把符合搜索条件的记录加入到结果集，
+所以需要将聚簇索引对应的页面加载到内存中，然后再检测记录是否符合搜索条件。</p>
+<p><strong>查询成本 = I/O成本 + CPU成本</strong></p>
+<p>所以计算全表扫描的代价需要两个信息:</p>
+<ol>
+<li>聚簇索引占用的页面数</li>
+<li>该表中的记录数</li>
+</ol>
+<p>MySQL为每个表维护了一系列的统计信息，查看表的统计信息：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SHOW</span> <span style="color:#ff79c6">TABLE</span> STATUS <span style="color:#ff79c6">LIKE</span> <span style="color:#f1fa8c">&#39;titles&#39;</span>;
+</code></pre></div><h3 id="rows">Rows</h3>
+<p><strong>表中的记录条数</strong></p>
+<p>对于使用 MyISAM 存储引擎的表来说，该值是准确的。</p>
+<p>对于使用 InnoDB 存储引擎的表来说，该值是一个估计值。</p>
+<h3 id="data_length">Data_length</h3>
+<p><strong>表占用的存储空间字节数</strong></p>
+<p>对于使用 MyISAM 存储引擎的表来说，该值就是数据文件的大小。</p>
+<p>对于使用 InnoDB 存储引擎的表来说，该值就相当于聚簇索引占用的存储空间大小，也就是说可以这样计算该值的大小：</p>
+<pre><code>Data_length = 聚簇索引的页面数量 * 每个页面的大小
+</code></pre><h3 id="计算案例中的全表扫描成本">计算案例中的全表扫描成本</h3>
+<p>titles 使用默认 16KB 的页面大小，根据上边查询结果显示 Data_length 的值是 20512768，所以可以反向推导出聚簇索引的页面数量为：</p>
+<pre><code>聚簇索引的页面数量 = Data_length / 16 / 1024 = 20512768 / 16 / 1024 = 1252
+</code></pre><p>现已得到聚簇索引占用的页面数量以及该表记录数的估计值，所以就可以计算全表扫描成本了。但是 MySQL 在真实计算成本时会进行一些微调。</p>
+<pre><code>I/O成本 = 1252 * 1 = 1252
+</code></pre><p>1252 指的是聚簇索引占用的页面数，1.0 指的是加载一个页面的成本常数。</p>
+<pre><code>CPU成本 = 442070 * 0.2 = 88414
+</code></pre><p>442070 指的是统计数据中表的记录数，对于InnoDB存储引擎来说是一个估计值，0.2 指的是访问一条记录所需的成本常数。</p>
+<pre><code>总成本 = 1252 + 88414 = 89666
+</code></pre><p>综上所述，对于 titles 的全表扫描所需的总成本就是 <strong>89666</strong>。</p>
+<blockquote>
+<p>表中的记录其实都存储在聚簇索引对应B+树的叶子节点中，所以只要通过根节点获得了最左边的叶子节点，就可以沿着叶子节点组成的双向链表把所有记录都查看一遍。
+也就是说全表扫描这个过程其实有的B+树内节点是不需要访问的，但是MySQL在计算全表扫描成本时直接使用聚簇索引占用的页面数作为计算I/O成本的依据，是不区分内节点和叶子节点的。</p>
+</blockquote>
+<h2 id="3-计算-primary-需要的成本">3. 计算 PRIMARY 需要的成本</h2>
+<p>计算 PRIMARY 需要多少成本的关键问题是：需要预估出根据对应的 <code>WHERE</code> 条件在主键索引B+树中存在多少条符合条件的记录。</p>
+<h3 id="范围区间数">范围区间数</h3>
+<p>当从索引中查询记录时，不管是 <code>=、in、&gt;、&lt;</code> 这些操作都需要从索引中确定一个范围，不论这个范围区间的索引占用了多少页面，查询优化器都粗略的认为读取索引的一个范围区间的I/O成本和读取一个页面是相同的。
+本例中使用 <code>PRIMARY</code> 的范围区间只有一个：<code>(10101, 20000)</code>，所以相当于访问这个范围区间的索引付出的I/O成本就是：</p>
+<pre><code>1 * 1.0 = 1.0
+</code></pre><h3 id="预估范围内的记录数">预估范围内的记录数</h3>
+<p>优化器需要计算索引的某个范围区间到底包含多少条记录，对于本例来说就是要计算 <code>PRIMARY</code> 在 <code>(10101, 20000)</code> 这个范围区间中包含多少条数据记录，计算过程：</p>
+<ol>
+<li>先根据 <code>emp_no &gt; 10101</code> 这个条件访问一下 <code>PRIMARY</code> 对应的B+树索引，找到满足 <code>emp_no &gt; 10101</code> 这个条件的第一条记录，把这条记录称为 <strong>区间最左记录</strong>。</li>
+<li>再根据 <code>emp_no &lt; 20000</code> 这个条件继续从 <code>PRIMARY</code> 对应的B+树索引中找出第一条满足这个条件的记录，把这条记录称为 <strong>区间最右记录</strong>。</li>
+<li>如果 <strong>区间最左记录</strong> 和 <strong>区间最右记录</strong> 相隔不太远(只要相隔不大于10个页面即可)，那就可以精确统计出满足 <code>emp_no &gt; '10101' AND emp_no &lt; '20000'</code> 条件的记录条数。
+否则只沿着 区间最左记录 向右读10个页面，计算平均每个页面中包含多少记录，然后用这个平均值乘以 区间最左记录 和 区间最右记录 之间的页面数量就可以了。</li>
+</ol>
+<blockquote>
+<p>怎么估计 区间最左记录 和 区间最右记录 之间有多少个页面呢？</p>
+<p>计算它们父节点中对应的目录项记录之间隔着几条记录就可以了。</p>
+</blockquote>
+<p>根据上面的步骤可以算出来 <code>PRIMARY</code> 索引的记录条数，所以读取记录的CPU成本：</p>
+<pre><code>CPU成本 = 26808 * 0.2 = 5361.6
+</code></pre><p>26808 是预估的需要读取的数据记录条数，0.2 是读取一条记录成本常数。</p>
+<p><strong>总成本</strong></p>
+<pre><code>确定访问的IO成本 + 过滤数据的CPU成本 = 1.0 + 5361.6 = 5362.6
+</code></pre><h2 id="4-计算二级索引需要的成本">4. 计算二级索引需要的成本</h2>
+<p>因为通过二级索引查询需要 <strong>回表</strong> ，所以计算二级索引需要的成本时还要加上回表的成本，而回表的成本就相当于下面这个SQL执行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> employees.titles <span style="color:#ff79c6">WHERE</span> 主键 <span style="color:#ff79c6">IN</span> (主键值<span style="color:#bd93f9">1</span>, 主键值<span style="color:#bd93f9">2</span>, 主键值<span style="color:#bd93f9">3</span>, ...);
+</code></pre></div><p>所以 二级索引的成本 = 辅助索引的查询成本 + 回表查询的成本</p>
+<h2 id="5-比较并选出最优">5. 比较并选出最优</h2>
+<p>选择成本最小的索引。</p>
+<h2 id="6-null-值的处理">6. NULL 值的处理</h2>
+<p>对于 <code>NULL</code> 值，有三种理解：</p>
+<ol>
+<li>NULL 值代表一个不确定的值，每个 NULL 值都是独一无二的，在统计列不重复的时候应该都当做是独立的。</li>
+<li>NULL 值在业务上就是代表没有，所有的 NULL 值代表的意义是一样的，所以所有的 NULL 值都一样，在统计列不重复值的时候应该只算一个。</li>
+<li>NULL 完全没有意义，在统计列不重复值的时候应该忽略 NULL。</li>
+</ol>
+<p>InnoDB 提供了一个系统变量:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SHOW</span> <span style="color:#ff79c6">GLOBAL</span> variables <span style="color:#ff79c6">LIKE</span> <span style="color:#f1fa8c">&#39;&#39;</span>;
+</code></pre></div><p>这个变量有三个值：</p>
+<ol>
+<li><code>nulls_equal</code>：认为所有 NULL 值都是相等的。这个值也是 <code>innodb_stats_method</code> 的默认值。如果某个索引列中 NULL 值特别多的话，
+这种统计方式会让优化器认为某个列中平均一个值重复次数特别多，所以倾向于不使用索引进行访问。</li>
+<li><code>nulls_unequal</code>：认为所有 NULL 值都是不相等的。如果某个索引列中 NULL 值特别多的话，这种统计方式会让优化器认为某个列中平均一个值重复次数特别少，所以倾向于使用索引进行访问。</li>
+<li><code>nulls_ignored</code>：直接把 NULL 值忽略掉。</li>
+</ol>
+<blockquote>
+<p>最好不在索引列中存放 NULL 值才是正解。</p>
+</blockquote>
+<h2 id="7-控制执行计划">7. 控制执行计划</h2>
+<p><strong>Index Hints</strong></p>
+<ul>
+<li><code>USE INDEX</code>：限制索引的使用范围，数据表里有很多索引，当MySQL对索引进行选择时，这些索引都在考虑的范围内。但有时我们希望 MySQL 只考虑几个索引，而不是全部的索引，
+这就需要用到 <code>USE INDEX</code> 对查询语句进行设置。</li>
+<li><code>IGNORE INDEX</code>：限制不使用索引的范围。</li>
+<li><code>FORCE INDEX</code>：我们希望 MySQL 必须使用某一个索引(由于 MySQL 在查询时只能使用一个索引，因此只能强迫 MySQL 使用一个索引)。这就需要使用 <code>FORCE INDEX</code> 来完成这个功能。</li>
+</ul>
+<p>基本语法格式:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> table1 USE<span style="color:#ff79c6">|</span><span style="color:#ff79c6">IGNORE</span><span style="color:#ff79c6">|</span><span style="color:#ff79c6">FORCE</span> <span style="color:#ff79c6">INDEX</span> (col1_index, col2_index) <span style="color:#ff79c6">WHERE</span> col1 <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">AND</span> col2 <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span> <span style="color:#ff79c6">AND</span> col3 <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">3</span>;
+</code></pre></div>
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://cuilan.github.io/"><img src="/img/favicon.png" />CUILAN</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b&#43;%E6%A0%91%E7%B4%A2%E5%BC%95/" data-toggle="tooltip" data-placement="top" title="二、B&#43;树索引">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96/" data-toggle="tooltip" data-placement="top" title="四、关于JOIN的优化">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/nginx" title="nginx">
+                            nginx
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springioc" title="springioc">
+                            springioc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springmvc" title="springmvc">
+                            springmvc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" title="多线程">
+                            多线程
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91" title="并发">
+                            并发
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA" title="概率论">
+                            概率论
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
+                            目录
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6" title="统计学">
+                            统计学
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA" title="虚拟机">
+                            虚拟机
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6" title="集合框架">
+                            集合框架
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:17746598041@163.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/mengdond24">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuilan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; CUILAN 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="MySQL优化" />
-    <meta property="og:title" content="MySQL优化" />
-    <meta property="twitter:title" content="MySQL优化" />
+    <meta name="title" content="五、关于子查询的优化" />
+    <meta property="og:title" content="五、关于子查询的优化" />
+    <meta property="twitter:title" content="五、关于子查询的优化" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>MySQL优化-EchoGreen</title>
+    <title>五、关于子查询的优化-EchoGreen</title>
 
-    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/mysql%E4%BC%98%E5%8C%96%E7%9B%AE%E5%BD%95/">
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -195,20 +195,16 @@
                             MySQL
                         </a>
                         
-                        <a class="tag" href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
-                            目录
-                        </a>
-                        
                     </div>
-                    <h1>MySQL优化</h1>
-                    <h2 class="subheading">MySQL优化，InnoDb存储引擎，B&#43;树原理，索引</h2>
+                    <h1>五、关于子查询的优化</h1>
+                    <h2 class="subheading">子查询分类，子查询执行原理，子查询优化</h2>
                     <span class="meta">
                         Posted by 
                         
                                 CUILAN
                          
                         on 
-                        Wednesday, October 21, 2020
+                        Thursday, October 29, 2020
                         
                         
                         
@@ -238,28 +234,44 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li><a href="#mysql-优化">MySQL 优化</a></li>
+    <li><a href="#子查询分类">子查询分类</a>
+      <ul>
+        <li><a href="#按返回结果集区分">按返回结果集区分</a></li>
+        <li><a href="#按与外层查询关系区分">按与外层查询关系区分</a></li>
+      </ul>
+    </li>
+    <li><a href="#子查询执行原理">子查询执行原理</a></li>
+    <li><a href="#子查询优化">子查询优化</a></li>
   </ul>
 </nav>
                 
-                <h1 id="mysql-优化">MySQL 优化</h1>
-<ul>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">一、InnoDb存储引擎</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b+%E6%A0%91%E7%B4%A2%E5%BC%95">二、B+树索引</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8">三、Explain插叙优化器</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96">四、关于JOIN的优化</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96">五、关于子查询的优化</a></p>
-</li>
-</ul>
+                <h1 id="子查询分类">子查询分类</h1>
+<p>两种写法：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2);
+<span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> (<span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1) <span style="color:#ff79c6">AS</span> t;
+</code></pre></div><h2 id="按返回结果集区分">按返回结果集区分</h2>
+<h3 id="1-标量子查询">1. 标量子查询</h3>
+<p>只返回一个单一值的子查询称之为标量子查询。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">MAX</span>(a) <span style="color:#ff79c6">FROM</span> t2);
+</code></pre></div><h3 id="2-行子查询">2. 行子查询</h3>
+<p>只返回一条记录的子查询，不过这条记录需要包含多个列。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> (a, b) <span style="color:#ff79c6">=</span> (<span style="color:#ff79c6">select</span> a, b <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">LIMIT</span> <span style="color:#bd93f9">1</span>);
+</code></pre></div><h3 id="3-列子查询">3. 列子查询</h3>
+<p>返回一个列的数据的子查询，包含多条记录。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2);
+</code></pre></div><h3 id="4-表子查询">4. 表子查询</h3>
+<p>子查询的结果既包含很多条记录，又包含很多个列。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> (a, b, <span style="color:#ff79c6">c</span>, ...) <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">select</span> a, b, <span style="color:#ff79c6">c</span>, ... <span style="color:#ff79c6">FROM</span> t2);
+</code></pre></div><h2 id="按与外层查询关系区分">按与外层查询关系区分</h2>
+<h3 id="1-相关子查询">1. 相关子查询</h3>
+<p>如果子查询的执行需要依赖于外层查询的值，这个子查询称之为相关子查询。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">WHERE</span> t1.a <span style="color:#ff79c6">=</span> t2.a);
+</code></pre></div><h3 id="2-不相关子查询">2. 不相关子查询</h3>
+<p>如果子查询可以单独运行出结果，而不依赖于外层查询的值，这个子查询称之为不相关子查询。上面的几个子查询全部都可以看作不相关子查询。</p>
+<hr>
+<h1 id="子查询执行原理">子查询执行原理</h1>
+<hr>
+<h1 id="子查询优化">子查询优化</h1>
 
 
                 
@@ -308,15 +320,10 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/spring/springioc/springioc09/" data-toggle="tooltip" data-placement="top" title="refresh 方法后续方法，bean 的实例化">&larr;
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96/" data-toggle="tooltip" data-placement="top" title="四、关于JOIN的优化">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" data-toggle="tooltip" data-placement="top" title="一、InnoDb存储引擎">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 
