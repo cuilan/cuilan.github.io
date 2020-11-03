@@ -6,7 +6,16 @@
     <description>Recent content in 中间件 on CUILAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 29 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>六、Explain关键字详解</title>
+      <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Mon, 02 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/</guid>
+      <description>Explain关键字 列名 描述 id 在一个大的查询语句中每个SELECT关键字都对应一个唯一的id select_type SELECT关键字对应的那个查询的类型 table 表名 partitions</description>
+    </item>
+    
     <item>
       <title>五、关于子查询的优化</title>
       <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/</link>
@@ -58,7 +67,7 @@
       <pubDate>Wed, 21 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/mysql%E4%BC%98%E5%8C%96%E7%9B%AE%E5%BD%95/</guid>
-      <description>MySQL 优化 一、InnoDb存储引擎 二、B+树索引 三、Explain插叙优化器 四、关于JOIN的优化 五、关于子查询的优化</description>
+      <description>MySQL 优化 一、InnoDb存储引擎 二、B+树索引 三、Explain插叙优化器 四、关于JOIN的优化 五、关于子查询的优化 六、Explain关键字详</description>
     </item>
     
     <item>

@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="MySQL优化" />
-    <meta property="og:title" content="MySQL优化" />
-    <meta property="twitter:title" content="MySQL优化" />
+    <meta name="title" content="六、Explain关键字详解" />
+    <meta property="og:title" content="六、Explain关键字详解" />
+    <meta property="twitter:title" content="六、Explain关键字详解" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>MySQL优化-EchoGreen</title>
+    <title>六、Explain关键字详解-EchoGreen</title>
 
-    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/mysql%E4%BC%98%E5%8C%96%E7%9B%AE%E5%BD%95/">
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -195,20 +195,16 @@
                             MySQL
                         </a>
                         
-                        <a class="tag" href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
-                            目录
-                        </a>
-                        
                     </div>
-                    <h1>MySQL优化</h1>
-                    <h2 class="subheading">MySQL优化，InnoDb存储引擎，B&#43;树原理，索引</h2>
+                    <h1>六、Explain关键字详解</h1>
+                    <h2 class="subheading">Explain关键字</h2>
                     <span class="meta">
                         Posted by 
                         
                                 CUILAN
                          
                         on 
-                        Wednesday, October 21, 2020
+                        Monday, November 2, 2020
                         
                         
                         
@@ -238,31 +234,72 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li><a href="#mysql-优化">MySQL 优化</a></li>
+    <li><a href="#explain关键字">Explain关键字</a></li>
+    <li><a href="#各字段详解">各字段详解</a></li>
   </ul>
 </nav>
                 
-                <h1 id="mysql-优化">MySQL 优化</h1>
-<ul>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">一、InnoDb存储引擎</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b+%E6%A0%91%E7%B4%A2%E5%BC%95">二、B+树索引</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8">三、Explain插叙优化器</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96">四、关于JOIN的优化</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96">五、关于子查询的优化</a></p>
-</li>
-<li>
-<p><a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3">六、Explain关键字详解</a></p>
-</li>
-</ul>
+                <h1 id="explain关键字">Explain关键字</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">列名</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">id</td>
+<td style="text-align:left">在一个大的查询语句中每个SELECT关键字都对应一个唯一的id</td>
+</tr>
+<tr>
+<td style="text-align:left">select_type</td>
+<td style="text-align:left">SELECT关键字对应的那个查询的类型</td>
+</tr>
+<tr>
+<td style="text-align:left">table</td>
+<td style="text-align:left">表名</td>
+</tr>
+<tr>
+<td style="text-align:left">partitions</td>
+<td style="text-align:left">匹配的分区信息</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>type</strong></td>
+<td style="text-align:left">针对单表的访问方法</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>possible_keys</strong></td>
+<td style="text-align:left">可能用到的索引</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>key</strong></td>
+<td style="text-align:left">实际使用的索引</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>key_len</strong></td>
+<td style="text-align:left">实际使用的索引长度</td>
+</tr>
+<tr>
+<td style="text-align:left">ref</td>
+<td style="text-align:left">当使用索引列等值查询时，与索引列进行等值匹配的对象信息</td>
+</tr>
+<tr>
+<td style="text-align:left">rows</td>
+<td style="text-align:left">预估的需要读取的记录条数</td>
+</tr>
+<tr>
+<td style="text-align:left">filtered</td>
+<td style="text-align:left">某个表经过搜索条件过滤后剩余记录条数的百分比</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Extra</strong></td>
+<td style="text-align:left">一些额外的信息</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="各字段详解">各字段详解</h1>
 
 
                 
@@ -311,15 +348,10 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/spring/springioc/springioc09/" data-toggle="tooltip" data-placement="top" title="refresh 方法后续方法，bean 的实例化">&larr;
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/" data-toggle="tooltip" data-placement="top" title="五、关于子查询的优化">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" data-toggle="tooltip" data-placement="top" title="一、InnoDb存储引擎">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 

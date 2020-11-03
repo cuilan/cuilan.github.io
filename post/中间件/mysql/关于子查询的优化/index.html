@@ -240,8 +240,26 @@
         <li><a href="#按与外层查询关系区分">按与外层查询关系区分</a></li>
       </ul>
     </li>
-    <li><a href="#子查询执行原理">子查询执行原理</a></li>
-    <li><a href="#子查询优化">子查询优化</a></li>
+    <li><a href="#子查询执行原理">子查询执行原理</a>
+      <ul>
+        <li><a href="#对于-不相关标量子查询-或-行子查询">对于 不相关标量子查询 或 行子查询</a></li>
+        <li><a href="#对于-相关标量子查询-或-行子查询">对于 相关标量子查询 或 行子查询</a></li>
+      </ul>
+    </li>
+    <li><a href="#in-子查询优化">IN 子查询优化</a>
+      <ul>
+        <li><a href="#临时表">临时表</a></li>
+        <li><a href="#物化表materialize">物化表(Materialize)</a></li>
+        <li><a href="#半连接semi-join">半连接（semi-join）</a></li>
+        <li><a href="#不能转换为半连接的情况">不能转换为半连接的情况</a></li>
+      </ul>
+    </li>
+    <li><a href="#对于派生表的优化">对于派生表的优化</a>
+      <ul>
+        <li><a href="#把派生表物化">把派生表物化</a></li>
+        <li><a href="#将派生表和外层的表合并也就是将查询重写为没有派生表的形式">将派生表和外层的表合并，也就是将查询重写为没有派生表的形式</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
                 
@@ -270,9 +288,120 @@
 <p>如果子查询可以单独运行出结果，而不依赖于外层查询的值，这个子查询称之为不相关子查询。上面的几个子查询全部都可以看作不相关子查询。</p>
 <hr>
 <h1 id="子查询执行原理">子查询执行原理</h1>
+<h2 id="对于-不相关标量子查询-或-行子查询">对于 不相关标量子查询 或 行子查询</h2>
+<p>如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">=</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">LIMIT</span> <span style="color:#bd93f9">1</span>);
+</code></pre></div><p>执行步骤：</p>
+<ol>
+<li>执行 <code>SELECT * FROM t2 LIMIT 1</code> 这个子查询。</li>
+<li>然后再将上一步子查询的结果当做外层查询的参数再执行外层查询 <code>SELECT * FROM t1 WHERE a = ...</code>。</li>
+</ol>
+<h2 id="对于-相关标量子查询-或-行子查询">对于 相关标量子查询 或 行子查询</h2>
+<p>如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> b <span style="color:#ff79c6">=</span> (<span style="color:#ff79c6">SELECT</span> b <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">WHERE</span> t1.a <span style="color:#ff79c6">=</span> t2.a <span style="color:#ff79c6">LIMIT</span> <span style="color:#bd93f9">1</span>);
+</code></pre></div><p>执行步骤：</p>
+<ol>
+<li>先从外层查询中获取一条记录，本例中也就是先从t1表中获取一条记录。</li>
+<li>然后从上一步骤中获取的那条记录中找出子查询中涉及到的值，本例中就是从t1表中获取的那条记录中找出t1.a列的值，然后执行子查询。</li>
+<li>最后根据子查询的查询结果来检测外层查询 <code>WHERE</code> 子句的条件是否成立，如果成立，就把外层查询的那条记录加入到结果集，否则就丢弃。</li>
+<li>再次执行第一步，获取第二条外层查询中的记录，依次类推。</li>
+</ol>
 <hr>
-<h1 id="子查询优化">子查询优化</h1>
-
+<h1 id="in-子查询优化">IN 子查询优化</h1>
+<p>如果子查询中记录条数比较多的情况，如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2);
+</code></pre></div><p>对于上一步 <strong>相关标量子查询</strong> 或 <strong>行子查询</strong> ，如果子查询的结果集的记录比较少，那么按照上面的方式 把内外查询分别看成两个独立的查询，效率还算比较高。</p>
+<p>如果对于包含 <code>IN</code> 语句的子查询，结果集比较多，会导致以下问题：</p>
+<ul>
+<li>结果集太多，多到内容都放不下。</li>
+<li>对于外层查询来说，如果子查询的结果集太多，那就意味着 <code>IN</code> 子句中的参数特别多，这会导致：
+<ul>
+<li>无法有效的使用索引，只能对外层查询进行全表扫描。</li>
+<li>在对外层查询执行全表扫描时，由于 <code>IN</code> 子句中的参数太多，这会导致检测一条记录是否符合和 <code>IN</code> 子句中的参数匹配花费的时间太长。</li>
+</ul>
+</li>
+</ul>
+<h2 id="临时表">临时表</h2>
+<p>在 MySQL 中，不直接将 <strong>不相关子查询</strong> 的结果集当作外层查询的参数，而是将该结果集写入一个 <strong>临时表</strong> 里。写入临时表的过程是这样的：</p>
+<ul>
+<li>该临时表的列就是子查询结果集中的列。</li>
+<li>写入临时表的记录会被去重。<code>IN</code> 语句是判断某个操作数在不在某个集合中，集合中的值重不重复对整个 IN 语句的结果并不影响，所以我们在将结果集写入临时表时对记录进行去重可以让临时表变得更小。
+临时表也是个表，只要为表中记录的所有列建立主键或者唯一索引就可以进行去重。</li>
+<li>一般情况下子查询结果集不会特别大，所以会为它建立基于内存的使用 <strong>Memory存储引擎</strong> 的临时表，而且会为该表建立 <strong>哈希索引</strong>。
+IN 语句的本质就是判断某个操作数在不在某个集合里，如果集合中的数据建立了 哈希索引，那么这个匹配的过程就是很快的。</li>
+<li>如果子查询的结果集非常大，超过了系统变量 <strong><code>tmp_table_size</code></strong> 或者 <strong><code>max_heap_table_size</code></strong> ，临时表会转而使用 <strong>基于磁盘的存储引擎</strong> 来保存结果集中的记录，索引类型为 <strong>B+树索引</strong>。</li>
+</ul>
+<h2 id="物化表materialize">物化表(Materialize)</h2>
+<p><strong>物化</strong>就是将子查询结果集中的记录保存到临时表的过程。存储子查询结果集的临时表称为<strong>物化表</strong>。正因为物化表中的记录都建立了索引(基于内存的物化表有哈希索引，基于磁盘的有B+树索引)，
+通过索引执行 IN 语句判断某个操作数在不在子查询结果集中变得非常快，从而提升了子查询语句的性能。</p>
+<p>对于上面的查询，当把子查询进行物化之后，假设子查询物化表的名称为 <code>materialized_table</code> ，该物化表存储的子查询结果集的列为 <code>m_val</code> ，这个查询可以从以下两种角度来看待：</p>
+<ul>
+<li>从 <strong>表<code>t1</code></strong> 的角度来看待，整个查询的意思是：对于 <code>t1</code> 表中的每条记录来说，如果该记录的 <code>a</code> 列的值在子查询对应的物化表中，则该记录会被加入最终的结果集。</li>
+<li>从子查询 <strong>物化表</strong> 的角度来看待，整个查询的意思是：对于子查询物化表的每个值来说，如果能在 <code>t1</code> 表中找到对应的 <code>a</code> 列的值与该值相等的记录，那么就把这些记录加入到最终的结果集。</li>
+</ul>
+<h4 id="以上查询的优化">以上查询的优化</h4>
+<p>上边的查询相当于表 t1 和子查询物化表 materialized_table 进行内连接：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">INNER</span> <span style="color:#ff79c6">JOIN</span> materialized_table <span style="color:#ff79c6">ON</span> t1.a <span style="color:#ff79c6">=</span> m_val;
+</code></pre></div><p>转化成内连接之后，查询优化器就可以评估不同连接顺序需要的成本是多少，选取成本最低的那种查询方式执行查询。</p>
+<h2 id="半连接semi-join">半连接（semi-join）</h2>
+<p>虽然将子查询进行物化之后再执行查询会有建立临时表的成本，但是可以将子查询转换为 <code>JOIN</code> 还是会更有效率一点的。</p>
+<blockquote>
+<p>如何不进行物化操作直接把子查询转换为连接呢？</p>
+</blockquote>
+<p>对比以下查询语句：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2);
+<span style="color:#ff79c6">SELECT</span> t1.<span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">INNER</span> <span style="color:#ff79c6">JOIN</span> t2 <span style="color:#ff79c6">ON</span> t1.a <span style="color:#ff79c6">=</span> t2.a;
+</code></pre></div><p>区别：第二个查询的结果没有 <strong>去重</strong>。</p>
+<p>所以 <strong>IN子查询</strong> 和 <strong>两表内连接</strong> 并不完全等价，但将子查询转换为连接可以充分发挥优化器的作用，所以MySQL提出了一个新概念 <strong>半连接 (semi-join)</strong>，
+将 t1表 和 t2表 进行半连接的意思就是：对于 t1表 的某条记录来说，只关心在 t2表 中是否存在与之匹配的记录，而不关心具体有多少条记录与之匹配，最终的结果集中只保留 t1表 的记录。</p>
+<blockquote>
+<p><strong>semi-join</strong> 只是在 MySQL 内部采用的一种执行子查询的方式，MySQL并没有提供面向用户的semi-join语法。</p>
+</blockquote>
+<h3 id="1-table-pullout在子查询中的表上拉">1. Table pullout（在子查询中的表上拉）</h3>
+<p>直接将 <code>IN</code> 语句改为 <code>JOIN</code>。</p>
+<p>当子查询的查询列表处只有主键或者唯一索引列时，可以直接把子查询中的表上拉到外层查询的 <code>FROM</code> 子句中，并把子查询中的搜索条件合并到外层查询的搜索条件中。</p>
+<p>如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#6272a4">-- a是主键
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> a <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">WHERE</span> t2.b <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>);
+</code></pre></div><p>优化后：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">INNER</span> <span style="color:#ff79c6">JOIN</span> t2 <span style="color:#ff79c6">ON</span> t1.a <span style="color:#ff79c6">=</span> t2.a <span style="color:#ff79c6">WHERE</span> t2.b <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</code></pre></div><h3 id="2-duplicateweedout重复值消除">2. DuplicateWeedout（重复值消除）</h3>
+<p>利用主键去重，会产生临时表。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#6272a4">-- e只是一个普通字段
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">IN</span> (<span style="color:#ff79c6">SELECT</span> e <span style="color:#ff79c6">FROM</span> t2 <span style="color:#ff79c6">WHERE</span> t2.b <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>);
+</code></pre></div><p>转换为半连接查询后，t1表中的某条记录可能在t2表中有多条匹配的记录，所以该条记录可能多次被添加到最后的结果集中，为了消除重复，我们可以建立一个临时表，比方说这个临时表长这样:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">CREATE</span> <span style="color:#ff79c6">TABLE</span> temp (
+    id <span style="color:#ff79c6">PRIMARY</span> <span style="color:#ff79c6">KEY</span>
+);
+</code></pre></div><p>这样在执行连接查询的过程中，每当某条t1表中的记录要加入结果集时，就首先把这条记录的主键值加入到这个临时表里，如果添加成功，说明之前这条t1表中的记录并没有加入最终的结果集，现在把该记录添加到最终的结果集;如果添加失败，说明这条之前这条t1表中的记录已经加入过最终的结果集，这里直接把它丢弃就好了，这种使用临时表消除semi-join结果集中的重复值的方式称之为DuplicateWeedout。</p>
+<h3 id="3-firstmatch首次匹配">3. FirstMatch（首次匹配）</h3>
+<p>逻辑上的去重，不产生临时表。</p>
+<p>FirstMatch是一种最原始的半连接执行方式，先取一条外层查询的中的记录，然后到子查询的表中寻找符合匹配条件的记录，如果能找到一条，则将该外层查询的记录放入最终的结果集并且停止查找更多匹配的记录，如果找不到则把该外层查询的记录丢弃掉;然后再开始取下一条外层查询中的记录，重复上边这个过程。</p>
+<h3 id="4-loosescan松散索引扫描">4. LooseScan（松散索引扫描）</h3>
+<p>利用 <code>Hash</code> 索引去重。</p>
+<h2 id="不能转换为半连接的情况">不能转换为半连接的情况</h2>
+<p><strong>注意：由于相关子查询并不是一个独立的查询，所以不能转换为物化表来执行查询。</strong></p>
+<p>以下几种情况 <strong>不能</strong> 转换为 <strong>semi-join</strong> ：</p>
+<ul>
+<li>外层查询的 <code>WHERE</code> 条件中有其他搜索条件与 <code>IN</code> 子查询组成布尔表达式使用 <code>OR</code> 连接。</li>
+<li>使用 <code>NOT IN</code> 而不是 <code>IN</code> 的情况。</li>
+<li>子查询中包含 <code>GROUP BY</code> <code>HAVING</code> 或者 <strong>聚集函数</strong> 的情况。</li>
+<li>子查询中包含 <code>UNION</code> 的情况。</li>
+</ul>
+<hr>
+<h1 id="对于派生表的优化">对于派生表的优化</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> (<span style="color:#ff79c6">SELECT</span> a, b <span style="color:#ff79c6">FROM</span> t1) <span style="color:#ff79c6">AS</span> t;
+</code></pre></div><p>对于上面的sql，子查询是放在 from 后面的，这个子查询的结果相当于一个 <strong>派生表</strong>，表的名称是 t，有 a，b 两个字段。对于派生表，有两种执行方式：</p>
+<h2 id="把派生表物化">把派生表物化</h2>
+<p>可以将派生表的结果集写到一个 <strong>内部的临时表</strong> 中，然后就把这个物化表当作普通表一样参与查询。当然，在对派生表进行物化时，使用了一种称为 <strong>延迟物化</strong> 的策略，
+也就是在查询中真正使用到派生表时才回去尝试物化派生表，而不是还没开始执行查询就把派生表物化掉。比如:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> (<span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>) <span style="color:#ff79c6">AS</span> t <span style="color:#ff79c6">INNER</span> <span style="color:#ff79c6">JOIN</span> t2 <span style="color:#ff79c6">ON</span> t.a <span style="color:#ff79c6">=</span> t2.a <span style="color:#ff79c6">WHERE</span> t2.a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>;
+</code></pre></div><p>首先会先执行子查询，并找到满足 <code>a = 1</code> 的结果集，如果找不到，则不会进行物化。</p>
+<h2 id="将派生表和外层的表合并也就是将查询重写为没有派生表的形式">将派生表和外层的表合并，也就是将查询重写为没有派生表的形式</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> (<span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> t1.a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>) <span style="color:#ff79c6">AS</span> t;
+</code></pre></div><p>等价于：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">FROM</span> t1 <span style="color:#ff79c6">WHERE</span> t1.a <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</code></pre></div>
 
                 
                 
@@ -324,6 +453,11 @@
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/" data-toggle="tooltip" data-placement="top" title="六、Explain关键字详解">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
