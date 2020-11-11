@@ -6,7 +6,16 @@
     <description>Recent content in MySQL on CUILAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>七、事务及锁的原理</title>
+      <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Mon, 09 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/</guid>
+      <description>事务 事务的特性 原子性 隔离性 一致性 持久性 我们把需要保证原子性、隔离性、一致性和持久性的一个或多个数据库操作称之为一个事务。 事务的使用 开启事务 BEGIN</description>
+    </item>
+    
     <item>
       <title>六、Explain关键字详解</title>
       <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/</link>

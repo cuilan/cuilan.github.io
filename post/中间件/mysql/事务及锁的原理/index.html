@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="CUILAN">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
+    
+
+    
+    <meta name="title" content="七、事务及锁的原理" />
+    <meta property="og:title" content="七、事务及锁的原理" />
+    <meta property="twitter:title" content="七、事务及锁的原理" />
+    
+
+    
+    <meta name="description" content="Java程序员">
+    <meta property="og:description" content="Java程序员" />
+    <meta property="twitter:description" content="Java程序员" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>七、事务及锁的原理-EchoGreen</title>
+
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CUILAN</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java%E8%99%9A%E6%8B%9F%E6%9C%BA">java虚拟机</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6">中间件</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B">并发编程</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        <a class="tag" href="/tags/mysql" title="MySQL">
+                            MySQL
+                        </a>
+                        
+                    </div>
+                    <h1>七、事务及锁的原理</h1>
+                    <h2 class="subheading">事务，锁的原理</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                CUILAN
+                         
+                        on 
+                        Monday, November 9, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#事务">事务</a>
+      <ul>
+        <li><a href="#事务的特性">事务的特性</a></li>
+        <li><a href="#事务的使用">事务的使用</a></li>
+        <li><a href="#隔离级别详解">隔离级别详解</a></li>
+        <li><a href="#mvcc多版本并发控制">MVCC多版本并发控制</a></li>
+      </ul>
+    </li>
+    <li><a href="#锁">锁</a>
+      <ul>
+        <li><a href="#读锁和写锁">读锁和写锁</a></li>
+        <li><a href="#行锁和表锁">行锁和表锁</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h1 id="事务">事务</h1>
+<h2 id="事务的特性">事务的特性</h2>
+<ul>
+<li>原子性</li>
+<li>隔离性</li>
+<li>一致性</li>
+<li>持久性</li>
+</ul>
+<p>我们把需要保证原子性、隔离性、一致性和持久性的一个或多个数据库操作称之为一个事务。</p>
+<h2 id="事务的使用">事务的使用</h2>
+<h3 id="开启事务">开启事务</h3>
+<h4 id="begin-work">BEGIN [WORK];</h4>
+<p><code>BEGIN</code> 语句代表开启一个事务，后边的单词 <code>WORK</code> 可有可无。开启事务后，就可以继续写若干条语句，这些语句都属于刚刚开启的这个事务。</p>
+<h4 id="start-transaction">START TRANSACTION;</h4>
+<p><code>START TRANSACTION</code> 语句和 <code>BEGIN</code> 语句有着相同的效果，都标志着开启一个事务。</p>
+<h3 id="提交事务">提交事务</h3>
+<h4 id="commit">COMMIT;</h4>
+<p>手动提交。</p>
+<h4 id="rollback">ROLLBACK;</h4>
+<p>手动终止事务，回滚。</p>
+<p>这里需要强调一下，<code>ROLLBACK</code> 语句是程序员手动的去回滚事务时才去使用的，如果事务在执行过程中遇到了某些错误而无法继续执行的话，事务自身会自动的回滚。</p>
+<h4 id="手动提交">手动提交</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SHOW</span> VARIABLES <span style="color:#ff79c6">LIKE</span> <span style="color:#f1fa8c">&#39;autocommit&#39;</span>;
+</code></pre></div><p>默认情况下，如果不显式的使用 <code>START TRANSACTION</code> 或者 <code>BEGIN</code> 语句开启一个事务，那么每一条语句都算是一个独立的事务，这种特性称之为 <strong>事务的自动提交</strong>。</p>
+<p>如果想关闭这种自动提交的功能，可以使用下边两种方法之一：</p>
+<ul>
+<li>显式的的使用 <code>START TRANSACTION</code> 或者 <code>BEGIN</code> 语句开启一个事务。这样在本次事务提交或者回滚前会暂时关闭掉自动提交的功能。</li>
+<li>把系统变量 <code>autocommit</code> 的值设置为 <code>OFF</code>，就像这样： <code>SET autocommit = OFF;</code> 这样的话，写入的多条语句就算是属于同一个事务了，
+直到显式的写出 <code>COMMIT</code> 语句来把这个事务提交掉，或者显式的写出 <code>ROLLBACK</code> 语句来把这个事务回滚掉。</li>
+</ul>
+<h3 id="隐式提交">隐式提交</h3>
+<p>当使用 <code>START TRANSACTION</code> 或者 <code>BEGIN</code> 语句开启了一个事务，或者把系统变量 <code>autocommit</code> 的值设置为 <code>OFF</code> 时，事务就不会进行自动提交，
+但是如果输入了某些语句之后就会悄悄提交，就像输入了 <code>COMMIT</code> 语句了一样，这种因为某些特殊的语句而导致事务提交的情况称为 <strong>隐式提交</strong>，这些会导致事务隐式提交的语句包括：</p>
+<ul>
+<li><strong>定义</strong> 或 <strong>修改</strong> 数据库对象的数据定义语言(Data definition language，缩写为：DDL)。数据库对象，指的就是数据库、表、视图、存储过程等等。
+当使用 <code>CREATE</code>、<code>ALTER</code>、<code>DROP</code> 等语句去修改这些所谓的数据库对象时，就会隐式的提交前边语句所属于的事务。</li>
+<li>隐式使用或修改mysql数据库中的表：当使用 <code>ALTER USER</code>、<code>CREATE USER</code>、<code>DROP USER</code>、<code>GRANT</code>、<code>RENAME USER</code>、<code>SET PASSWORD</code> 等语句时也会隐式的提交前边语句所属于的事务。</li>
+<li>事务控制或关于锁定的语句：当在一个事务还没提交或者回滚时就又使用 <code>START TRANSACTION</code> 或者 <code>BEGIN</code> 语句开启了另一个事务时，会隐式的提交上一个事务。
+或者当前的 <code>autocommit</code> 系统变量的值为 <code>OFF</code>，我们手动把它调为 <code>ON</code> 时，也会隐式的提交前边语句所属的事务。
+或者使用 <code>LOCK TABLES</code>、<code>UNLOCK TABLES</code> 等关于锁定的语句也会隐式的提交前边语句所属的事务。</li>
+<li>加载数据的语句：比如使用 <code>LOAD DATA</code> 语句来批量往数据库中导入数据时，也会隐式的提交前边语句所属的事务。</li>
+<li>其它的一些语句：使用 <code>ANALYZE TABLE</code>、<code>CACHE INDEX</code>、<code>CHECK TABLE</code>、<code>FLUSH</code>、<code>LOAD INDEX INTO CACHE</code>、<code>OPTIMIZE TABLE</code>、
+<code>REPAIR TABLE</code>、<code>RESET</code> 等语句也会隐式的提交前边语句所属的事务。</li>
+</ul>
+<h3 id="保存点">保存点</h3>
+<p>如果开启了一个事务，并且已经执行了很多语句，忽然发现上一条语句有点问题，只能使用 <code>ROLLBACK</code> 语句让数据库回滚到之前的状态。
+所以 MySQL 提出了一个 <strong>保存点(英文:savepoint)</strong> 的概念，就是在事务对应的数据库语句中打几个点，在调用 <code>ROLLBACK</code> 语句时可以指定回滚到哪个点，而不是回到最初的原点。定义保存点的语法如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">SAVEPOINT 保存点名称;
+</code></pre></div><p>当想回滚到某个保存点时，可以使用下边这个语句(下边语句中的单词 <code>WORK</code> 和 <code>SAVEPOINT</code> 是可有可无的)：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">ROLLBACK</span> [<span style="color:#ff79c6">WORK</span>] <span style="color:#ff79c6">TO</span> [SAVEPOINT] 保存点名称;
+</code></pre></div><p>不过如果 <code>ROLLBACK</code> 语句后边不跟随保存点名称的话，会直接回滚到事务执行之前的状态。如果想删除某个保存点，可以使用这个语句：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">RELEASE SAVEPOINT 保存点名称;
+</code></pre></div><h2 id="隔离级别详解">隔离级别详解</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#6272a4">-- 修改隔离级别
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SET</span> <span style="color:#ff79c6">SESSION</span> <span style="color:#ff79c6">TRANSACTION</span> <span style="color:#ff79c6">ISOLATION</span> <span style="color:#ff79c6">LEVEL</span> <span style="color:#ff79c6">READ</span> <span style="color:#ff79c6">UNCOMMITTED</span>;
+
+<span style="color:#6272a4">-- 查看隔离级别
+</span><span style="color:#6272a4"></span><span style="color:#ff79c6">SELECT</span> <span style="color:#ff79c6">@@</span>tx_isolation;
+</code></pre></div><h3 id="1-未提交读read-uncommitted">1. 未提交读(READ UNCOMMITTED)</h3>
+<p>一个事务可以读到其他事务还没有提交的数据，会出现 <strong>脏读</strong>。</p>
+<h3 id="2-已提交读read-committed">2. 已提交读(READ COMMITTED)</h3>
+<p>一个事务只能读到另一个已经提交的事务修改过的数据，并且其他事务每对该数据进行一次修改并提交后，该事务都能查询得到最新值，会出现 <strong>不可重复读</strong>、<strong>幻读</strong>。</p>
+<blockquote>
+<p>如果一个事务先根据某些条件查询出一些记录，之后另一个事务又向表中插入了符合这些条件的记录，原先的事务再次按照该条件查询时，能把另一个事务插入的记录也读出来，这就是 <strong>幻读</strong>。</p>
+</blockquote>
+<h3 id="3-可重复读repeatable-read">3. 可重复读(REPEATABLE READ)</h3>
+<p>一个事务第一次读过某条记录后，即使其他事务修改了该记录的值并且提交，该事务之后再读该条记录时，读到的仍是第一次读到的值，
+而不是每次都读到不同的数据，这就是 <strong>可重复读</strong>，这种隔离级别解决了不可重复，但是还是有可能会出现幻读。</p>
+<h3 id="4-串行化serializable">4. 串行化(SERIALIZABLE)</h3>
+<p>以上3种隔离级别都允许对同一条记录同时进行 <strong>读-读</strong>、<strong>读-写</strong>、<strong>写-读</strong> 的并发操作，如果我们不允许读-写、写-读 的并发操作，可以使用 <code>SERIALIZABLE</code> 隔离级别，
+这种隔离级别因为对同一条记录的操作都是串行的，所以不会出现脏读、幻读等现象。</p>
+<h3 id="总结">总结</h3>
+<ul>
+<li><code>READ UNCOMMITTED</code> 隔离级别下，可能发生 <strong>脏读</strong>、<strong>不可重复读</strong> 和 <strong>幻读</strong> 问题。</li>
+<li><code>READ COMMITTED</code> 隔离级别下，可能发生 <strong>不可重复读</strong> 和 <strong>幻读</strong> 问题，但是不会发生 <strong>脏读</strong> 问题。</li>
+<li><code>REPEATABLE READ</code> 隔离级别下，可能发生 <strong>幻读</strong> 问题，不会发生 <strong>脏读</strong> 和 <strong>不可重复读</strong> 的问题。</li>
+<li><code>SERIALIZABLE</code> 隔离级别下，各种问题都不会发生。</li>
+</ul>
+<p><strong>注意</strong>：这四种隔离级别是SQL的标准定义，不同的数据库会有不同的实现，特别需要注意的是 MySQL 在 <code>REPEATABLE READ</code> 隔离级别下，是可以禁止幻读问题的发生的。</p>
+<h2 id="mvcc多版本并发控制">MVCC多版本并发控制</h2>
+<h3 id="版本链">版本链</h3>
+<p>对于使用 InnoDB 存储引擎的表来说，它的 <strong>聚簇索引</strong> 记录中都包含两个必要的 <strong>隐藏列</strong> (<code>row_id</code> 并不是必要的，创建的表中有主键或者非NULL唯一键时都不会包含row_id列)：</p>
+<ul>
+<li><code>trx_id</code>：每次对某条记录进行改动时，都会把对应的 <strong>事务id</strong> 赋值给 <code>trx_id</code> 隐藏列。</li>
+<li><code>roll_pointer</code>：每次对某条记录进行改动时，这个隐藏列会存一个指针，可以通过这个指针找到该记录修改前的信息。</li>
+</ul>
+<h3 id="readview">ReadView</h3>
+<ul>
+<li>对于使用 <code>READ UNCOMMITTED</code> 隔离级别的事务来说，可以直接读取记录的最新版本。</li>
+<li>对于使用 <code>SERIALIZABLE</code> 隔离级别的事务来说，使用 <strong>加锁</strong> 的方式来访问记录。</li>
+<li>对于使用 <code>READ COMMITTED</code> 和 <code>REPEATABLE READ</code> 隔离级别的事务来说，就需要用到 <strong>版本链</strong> 了，核心问题就是：需要判断一下版本链中的哪个版本是当前事务可见的。</li>
+</ul>
+<h4 id="readview的组成">ReadView的组成</h4>
+<p>ReadView 中主要包含4个比较重要的内容：</p>
+<ol>
+<li><code>m_ids</code>：表示在生成 ReadView 时当前系统中 <strong>活跃的</strong> 读写事务的 <strong>事务id列表</strong>。</li>
+<li><code>min_trx_id</code>：表示在生成 ReadView 时当前系统中活跃的读写事务中 <strong>最小的事务id</strong>，也就是 <code>m_ids</code> 中的最小值。</li>
+<li><code>max_trx_id</code>：表示生成 ReadView 时系统中应该分配给 <strong>下一个事务的id值</strong>。</li>
+<li><code>creator_trx_id</code>：表示生成该 ReadView 的事务的事务id。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：<code>max_trx_id</code> 并不是 <code>m_ids</code> 中的最大值，事务id是递增分配的。比方说现在有 id 为 1，2，3 这三个事务，之后id为3的事务提交了。
+那么一个新的读事务在生成 ReadView 时，<code>m_ids</code> 就包括 1和2，<code>min_trx_id</code>的值就是1，<code>max_trx_id</code> 的值就是4。</p>
+</blockquote>
+<h4 id="版本可见性判断条件">版本可见性判断条件</h4>
+<p>有了这个 ReadView，这样在访问某条记录时，只需要按照下边的步骤判断记录的某个版本是否可见：</p>
+<ul>
+<li>如果被访问版本的 <code>trx_id</code> 属性值 <strong>等于</strong> ReadView 中的 <code>creator_trx_id</code> 值，表明当前事务在访问它自己修改过的记录，所以该版本可以被当前事务访问。</li>
+<li>如果被访问版本的 <code>trx_id</code> 属性值 <strong>小于</strong> ReadView 中的 <code>min_trx_id</code> 值，表明生成该版本的事务在当前事务生成 ReadView 前已经提交，所以该版本可以被当前事务访问。</li>
+<li>如果被访问版本的 <code>trx_id</code> 属性值 <strong>大于</strong> ReadView 中的 <code>max_trx_id</code> 值，表明生成该版本的事务在当前事务生成 ReadView 后才开启，所以该版本不可以被当前事务访问。</li>
+<li>如果被访问版本的 <code>trx_id</code> 属性值在 ReadView 的 <code>min_trx_id</code> 和 <code>max_trx_id</code> 之间，那就需要判断一下 <code>trx_id</code> 属性值是不是在 <code>m_ids</code> 列表中，
+如果在，说明创建 ReadView 时生成该版本的事务还是活跃的，该版本不可以被访问；如果不在，说明创建 ReadView 时生成该版本的事务已经被提交，该版本可以被访问。</li>
+</ul>
+<h3 id="read-committed-的实现方式">READ COMMITTED 的实现方式</h3>
+<p><strong>每次</strong> 读取数据前都生成一个 ReadView。</p>
+<h3 id="repeatable-read-的实现方式">REPEATABLE READ 的实现方式</h3>
+<p>在 <strong>第一次</strong> 读取数据时生成一个 ReadView。</p>
+<h3 id="mvcc总结">MVCC总结</h3>
+<p>MVCC(Multi-Version Concurrency Control ，多版本并发控制)指的就是在使用 <code>READ COMMITTED</code>、<code>REPEATABLE READ</code> 这两种隔离级别的事务在执行普通的 <code>SEELCT</code> 操作时访问记录的版本链的过程。
+可以使不同事务的 <strong>读-写</strong>、<strong>写-读</strong> 操作 <strong>并发执行</strong>，从而提升系统性能。<code>READ COMMITTED</code>、<code>REPEATABLE READ</code> 这两个隔离级别的一个很大不同就是：
+生成 ReadView 的时机不同，<code>READ COMMITTED</code> 在每一次进行普通 <code>SELECT</code> 操作前都会生成一个 ReadView，而 <code>REPEATABLE READ</code> 只在第一次进行普通 <code>SELECT</code> 操作前生成一个 ReadView，
+之后的查询操作都重复使用这个 ReadView。</p>
+<hr>
+<h1 id="锁">锁</h1>
+<h2 id="读锁和写锁">读锁和写锁</h2>
+<ul>
+<li>读锁：共享锁、Shared Locks、S锁。</li>
+<li>写锁：排它锁、Exclusive Locks、X锁。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">是否冲突</th>
+<th style="text-align:center">X锁</th>
+<th style="text-align:center">S锁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>X锁</strong></td>
+<td style="text-align:center">冲突</td>
+<td style="text-align:center">冲突</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>S锁</strong></td>
+<td style="text-align:center">冲突</td>
+<td style="text-align:center">不冲突</td>
+</tr>
+</tbody>
+</table>
+<h3 id="读操作">读操作</h3>
+<p>对于普通 <code>SELECT</code> 语句，InnoDB 不会加任何锁。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> ... <span style="color:#ff79c6">lock</span> <span style="color:#ff79c6">in</span> <span style="color:#ff79c6">share</span> <span style="color:#ff79c6">mode</span>;
+</code></pre></div><p>将查找到的数据加上一个 S锁，允许其他事务继续获取这些记录的 S锁，不能获取这些记录的 X锁(会阻塞)。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#ff79c6">SELECT</span> ... <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">update</span>;
+</code></pre></div><p>将查找到的数据加上一个 X锁，不允许其他事务获取这些记录的 S锁 和 X锁。</p>
+<h3 id="写操作">写操作</h3>
+<ul>
+<li><code>DELETE</code>：删除一条数据时，先对记录加 X锁，再执行删除操作。</li>
+<li><code>INSERT</code>：插入一条记录时，会先加 <strong>隐式锁</strong> 来保护这条新插入的记录在本事务提交前不被别的事务访问到。</li>
+<li><code>UPDATE</code>：
+<ul>
+<li>如果被更新的列，修改前后没有导致存储空间变化，那么会先给记录加 X锁，再直接对记录进行修改。</li>
+<li>如果被更新的列，修改前后导致存储空间发生了变化，那么会先给记录加 X锁，然后将记录删掉，再 <code>INSERT</code> 一条新记录。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>隐式锁</strong>：一个事务插入一条记录后，还未提交，这条记录会保存本次事务id，而其他事务如果想来读取这个记录会发现事务id不对应，所以相当于在插入一条记录时，隐式的给这条记录加了一把隐式锁。</p>
+</blockquote>
+<h2 id="行锁和表锁">行锁和表锁</h2>
+<h3 id="行锁">行锁</h3>
+<ul>
+<li><strong>LOCK_REC_NOT_GAP</strong>：单个行记录上的锁。</li>
+<li><strong>LOCK_GAP</strong>：间隙锁，锁定一个范围，但不包括记录本身。GAP锁的目的，是为了防止同一事务的两次当前读，出现幻读的情况。</li>
+<li><strong>LOCK_ORDINARY</strong>：锁定一个范围，并且锁定记录本身。对于行的查询，都是采用该方法，主要目的是解决幻读的问题。</li>
+</ul>
+<h3 id="表锁">表锁</h3>
+<h4 id="表级别的s锁x锁">表级别的S锁、X锁</h4>
+<h4 id="is锁ix锁">IS锁、IX锁</h4>
+<h4 id="auto-inc锁">AUTO-INC锁</h4>
+<h3 id="悲观锁">悲观锁</h3>
+<h3 id="乐观锁">乐观锁</h3>
+<h3 id="死锁">死锁</h3>
+<h3 id="避免死锁">避免死锁</h3>
+<ul>
+<li>以固定的顺序访问表和行</li>
+<li>大事务拆小，大事务更容易产生死锁</li>
+<li>在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁概率</li>
+<li>降低隔离级别(下下签)</li>
+<li>为表添加合理的索引</li>
+</ul>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://cuilan.github.io/"><img src="/img/favicon.png" />CUILAN</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/" data-toggle="tooltip" data-placement="top" title="六、Explain关键字详解">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/nginx" title="nginx">
+                            nginx
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springioc" title="springioc">
+                            springioc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springmvc" title="springmvc">
+                            springmvc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" title="多线程">
+                            多线程
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91" title="并发">
+                            并发
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA" title="概率论">
+                            概率论
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
+                            目录
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6" title="统计学">
+                            统计学
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA" title="虚拟机">
+                            虚拟机
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6" title="集合框架">
+                            集合框架
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:17746598041@163.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/mengdond24">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuilan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; CUILAN 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
