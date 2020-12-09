@@ -109,6 +109,10 @@
                         </li>
                         
                         <li>
+                            <a href="/categories/linux">linux</a>
+                        </li>
+                        
+                        <li>
                             <a href="/categories/spring">spring</a>
                         </li>
                         
@@ -206,6 +210,56 @@
             
 
 <div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8Ejoin%E7%9A%84%E4%BC%98%E5%8C%96/">
+        <h2 class="post-title">
+            四、关于JOIN的优化
+        </h2>
+	
+        <h3 class="post-subtitle">
+            JOIN优化
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            JOIN 连接 内连接 以下三种写法都是内连接： SELECT * FROM t1 JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 INNER JOIN t2 ON t1.a = t2.b; SELECT * FROM t1 CROSS JOIN t2 ON t1.a = t2.b; 左连接、右连接 左连接 SELECT * FROM t1 LEFT JOIN t2 ON t1.a =
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Wednesday, October 28, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/">
+        <h2 class="post-title">
+            三、查询优化器
+        </h2>
+	
+        <h3 class="post-subtitle">
+            查询优化器，查询优化器日志，查询优化原理分析
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。 优化步骤： 条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by CUILAN Monday, October 26, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/b&#43;%E6%A0%91%E7%B4%A2%E5%BC%95/">
         <h2 class="post-title">
             二、B&#43;树索引
@@ -280,56 +334,6 @@
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc09/">
-        <h2 class="post-title">
-            refresh 方法后续方法，bean 的实例化
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析六，refresh 方法后续方法，完成 BeanFactory 中所有非延迟加载的 bean 的实例化
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            refresh 方法，至此，BeanFactory 初始化已完成。 一、registerBeanPostProcessors 注册 BeanPostProcess
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Monday, October 19, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc08/">
-        <h2 class="post-title">
-            Spring容器初始化流程
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析五
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            Spring容器初始化流程 // 父类构造器，实例化一个 BeanFactory -&gt; DefaultListableBeanFactory org.springframework.context.support.GenericApplicationContext#GenericApplicationContext() // 入口 org.springframework.context.annotation.AnnotationConfigApplicationContext#AnnotationConfigApplicationContext() // 1. 实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils org.springframework.context.annotation.AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader() // 设置 AnnotationAwareOrderComparator 对象，提供依赖的排序功能 // 设置 ContextAnnotationAutowireCandidateResolver 对象，提供
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Monday, October 19, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
 
             
 
@@ -375,6 +379,10 @@
                 
             
                 
+            
+                
+            
+                
                     <a href="/tags/mysql" title="mysql">
                         mysql
                     </a>
@@ -384,6 +392,8 @@
                     <a href="/tags/nginx" title="nginx">
                         nginx
                     </a>
+                
+            
                 
             
                 

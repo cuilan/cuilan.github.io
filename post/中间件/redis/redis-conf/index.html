@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="CUILAN">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg">
+    <meta property="twitter:image" content="https://cuilan.github.io///img/post-bg-coffee.jpeg" />
+    
+
+    
+    <meta name="title" content="Redis配置文件详解" />
+    <meta property="og:title" content="Redis配置文件详解" />
+    <meta property="twitter:title" content="Redis配置文件详解" />
+    
+
+    
+    <meta name="description" content="Java程序员">
+    <meta property="og:description" content="Java程序员" />
+    <meta property="twitter:description" content="Java程序员" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="翠兰, cuilan, 博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Redis配置文件详解-EchoGreen</title>
+
+    <link rel="canonical" href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis-conf/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CUILAN</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java%E8%99%9A%E6%8B%9F%E6%9C%BA">java虚拟机</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/linux">linux</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6">中间件</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B">并发编程</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%9D%82%E9%A1%B9">杂项</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%9B%AE%E5%BD%95">目录</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        <a class="tag" href="/tags/redis" title="Redis">
+                            Redis
+                        </a>
+                        
+                    </div>
+                    <h1>Redis配置文件详解</h1>
+                    <h2 class="subheading">Redis、redis.conf</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                CUILAN
+                         
+                        on 
+                        Tuesday, December 1, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#redisconf配置文件">redis.conf配置文件</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="redisconf配置文件">redis.conf配置文件</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#6272a4"># Redis configuration file example.</span>
+
+<span style="color:#6272a4"># 启动时指定配置文件</span>
+<span style="color:#6272a4"># ./redis-server /path/to/redis.conf</span>
+
+<span style="color:#6272a4">################################## NETWORK 网络 ####################################</span>
+
+<span style="color:#6272a4"># 绑定主机地址</span>
+<span style="color:#8be9fd;font-style:italic">bind</span> 127.0.0.1
+
+<span style="color:#6272a4"># 保护模式，默认开启</span>
+protected-mode yes
+
+<span style="color:#6272a4"># 监听端口号，默认为6379，设置为0，则不监听任何端口</span>
+port <span style="color:#bd93f9">6379</span>
+
+<span style="color:#6272a4"># TCP 监听的最大容纳数量，默认511</span>
+Linux需要修改 /proc/sys/net/core/somaxconn 对应的值
+tcp-backlog <span style="color:#bd93f9">511</span>
+
+<span style="color:#6272a4"># 制定 Unix socket 的路径</span>
+<span style="color:#6272a4"># unixsocket /tmp/redis.sock</span>
+<span style="color:#6272a4"># unixsocketperm 700</span>
+
+<span style="color:#6272a4"># 当客户端闲置多少秒后关闭连接，0代表关闭该功能</span>
+timeout <span style="color:#bd93f9">0</span>
+
+<span style="color:#6272a4"># TCP keepalive 心跳包</span>
+<span style="color:#6272a4"># Redis 3.2.1 之后版本推荐设置为300秒</span>
+tcp-keepalive <span style="color:#bd93f9">300</span>
+
+<span style="color:#6272a4">################################# GENERAL 通用 #####################################</span>
+
+<span style="color:#6272a4"># Redis默认不是以守护进程的方式运行的，yes启动守护进程</span>
+daemonize no
+
+<span style="color:#6272a4"># 监控管理守护进程，no、upstart、systemd、no，默认no</span>
+supervised no
+
+<span style="color:#6272a4"># Redis以守护进程方式运行时，Redis默认会把pid写入 /var/run/redis.pid 文件，</span>
+pidfile /var/run/redis_6379.pid
+
+<span style="color:#6272a4"># 定义日志级别</span>
+<span style="color:#6272a4"># debug     适用于开发或测试阶段</span>
+<span style="color:#6272a4"># verbose   日志数量少于debug</span>
+<span style="color:#6272a4"># notice    适用于生产环境，默认级别</span>
+<span style="color:#6272a4"># warning   仅仅一些重要的消息被记录</span>
+loglevel notice
+
+<span style="color:#6272a4"># 指定日志文件的位置</span>
+logfile <span style="color:#f1fa8c">&#34;&#34;</span>
+
+<span style="color:#6272a4"># 是否把日志记录到系统日志，默认no</span>
+<span style="color:#6272a4"># syslog-enabled no</span>
+
+<span style="color:#6272a4"># 设置 syslog 的 identity</span>
+<span style="color:#6272a4"># syslog-ident redis</span>
+
+<span style="color:#6272a4"># 设置 syslog 的 facility，必须是 USER 或者是 LOCAL0-LOCAL7 之间的值</span>
+<span style="color:#6272a4"># syslog-facility local0</span>
+
+<span style="color:#6272a4"># 设置数据库的数量</span>
+databases <span style="color:#bd93f9">16</span>
+
+<span style="color:#6272a4"># 控制台展示redis logo</span>
+always-show-logo yes
+
+<span style="color:#6272a4">################################ SNAPSHOTTING 快照  ################################</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4"># 保存数据到磁盘：</span>
+<span style="color:#6272a4"># Save the DB on disk:</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4">#   格式：save &lt;seconds&gt; &lt;changes&gt;</span>
+<span style="color:#6272a4">#   根据给定的时间间隔和写入次数将数据保存到磁盘</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4">#   下面的例子的意思是：</span>
+<span style="color:#6272a4">#     900 秒后如果至少有 1 个 key 的值变化，则保存</span>
+<span style="color:#6272a4">#     300 秒后如果至少有 10 个 key 的值变化，则保存</span>
+<span style="color:#6272a4">#     60  秒后如果至少有 10000 个 key 的值变化，则保存</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4">#   注意：注释掉所有的 save 可停用保存功能。也可以直接一个空字符串来实现停用：</span>
+<span style="color:#6272a4">#   save &#34;&#34;</span>
+save <span style="color:#bd93f9">900</span> <span style="color:#bd93f9">1</span>
+save <span style="color:#bd93f9">300</span> <span style="color:#bd93f9">10</span>
+save <span style="color:#bd93f9">60</span> <span style="color:#bd93f9">10000</span>
+
+<span style="color:#6272a4"># 持久化失败后, 是否继续工作</span>
+stop-writes-on-bgsave-error yes
+
+<span style="color:#6272a4"># dump.rdb 文件是否使用 LZF 压缩，默认为 yes</span>
+rdbcompression yes
+
+<span style="color:#6272a4"># 是否校验rdb文件</span>
+rdbchecksum yes
+
+<span style="color:#6272a4"># 设置 dump 的文件名称</span>
+dbfilename dump.rdb
+
+<span style="color:#6272a4"># RDB 文件是否删除同步锁</span>
+<span style="color:#6272a4"># 仅在同时禁用 AOF 和 RDB 的实例中起作用，否则将被完全忽略。</span>
+rdb-del-sync-files no
+
+<span style="color:#6272a4"># 制定 rdb 存放目录，上面的 dbfilename 只指定了文件名。这个配置项必须是目录，而不能是文件名。</span>
+dir ./
+
+<span style="color:#6272a4">################################# REPLICATION 从复制节点 #################################</span>
+
+<span style="color:#6272a4"># 从节点配置</span>
+<span style="color:#6272a4"># Redis 5.0 以前的版本使用 slaveof 配置从节点</span>
+<span style="color:#6272a4"># slaveof &lt;masterip&gt; &lt;masterport&gt;</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4"># Redis 5.0 以后的版本建议使用此配置</span>
+<span style="color:#6272a4"># replicaof &lt;masterip&gt; &lt;masterport&gt;</span>
+
+<span style="color:#6272a4"># 如果主节点配置了认证，需要添加用户名、密码</span>
+<span style="color:#6272a4"># masteruser &lt;username&gt;</span>
+<span style="color:#6272a4"># masterauth &lt;master-password&gt;</span>
+
+<span style="color:#6272a4"># 从节点是否可以相应客户端请求，默认：yes</span>
+replica-serve-stale-data yes
+
+<span style="color:#6272a4"># 从节点只读</span>
+replica-read-only yes
+
+<span style="color:#6272a4"># 是否使用无盘复制</span>
+repl-diskless-sync no
+repl-diskless-sync-delay <span style="color:#bd93f9">5</span>
+
+<span style="color:#6272a4"># RDB无盘加载</span>
+<span style="color:#6272a4"># &#34;disabled&#34;    - 不要使用无盘负载（首先将rdb文件存储到磁盘）</span>
+<span style="color:#6272a4"># &#34;on-empty-db&#34; - 仅在完全安全时才使用无盘加载</span>
+<span style="color:#6272a4"># &#34;swapdb&#34;      - 解析时在RAM中保留当前数据库内容的副本直接从套接字获取数据</span>
+repl-diskless-load disabled
+
+<span style="color:#6272a4"># 主节点每隔一段固定的时间向从节点发送一个PING命令</span>
+<span style="color:#6272a4"># repl-ping-replica-period 10</span>
+
+<span style="color:#6272a4"># 复制超时时间，单位：秒</span>
+<span style="color:#6272a4"># repl-timeout 60</span>
+
+<span style="color:#6272a4"># 是否禁用 TCP_NODELAY 网络延迟，no不禁用，yes禁用</span>
+repl-disable-tcp-nodelay no
+
+<span style="color:#6272a4"># 复制积累缓冲区大小</span>
+<span style="color:#6272a4"># repl-backlog-size 1mb</span>
+
+<span style="color:#6272a4"># 主服务器与从服务器断开多长时间，释放缓冲区，单位：秒，0表示从不释放积压</span>
+<span style="color:#6272a4"># repl-backlog-ttl 3600</span>
+
+<span style="color:#6272a4"># 从服务器晋升为主服务器的优先级，取值：0~100，值越小优先级越高，默认100</span>
+replica-priority <span style="color:#bd93f9">100</span>
+
+<span style="color:#6272a4"># 最小3个可写的从节点，默认0，禁用此功能</span>
+<span style="color:#6272a4"># min-replicas-to-write 3</span>
+<span style="color:#6272a4"># 最小从节点的最大延迟为10秒</span>
+<span style="color:#6272a4"># min-replicas-max-lag 10</span>
+
+<span style="color:#6272a4"># 从节点对外暴露ip</span>
+<span style="color:#6272a4"># replica-announce-ip 5.5.5.5</span>
+<span style="color:#6272a4"># 从节点对外暴露端口</span>
+<span style="color:#6272a4"># replica-announce-port 1234</span>
+
+<span style="color:#6272a4">################################## SECURITY 安全 ###################################</span>
+
+<span style="color:#6272a4"># 设置密码，默认无</span>
+<span style="color:#6272a4"># requirepass 123456</span>
+
+<span style="color:#6272a4">############################ MEMORY MANAGEMENT 内存管理 ##############################</span>
+
+<span style="color:#6272a4"># 最大内存限制</span>
+<span style="color:#6272a4"># maxmemory &lt;bytes&gt;</span>
+
+<span style="color:#6272a4"># 最大内存策略：如果达到内存限制了，Redis如何选择删除key。</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4"># volatile-lru    -&gt; 根据 LRU 算法删除设置过期时间的key</span>
+<span style="color:#6272a4"># allkeys-lru     -&gt; 根据 LRU 算法删除任何key</span>
+<span style="color:#6272a4"># volatile-lfu    -&gt; 根据 LFU 算法删除设置过期时间的key</span>
+<span style="color:#6272a4"># allkeys-lfu     -&gt; 根据 LFU 算法删除任何key</span>
+<span style="color:#6272a4"># volatile-random -&gt; 随机移除设置过过期时间的key</span>
+<span style="color:#6272a4"># allkeys-random  -&gt; 随机移除任何key</span>
+<span style="color:#6272a4"># volatile-ttl    -&gt; 移除即将过期的key(minor TTL)</span>
+<span style="color:#6272a4"># noeviction      -&gt; 不移除任何key，只返回一个写错误（默认）</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4"># maxmemory-policy noeviction</span>
+
+<span style="color:#6272a4"># 删除时 Redis 会检查 5 个key然后取最旧的那个。</span>
+<span style="color:#6272a4"># 默认值为5，数字越大结果越精确，但会消耗更多CPU。</span>
+<span style="color:#6272a4"># maxmemory-samples 5</span>
+
+<span style="color:#6272a4"># 从节点忽略最大内存限制</span>
+<span style="color:#6272a4"># replica-ignore-maxmemory yes</span>
+
+<span style="color:#6272a4">############################## APPEND ONLY MODE ###############################</span>
+
+<span style="color:#6272a4"># 是否开启 AOF 模式，默认no</span>
+appendonly no
+
+<span style="color:#6272a4"># AOF 文件名</span>
+appendfilename <span style="color:#f1fa8c">&#34;appendonly.aof&#34;</span>
+
+<span style="color:#6272a4"># 同步策略，数据刷入磁盘的频率：</span>
+<span style="color:#6272a4">#     no: 不要立刻刷，只有在操作系统需要刷的时候再刷。比较快。</span>
+<span style="color:#6272a4">#     always: 每次写操作都立刻写入到aof文件。慢，但是最安全。</span>
+<span style="color:#6272a4">#     everysec: 每秒写一次。折中方案。</span>
+<span style="color:#6272a4">#</span>
+<span style="color:#6272a4"># appendfsync always</span>
+appendfsync everysec
+<span style="color:#6272a4"># appendfsync no</span>
+
+<span style="color:#6272a4"># AOF 重写期间是否同步</span>
+no-appendfsync-on-rewrite no
+
+<span style="color:#6272a4"># 自动重写AOF文件配置，达到64mb的100%触发重写。</span>
+auto-aof-rewrite-percentage <span style="color:#bd93f9">100</span>
+auto-aof-rewrite-min-size 64mb
+
+<span style="color:#6272a4"># 加载 AOF 文件时出错，是否依然启动，并发送日志通知。</span>
+aof-load-truncated yes
+
+<span style="color:#6272a4"># RDB AOF 混合持久化</span>
+aof-use-rdb-preamble yes
+
+<span style="color:#6272a4">################################ LUA SCRIPTING  ###############################</span>
+
+<span style="color:#6272a4"># LUA 脚本最大执行时间</span>
+lua-time-limit <span style="color:#bd93f9">5000</span>
+
+<span style="color:#6272a4">################################ REDIS CLUSTER 集群  ###############################</span>
+
+<span style="color:#6272a4"># 开启Redis集群功能</span>
+<span style="color:#6272a4"># cluster-enabled yes</span>
+
+<span style="color:#6272a4"># Redis自动生成的集群配置文件名，不能重复</span>
+<span style="color:#6272a4"># cluster-config-file nodes-6379.conf</span>
+
+<span style="color:#6272a4"># 集群节点超时毫秒数。超时的节点将被视为不可用状态。</span>
+<span style="color:#6272a4"># cluster-node-timeout 15000</span>
+
+<span style="color:#6272a4"># 集群选举新master策略：</span>
+<span style="color:#6272a4">#   (node-timeout * cluster-replica-validity-factor) + repl-ping-replica-period</span>
+<span style="color:#6272a4"># </span>
+<span style="color:#6272a4"># cluster-replica-validity-factor 10</span>
+
+<span style="color:#6272a4"># cluster-migration-barrier 1</span>
+
+<span style="color:#6272a4"># 默认情况下 Redis 集群只要发现有一个 hash slot 未被覆盖（没有可用的节点为其提供服务）则会停止提供查询服务。 </span>
+<span style="color:#6272a4"># 因此当集群发生部分故障（比如部分的 hash slot 未被覆盖），则会导致整个集群都无法工作。</span>
+<span style="color:#6272a4"># 当所有的 slots 再次被覆盖后，集群会自动恢复到可用状态。</span>
+<span style="color:#6272a4"># 如果希望在集群发生故障时可用的部分依然可以提供查询服务，可设置为 no</span>
+<span style="color:#6272a4"># cluster-require-full-coverage yes</span>
+
+<span style="color:#6272a4"># master是否进行故障转移，yes不会自动进行故障转移</span>
+<span style="color:#6272a4"># cluster-replica-no-failover no</span>
+
+<span style="color:#6272a4"># 当集群节点数达不到最小值时，是否允许客户端读操作</span>
+<span style="color:#6272a4"># cluster-allow-reads-when-down no</span>
+
+<span style="color:#6272a4">################################## SLOW LOG 慢查询日志 ###################################</span>
+
+<span style="color:#6272a4"># 慢查询日志，记录超过多少微秒的查询命令。</span>
+<span style="color:#6272a4"># 1000000等于1秒，设置为0则记录所有命令。</span>
+slowlog-log-slower-than <span style="color:#bd93f9">10000</span>
+
+<span style="color:#6272a4"># 记录大小，可通过SLOWLOG RESET命令重置</span>
+slowlog-max-len <span style="color:#bd93f9">128</span>
+</code></pre></div>
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://cuilan.github.io/"><img src="/img/favicon.png" />CUILAN</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/" data-toggle="tooltip" data-placement="top" title="七、事务及锁的原理">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2020-12-06-manjaro_after_install/" data-toggle="tooltip" data-placement="top" title="manjaro安装后基本配置">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/nginx" title="nginx">
+                            nginx
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/springioc" title="springioc">
+                            springioc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/springmvc" title="springmvc">
+                            springmvc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6" title="中间件">
+                            中间件
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" title="多线程">
+                            多线程
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91" title="并发">
+                            并发
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA" title="概率论">
+                            概率论
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81" title="源码">
+                            源码
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%9B%AE%E5%BD%95" title="目录">
+                            目录
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6" title="统计学">
+                            统计学
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA" title="虚拟机">
+                            虚拟机
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6" title="集合框架">
+                            集合框架
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:17746598041@163.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/mengdond24">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuilan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; CUILAN 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

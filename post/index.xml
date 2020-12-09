@@ -8,6 +8,24 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 02 Mar 2020 12:00:00 -0500</lastBuildDate><atom:link href="https://cuilan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>manjaro安装后基本配置</title>
+      <link>https://cuilan.github.io/post/2020-12-06-manjaro_after_install/</link>
+      <pubDate>Sun, 06 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/2020-12-06-manjaro_after_install/</guid>
+      <description>设置官方镜像源（包括 core, extra, community, mutilab） // 更新镜像排名 $ sudo pacman-mirrors -i -c China -m rank 然后勾选需要的镜像源，确认即可。 // 更新数据源 $ sudo pacman -Syy // 更新系统软件 $</description>
+    </item>
+    
+    <item>
+      <title>Redis配置文件详解</title>
+      <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis-conf/</link>
+      <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis-conf/</guid>
+      <description>redis.conf配置文件 # Redis configuration file example. # 启动时指定配置文件 # ./redis-server /path/to/redis.conf ################################## NETWORK 网络 #################################### # 绑定主机地址 bind 127.0.0.1 # 保护模式，默认开启 protected-mode yes # 监听端口号，默认为63</description>
+    </item>
+    
+    <item>
       <title>七、事务及锁的原理</title>
       <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/</link>
       <pubDate>Mon, 09 Nov 2020 00:00:00 +0000</pubDate>
