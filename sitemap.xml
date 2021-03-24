@@ -4,12 +4,37 @@
   
   <url>
     <loc>https://cuilan.github.io/categories/</loc>
-    <lastmod>2020-12-06T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuilan.github.io/</loc>
-    <lastmod>2020-12-06T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/java/</loc>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/categories/java/</loc>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/</loc>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/post/2021/2021-03-05-jit/</loc>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
+    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -28,12 +53,7 @@
   </url>
   
   <url>
-    <loc>https://cuilan.github.io/post/2020-12-06-manjaro_after_install/</loc>
-    <lastmod>2020-12-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/tags/</loc>
+    <loc>https://cuilan.github.io/post/2020/2020-12-06-manjaro_after_install/</loc>
     <lastmod>2020-12-06T00:00:00+00:00</lastmod>
   </url>
   
@@ -110,11 +130,6 @@
   <url>
     <loc>https://cuilan.github.io/categories/%E7%9B%AE%E5%BD%95/</loc>
     <lastmod>2020-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/tags/java/</loc>
-    <lastmod>2020-10-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -254,11 +269,6 @@
   
   <url>
     <loc>https://cuilan.github.io/post/java/dictionary-source-analysis/</loc>
-    <lastmod>2019-09-17T16:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/categories/java/</loc>
     <lastmod>2019-09-17T16:00:00+00:00</lastmod>
   </url>
   
@@ -499,11 +509,6 @@
   
   <url>
     <loc>https://cuilan.github.io/post/jvm/jvm-gc-log/</loc>
-    <lastmod>2018-11-08T15:13:38+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     <lastmod>2018-11-08T15:13:38+00:00</lastmod>
   </url>
   

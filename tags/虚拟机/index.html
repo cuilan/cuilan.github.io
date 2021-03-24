@@ -209,6 +209,31 @@
             
 
 <div class="post-preview">
+    <a href="https://cuilan.github.io/post/2021/2021-03-05-jit/">
+        <h2 class="post-title">
+            对象在内存中流转过程(栈上分配、TLAB)
+        </h2>
+	
+        <h3 class="post-subtitle">
+            栈上分配、TLAB、Eden
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            一般在java程序中，new的对象是分配在堆空间中的，但是实际的情况是，大部分的new对象会进入堆空间中，而并非是全部的对象，还有另外两个地方可以存储new的对象，我们称之为栈上分配以及TLAB。
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by 张岩 Wednesday, March 24, 2021
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://cuilan.github.io/post/jvm/jvm-gc-log/">
         <h2 class="post-title">
             七、理解GC日志
@@ -285,27 +310,6 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Thursday, November 8, 2018
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/jvm/jvm-gc-memory-strategy/">
-        <h2 class="post-title">
-            三、垃圾收集器与内存分配策略
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            1、概述 第一门正真使用内存动态分配和垃圾回收技术的语言是Lisp语言。 在Java各内存区域中，程序计数器、虚拟机栈、本地方法区3个区域随线程
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Wednesday, November 7, 2018
     
     
     </p>

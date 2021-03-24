@@ -209,6 +209,31 @@
             
 
 <div class="post-preview">
+    <a href="https://cuilan.github.io/post/2021/2021-03-05-jit/">
+        <h2 class="post-title">
+            对象在内存中流转过程(栈上分配、TLAB)
+        </h2>
+	
+        <h3 class="post-subtitle">
+            栈上分配、TLAB、Eden
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            一般在java程序中，new的对象是分配在堆空间中的，但是实际的情况是，大部分的new对象会进入堆空间中，而并非是全部的对象，还有另外两个地方可以存储new的对象，我们称之为栈上分配以及TLAB。
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by 张岩 Wednesday, March 24, 2021
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://cuilan.github.io/post/spring/springioc/springioc09/">
         <h2 class="post-title">
             refresh 方法后续方法，bean 的实例化
@@ -301,31 +326,6 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Monday, September 21, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/spring/springioc/springioc05/">
-        <h2 class="post-title">
-            Spring注册Bean的流程
-        </h2>
-	
-        <h3 class="post-subtitle">
-            SpringIOC源码分析二，Spring注册Bean的流程，register方法
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            Spring注册Bean的流程 一、register方法 register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。 // 注册普遍Bean context.register(Test.class); public
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Sunday, September 20, 2020
     
     
     </p>

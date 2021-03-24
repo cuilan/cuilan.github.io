@@ -210,7 +210,32 @@
             
 
 <div class="post-preview">
-    <a href="https://cuilan.github.io/post/2020-12-06-manjaro_after_install/">
+    <a href="https://cuilan.github.io/post/2021/2021-03-05-jit/">
+        <h2 class="post-title">
+            对象在内存中流转过程(栈上分配、TLAB)
+        </h2>
+	
+        <h3 class="post-subtitle">
+            栈上分配、TLAB、Eden
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            一般在java程序中，new的对象是分配在堆空间中的，但是实际的情况是，大部分的new对象会进入堆空间中，而并非是全部的对象，还有另外两个地方可以存储new的对象，我们称之为栈上分配以及TLAB。
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by 张岩 Wednesday, March 24, 2021
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://cuilan.github.io/post/2020/2020-12-06-manjaro_after_install/">
         <h2 class="post-title">
             manjaro安装后基本配置
         </h2>
@@ -242,8 +267,8 @@
 	
         <div class="post-content-preview">
 	
-            redis.conf配置文件 # Redis configuration file example. # 启动时指定配置文件 # ./redis-server /path/to/redis.conf ################################## NETWORK 网络 #################################### # 绑定主机地址 bind 127.0.0.1 # 保护模式，默认开启 protected-mode yes # 监听端口号，默认为63
-       
+            Redis各模块功能，及配置参数详解
+        
         </div>
     </a>
     <p class="post-meta">
@@ -298,31 +323,6 @@
     </a>
     <p class="post-meta">
     Posted by CUILAN Monday, November 2, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/">
-        <h2 class="post-title">
-            五、关于子查询的优化
-        </h2>
-	
-        <h3 class="post-subtitle">
-            子查询分类，子查询执行原理，子查询优化
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            子查询分类 两种写法： SELECT * FROM t1 WHERE a IN (SELECT a FROM t2); SELECT * FROM (SELECT * FROM t1) AS t; 按返回结果集区分 1. 标量子查询 只返回一个单一值的子查询称之为标量子查询。 SELECT * FROM t1 WHERE
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by CUILAN Thursday, October 29, 2020
     
     
     </p>
