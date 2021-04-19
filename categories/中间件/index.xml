@@ -6,7 +6,16 @@
     <description>Recent content in 中间件 on CUILAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 19 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式系统介绍</title>
+      <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/zookeeper/zk1/</link>
+      <pubDate>Mon, 19 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/zookeeper/zk1/</guid>
+      <description>一、软件架构 1.1 单一应用架构 当网站流量很小，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。 1.2 垂直应用架构 当访问量主键增大，单一应</description>
+    </item>
+    
     <item>
       <title>Redis配置文件详解</title>
       <link>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis-conf/</link>

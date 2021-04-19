@@ -4,12 +4,37 @@
   
   <url>
     <loc>https://cuilan.github.io/categories/</loc>
-    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuilan.github.io/</loc>
-    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/</loc>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/zookeeper/</loc>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/zookeeper/zk1/</loc>
+    <lastmod>2021-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -19,11 +44,6 @@
   
   <url>
     <loc>https://cuilan.github.io/categories/java/</loc>
-    <lastmod>2021-03-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/tags/</loc>
     <lastmod>2021-03-24T00:00:00+00:00</lastmod>
   </url>
   
@@ -64,16 +84,6 @@
   
   <url>
     <loc>https://cuilan.github.io/post/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis-conf/</loc>
-    <lastmod>2020-12-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
-    <lastmod>2020-12-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuilan.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
     <lastmod>2020-12-01T00:00:00+00:00</lastmod>
   </url>
   
