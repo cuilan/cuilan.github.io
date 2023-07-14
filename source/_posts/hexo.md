@@ -10,46 +10,46 @@ categories:
 创建任意目录
 
 开始安装：
-```bash
+```shell
 npm install hexo --save
 ```
 
 <!-- more -->
 
 检测安装是否成功：
-```bash
+```shell
 hexo -v
 ```
 
 初始化：
-```bash
+```shell
 hexo init
 ```
 
 安装所需组件：
-```bash
+```shell
 npm install
 ```
 
 创建文件： layout 可省略，默认使用 _config.yml 中的 default_layout 参数代替
-```bash
+```shell
 hexo new [layout] <title>
 hexo n "filename"
 ```
 
 生成静态页面：
-```bash
+```shell
 hexo generate
 hexo g
 ```
 
 开启服务：
-```bash
+```shell
 hexo server
 hexo s
 ```
 
 安装本地图片上传插件：
-```bash
-npm install hexo-asset-image --save
+```shell
+npm install hexo-asset-img --save
 ```
