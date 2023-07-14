@@ -6,13 +6,13 @@
 
 * install hexo
 
-```bash
+```shell
 npm install hexo --save
 ```
 
 * verify success
 
-```bash
+```shell
 hexo -v
 ```
 
@@ -20,40 +20,40 @@ hexo -v
 
 * init
 
-```bash
+```shell
 hexo init
 ```
 
 * install dependents module
 
-```bash
+```shell
 npm install
 ```
 
 * create ports file
 
-```bash
+```shell
 hexo new [layout] <title>
 hexo n "filename"
 ```
 
 * generate static html files
 
-```bash
+```shell
 hexo generate
 hexo g
 ```
 
 * start server
 
-```bash
+```shell
 hexo server
 hexo s
 ```
 
 * install images plugins
 
-```bash
+```shell
 npm install hexo-asset-image --save
 ```
 
