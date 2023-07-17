@@ -1,728 +1,1000 @@
-<!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
-  
 
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <title>翠兰 - Greenland</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
-<meta name="keywords" content="博客">
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
 <meta property="og:type" content="website">
 <meta property="og:title" content="翠兰 - Greenland">
 <meta property="og:url" content="https://cuilan.github.io/page/5/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
-<meta property="og:locale" content="default">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="翠兰 - Greenland">
-<meta name="twitter:description" content="Java java Spring 虚拟机 SpringBoot SpringCloud">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary_large_image">
   
   
-    <link rel="icon" href="/favicon.png">
   
+  <title>翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-</html>
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">翠兰 - Greenland</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Let the cat out of the bag.</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
         
-          <a class="main-nav-link" href="/">Home</a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
         
-          <a class="main-nav-link" href="/atom.xml">rss</a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
         
-      </nav>
-      <nav id="sub-nav">
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cuilan.github.io"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-java并发编程/java并发机制的底层实现原理三" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/01/java并发编程/java并发机制的底层实现原理三/" class="article-date">
-  <time datetime="2019-04-01T22:29:11.000Z" itemprop="datePublished">2019-04-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/01/java并发编程/java并发机制的底层实现原理三/">Java并发机制的底层实现原理（原子操作）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>原子操作：不可被中断的一个或一系列操作。</p>
-<h2 id="一、处理器如何实现原子操作"><a href="#一、处理器如何实现原子操作" class="headerlink" title="一、处理器如何实现原子操作"></a>一、处理器如何实现原子操作</h2><h3 id="使用总线锁保证原子性"><a href="#使用总线锁保证原子性" class="headerlink" title="使用总线锁保证原子性"></a>使用总线锁保证原子性</h3><p><strong>第一个机制是通过总线锁保证原子性</strong>。如果多个处理器同时对共享变量进行读改写操作（i++就是经典的读改写操作），那么共享变量就会被多个处理器同时进行操作，这样的操作就不是原子的。</p>
-<p>要想保证读改写共享变量的操作是原子的，就必须保证CPU1读改写共享变量的时候，CPU2不能操作缓存了该共享变量内存地址的缓存。</p>
-<p>处理器使用 <strong>总线锁</strong> 来解决这个问题。</p>
-<p><strong>总线锁</strong>：就是使用处理器通过的一个 <strong>LOCK #</strong> 信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，那么该处理器可以独占共享内存。</p>
         
-          <p class="article-more-link">
-            <a href="/2019/04/01/java并发编程/java并发机制的底层实现原理三/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/04/01/java并发编程/java并发机制的底层实现原理三/" data-id="ckbqnwqnv002lxwvmf1wz59yd" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-java并发编程/java并发机制的底层实现原理二" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/21/java并发编程/java并发机制的底层实现原理二/" class="article-date">
-  <time datetime="2019-03-21T00:16:03.000Z" itemprop="datePublished">2019-03-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/21/java并发编程/java并发机制的底层实现原理二/">Java并发机制的底层实现原理（synchronized）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>synchronized 一般称之为重量级锁，在Java1.6中对 synchronized 进行了各种优化，在有些情况下它并不那么重了。</p>
-<h2 id="利用synchronized实现同步的基础"><a href="#利用synchronized实现同步的基础" class="headerlink" title="利用synchronized实现同步的基础"></a>利用synchronized实现同步的基础</h2><p>在Java中每一个对象都可以作为锁。具体有以下3中形式：</p>
-<ul>
-<li>对于普通同步方法，锁是当前实例对象。</li>
-<li>对于静态同步方法，锁是当前类的 Class 对象。</li>
-<li>对于同步方法块，锁是 synchronized 括号里配置的对象。</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/03/21/java并发编程/java并发机制的底层实现原理二/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/03/21/java并发编程/java并发机制的底层实现原理二/" data-id="ckbqnwqnw002pxwvm645zzp5p" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-javase/java-object-head" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/15/javase/java-object-head/" class="article-date">
-  <time datetime="2019-03-15T11:23:51.000Z" itemprop="datePublished">2019-03-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/15/javase/java-object-head/">Java对象头详解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>由于Java面向对象的思想，在JVM中需要大量存储对象，存储时为了实现一些额外的功能，需要在对象中添加一些标记字段用于增强对象功能，这些标记字段组成了对象头。</p>
-<h2 id="1-对象头形式"><a href="#1-对象头形式" class="headerlink" title="1.对象头形式"></a>1.对象头形式</h2><p>JVM中对象头的方式有以下两种（以32位JVM为例）：</p>
-<h3 id="1-1-普通对象"><a href="#1-1-普通对象" class="headerlink" title="1.1.普通对象"></a>1.1.普通对象</h3><pre>
-|--------------------------------------------|
-|           Object Header (64 bits)          |
-|---------------------|----------------------|
-| Mark Word (32 bits) | Klass Word (32 bits) |
-|---------------------|----------------------|
-</pre>
-
-<h3 id="1-2-数组对象"><a href="#1-2-数组对象" class="headerlink" title="1.2.数组对象"></a>1.2.数组对象</h3><pre>
-|---------------------------------------------------------------|
-|                     Object Header (96 bits)                   |
-|-------------------|--------------------|----------------------|
-| Mark Word(32bits) | Klass Word(32bits) | array length(32bits) |
-|-------------------|--------------------|----------------------|
-</pre>
-        
-          <p class="article-more-link">
-            <a href="/2019/03/15/javase/java-object-head/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/03/15/javase/java-object-head/" data-id="ckbqnwqnh001nxwvmvblnr7zc" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-java并发编程/java并发机制的底层实现原理一" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/05/java并发编程/java并发机制的底层实现原理一/" class="article-date">
-  <time datetime="2019-03-05T23:20:27.000Z" itemprop="datePublished">2019-03-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/05/java并发编程/java并发机制的底层实现原理一/">Java并发机制的底层实现原理（volatile）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Java中所使用的并发机制依赖于JVM的实现和CPU的指令。在多线程并发编程中 <strong>synchronized</strong> 和 <strong>volatile</strong> 都扮演着重要的角色。</p>
-<h2 id="volatile的应用"><a href="#volatile的应用" class="headerlink" title="volatile的应用"></a>volatile的应用</h2><p><strong>volatile</strong> 是轻量级的 <strong>synchronized</strong>，它在多处理器开发中保证了共享变量的“<strong>可见性</strong>”。<strong>可见性的意思是当一个线程修改一个共享变量时，另外一个线程能读到这个修改的值。</strong> 如果volatile变量修饰符使用适当的话，它比synchronized的使用和执行成本更低，因为它不会引起线程上下文的切换和调度。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/03/05/java并发编程/java并发机制的底层实现原理一/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/03/05/java并发编程/java并发机制的底层实现原理一/" data-id="ckbqnwqnu002ixwvme1nmbf58" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-java并发编程/java并发解决方案" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/04/java并发编程/java并发解决方案/" class="article-date">
-  <time datetime="2019-03-04T23:11:08.000Z" itemprop="datePublished">2019-03-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java并发编程/">Java并发编程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/04/java并发编程/java并发解决方案/">Java并发解决方案</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Java并发编程的缺陷</strong></p>
-<ul>
-<li>上下文切换带来的CPU开销</li>
-<li>死锁</li>
-<li>物理硬件的限制</li>
-<li>软件资源的限制</li>
-</ul>
-<h2 id="为什么需要并发？"><a href="#为什么需要并发？" class="headerlink" title="为什么需要并发？"></a>为什么需要并发？</h2><p>并发其实是一种解耦合的策略，这种策略帮助我们把做什么（目标）和什么时候做（时机）分开。优点是可以明显改进应用程序的吞吐量（获得更多的CPU调度时间）和结构（程序有多个部分在协同工作）。Servlet容器就是采用单实例多线程的工作模式，来处理并发问题。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/03/04/java并发编程/java并发解决方案/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/03/04/java并发编程/java并发解决方案/" data-id="ckbqnwqnx002sxwvmzd1s9shl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-概率论与数理统计/二、随机事件间的运算律" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/" class="article-date">
-  <time datetime="2019-01-09T00:34:59.000Z" itemprop="datePublished">2019-01-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/概率论与数理统计/">概率论与数理统计</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/">二、随机事件间的运算律</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="基本定律："><a href="#基本定律：" class="headerlink" title="基本定律："></a>基本定律：</h2><p><strong>幂等律</strong>：A∪A = A，A∩A = A<br><strong>交换律</strong>：A∪B = B∪A，A∩B = B∩A<br><strong>结合律</strong>：(A∪B)∪C = A∪(B∪C)，(A∩B)∩C = A∩(B∩C)<br><strong>分配律</strong>：A∩(B∪C) = (A∩B)∪(A∩C)，A∪(B∩C) = (A∪B)∩(A∪C)</p>
-<h2 id="De·Morgan（德·摩根）定律："><a href="#De·Morgan（德·摩根）定律：" class="headerlink" title="De·Morgan（德·摩根）定律："></a>De·Morgan（德·摩根）定律：</h2><p>非(A且B) = 非A或非B<br><img src="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/%E4%BA%8C%E3%80%81%E9%9A%8F%E6%9C%BA%E4%BA%8B%E4%BB%B6%E9%97%B4%E7%9A%84%E8%BF%90%E7%AE%97%E5%BE%8B/1.png" alt="德·摩根" title="德·摩根"></p>
-<p>非(A或B) = 非A且非B<br><img src="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/%E4%BA%8C%E3%80%81%E9%9A%8F%E6%9C%BA%E4%BA%8B%E4%BB%B6%E9%97%B4%E7%9A%84%E8%BF%90%E7%AE%97%E5%BE%8B/2.png" alt="德·摩根" title="德·摩根"></p>
-<p><img src="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/%E4%BA%8C%E3%80%81%E9%9A%8F%E6%9C%BA%E4%BA%8B%E4%BB%B6%E9%97%B4%E7%9A%84%E8%BF%90%E7%AE%97%E5%BE%8B/3.png" alt="德·摩根" title="德·摩根"></p>
-<p><img src="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/%E4%BA%8C%E3%80%81%E9%9A%8F%E6%9C%BA%E4%BA%8B%E4%BB%B6%E9%97%B4%E7%9A%84%E8%BF%90%E7%AE%97%E5%BE%8B/4.png" alt="德·摩根" title="德·摩根"></p>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/09/概率论与数理统计/二、随机事件间的运算律/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/01/09/概率论与数理统计/二、随机事件间的运算律/" data-id="ckbqnwqod003zxwvmpyl30xzf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/概率论/">概率论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/统计学/">统计学</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-概率论与数理统计/一、概率与随机事件" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/07/概率论与数理统计/一、概率与随机事件/" class="article-date">
-  <time datetime="2019-01-07T23:36:54.000Z" itemprop="datePublished">2019-01-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/概率论与数理统计/">概率论与数理统计</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/07/概率论与数理统计/一、概率与随机事件/">一、概率与随机事件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="随机试验（Experiment）"><a href="#随机试验（Experiment）" class="headerlink" title="随机试验（Experiment）"></a>随机试验（Experiment）</h2><p><strong>定义：对事物的某一特征的观察。</strong></p>
-<p><em>其典型的例子有：</em></p>
-<ul>
-<li><strong>E<sub>1</sub></strong>：抛一枚硬币，观察正面H（Heads）、反面T（Tails）出现的情况。</li>
-<li><strong>E<sub>2</sub></strong>：抛一颗骰子，观察出现的点数。</li>
-<li><strong>E<sub>3</sub></strong>：观察某一时间段通过某一路口的车辆数。</li>
-<li><strong>E<sub>4</sub></strong>：观察某一电子元件的寿命。</li>
-<li><strong>E<sub>5</sub></strong>：观察某地区一昼夜的最低温度和最高温度。</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/07/概率论与数理统计/一、概率与随机事件/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/01/07/概率论与数理统计/一、概率与随机事件/" data-id="ckbqnwqob003vxwvmcc4g17j0" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/概率论/">概率论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/统计学/">统计学</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx/nginx-high" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/19/nginx/nginx-high/" class="article-date">
-  <time datetime="2018-12-19T12:19:23.000Z" itemprop="datePublished">2018-12-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/19/nginx/nginx-high/">Nginx高级</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、Nginx的反向代理"><a href="#一、Nginx的反向代理" class="headerlink" title="一、Nginx的反向代理"></a>一、Nginx的反向代理</h2><p>反向代理服务器：</p>
-<p><img src="/2018/12/19/nginx/nginx-high/nginx-high1.png" alt="Nginx反向代理" title="Nginx反向代理"></p>
-<p><strong>优势：</strong></p>
-<ol>
-<li>隔离内部服务器，提高安全性。</li>
-<li>可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。</li>
-<li>方便横向扩展。</li>
-<li>AIO（异步非阻塞）动静分离，提高性能。</li>
-</ol>
-        
-          <p class="article-more-link">
-            <a href="/2018/12/19/nginx/nginx-high/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/12/19/nginx/nginx-high/" data-id="ckbqnwqo8003nxwvmrxax3iir" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx/nginx-base" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/13/nginx/nginx-base/" class="article-date">
-  <time datetime="2018-12-13T15:31:24.000Z" itemprop="datePublished">2018-12-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/13/nginx/nginx-base/">Nginx基础</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、什么是-Nginx？"><a href="#一、什么是-Nginx？" class="headerlink" title="一、什么是 Nginx？"></a>一、什么是 Nginx？</h2><p>Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。</p>
-<p>Nginx的进程模型：<strong>deamon (守护)</strong>。</p>
-<p> <strong>Nginx的优势：</strong></p>
-<ul>
-<li>1、Nginx采用多进程模型：<strong>Master</strong>、多个 <strong>Worker</strong> (独立进程，不需要锁，避免了锁带来的性能开销)</li>
-<li>2、异步非阻塞 <strong>(NIO)</strong></li>
-</ul>
-<p><img src="/2018/12/13/nginx/nginx-base/nginx1.png" alt="Nginx进程模型" title="Nginx进程模型"></p>
-        
-          <p class="article-more-link">
-            <a href="/2018/12/13/nginx/nginx-base/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/12/13/nginx/nginx-base/" data-id="ckbqnwqo6003jxwvmomn6a7b8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-javase/linked-list-source-analysis" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/06/javase/linked-list-source-analysis/" class="article-date">
-  <time datetime="2018-12-06T23:10:05.000Z" itemprop="datePublished">2018-12-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/06/javase/linked-list-source-analysis/">LinkedList源码分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="#1">一、LinkedList简介</a><br><a href="#2">二、成员分析</a><br><a href="#3">三、链表实现</a><br><a href="#4">四、双端队列实现</a><br><a href="#5">五、队列实现</a><br><a href="#6">六、栈实现</a><br><a href="#7">七、列表实现</a><br><a href="#8">八、迭代器、分割器</a></p>
-<h2 id="一、LinkedList简介"><a href="#一、LinkedList简介" class="headerlink" title="一、LinkedList简介"></a><a name="1">一、LinkedList简介</a></h2><p><strong><code>java.util.LinkedList</code></strong> 是 <strong><code>java.util.List</code></strong> 接口实现，是一个 <strong>链表</strong> 数据结构的实现，直接继承自 <strong><code>java.util.AbstractSequentialList</code></strong> 抽象有序集合，是一个有序的 List，同时实现了 <strong><code>java.util.List</code></strong> 、 <strong><code>java.util.Deque</code></strong> 接口，也具备 <strong>队列</strong> 、 <strong>双端队列</strong> 的功能。同时，LinkedList 也具有 <strong>栈</strong> 的数据结构。因此 LinkedList 可以满足多种使用场景，是一个功能齐全的集合。</p>
-        
-          <p class="article-more-link">
-            <a href="/2018/12/06/javase/linked-list-source-analysis/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2018/12/06/javase/linked-list-source-analysis/" data-id="ckbqnwqpu0085xwvmc302rv16" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/集合框架/">集合框架</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Go/" style="font-size: 10px;">Go</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
-          <li>
-            <a href="/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
-          </li>
         
-          <li>
-            <a href="/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
     </div>
   </div>
+</nav>
 
   
-</aside>
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Let the cat out of the bag."></span>
+          
+        </div>
+
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
-	  &copy; 2020 zhang.yan<br>
-	  &copy; Copyright 转载请附出处<br>
-	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
-	  <span class="post-meta-divider"> | </span>
-	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
     </div>
   </div>
-</footer>
+</div>
 
-<!-- 不蒜子 页面访问统计插件 -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    </div>
-    <nav id="mobile-nav">
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/21/java/Map-source-analysis/" target="_self">
+          Map接口源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/21/java/Map-source-analysis/" target="_self">
+        <div>
+          java.util.Map 接口是双列集合的顶级接口。 一、Map特点或规范 双列集合，由 key 映射 value 的对象。 Map 不能包含重复的 key，且每个 key 只能映射一个 value。 Map 接口提供了三个集合的视图，key集合、value集合、**Entry&lt;K, V&gt;集合。 Map 的顺序定义为 集合视图 的迭代器返回其元素的顺序。 有序性 java.util.
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-21 15:00" pubdate>
+              2019-08-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
   
-    <a href="/" class="mobile-nav-link">Home</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
   
-    <a href="/atom.xml" class="mobile-nav-link">rss</a>
   
-</nav>
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/21/java/AbstractQueue-source-analysis/" target="_self">
+          AbstractQueue源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/21/java/AbstractQueue-source-analysis/" target="_self">
+        <div>
+          java.util.AbstractQueue 类继承自 java.util.AbstractCollection 抽象类，实现了 java.util.Queue 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-21 11:00" pubdate>
+              2019-08-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/20/java/TreeSet-source-analysis/" target="_self">
+          TreeSet源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/20/java/TreeSet-source-analysis/" target="_self">
+        <div>
+          java.util.TreeSet 类继承自 java.util.AbstractSet 抽象类，实现了 java.util.NavigableSet、java.lang.Cloneable、java.io.Serializable 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-20 15:00" pubdate>
+              2019-08-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/19/java/LinkedHashSet-source-analysis/" target="_self">
+          LinkedHashSet源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/19/java/LinkedHashSet-source-analysis/" target="_self">
+        <div>
+          java.util.LinkedHashSet 类继承自 java.util.HashSet 抽象类，实现了 java.util.Set、java.lang.Cloneable、java.io.Serializable 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-19 16:00" pubdate>
+              2019-08-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/19/java/HashSet-source-analysis/" target="_self">
+          HashSet源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/19/java/HashSet-source-analysis/" target="_self">
+        <div>
+          java.util.HashSet 类继承自 java.util.AbstractSet 抽象类，实现了 java.util.Set、java.lang.Cloneable、java.io.Serializable 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-19 10:00" pubdate>
+              2019-08-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/16/java/AbstractSet-source-analysis/" target="_self">
+          AbstractSet源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/16/java/AbstractSet-source-analysis/" target="_self">
+        <div>
+          java.util.AbstractSet 抽象类继承自 java.util.AbstractCollection 抽象类，实现了 java.util.Set 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-16 12:00" pubdate>
+              2019-08-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/09/java/AbstractSequentialList-source-analysis/" target="_self">
+          AbstractSequentialList源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/09/java/AbstractSequentialList-source-analysis/" target="_self">
+        <div>
+          java.util.AbstractSequentialList 抽象类继承自 java.util.AbstractList 抽象类。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-09 12:00" pubdate>
+              2019-08-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/06/java/Deque-source-analysis/" target="_self">
+          Deque接口源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/06/java/Deque-source-analysis/" target="_self">
+        <div>
+          java.util.Deque 接口直接继承自 java.util.Queue 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-06 12:00" pubdate>
+              2019-08-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/05/java/Queue-source-analysis/" target="_self">
+          Queue接口源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/05/java/Queue-source-analysis/" target="_self">
+        <div>
+          java.util.Queue 接口直接继承自 java.util.Collection 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-05 18:00" pubdate>
+              2019-08-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/08/01/java/NavigableSet-source-analysis/" target="_self">
+          NavigableSet接口源码分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2019/08/01/java/NavigableSet-source-analysis/" target="_self">
+        <div>
+          java.util.NavigableSet 接口直接继承自 java.util.SortedSet 接口。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-01 18:00" pubdate>
+              2019-08-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81/">#源码</a>
+            
+              <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">#集合框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/4/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/#board">6</a><a class="page-number" href="/page/7/#board">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#board">9</a><a class="extend next" rel="next" href="/page/6/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     
 
-<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
   </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

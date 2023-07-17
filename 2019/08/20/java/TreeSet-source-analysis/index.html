@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="java.util.TreeSet 类继承自 java.util.AbstractSet 抽象类，实现了 java.util.NavigableSet、java.lang.Cloneable、java.io.Serializable 接口。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TreeSet源码分析">
+<meta property="og:url" content="https://cuilan.github.io/2019/08/20/java/TreeSet-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.TreeSet 类继承自 java.util.AbstractSet 抽象类，实现了 java.util.NavigableSet、java.lang.Cloneable、java.io.Serializable 接口。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/2019/08/20/java/TreeSet-source-analysis/TreeSet1.png">
+<meta property="article:published_time" content="2019-08-20T07:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T10:55:33.716Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="源码">
+<meta property="article:tag" content="集合框架">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/08/20/java/TreeSet-source-analysis/TreeSet1.png">
+  
+  
+  
+  <title>TreeSet源码分析 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TreeSet源码分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-20 15:00" pubdate>
+          2019年8月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          53 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">TreeSet源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong><code>java.util.TreeSet</code></strong> 类继承自 <strong><code>java.util.AbstractSet</code></strong> 抽象类，实现了 <strong><code>java.util.NavigableSet</code><strong>、</strong><code>java.lang.Cloneable</code><strong>、</strong><code>java.io.Serializable</code></strong> 接口。</p>
+<img src="/2019/08/20/java/TreeSet-source-analysis/TreeSet1.png" srcset="/img/loading.gif" lazyload class="" title="TreeSet继承关系 TreeSet继承关系">
+
+<span id="more"></span>
+
+<h2 id="一、TreeSet特点或规范"><a href="#一、TreeSet特点或规范" class="headerlink" title="一、TreeSet特点或规范"></a>一、TreeSet特点或规范</h2><p><strong><code>TreeSet</code></strong> 是基于 <strong><code>java.util.TreeMap</code></strong> 的 <strong><code>java.util.NavigableSet</code></strong> 实现类。</p>
+<ul>
+<li><strong>有序</strong>：元素按照其自然顺序排序，或在创建时指定比较器，具体实现取决于创建时调用的的构造函数。</li>
+<li><strong>不可重复</strong>。</li>
+</ul>
+<h3 id="1-1-时间复杂度"><a href="#1-1-时间复杂度" class="headerlink" title="1.1 时间复杂度"></a>1.1 时间复杂度</h3><p>TreeSet 的基本操作（**<code>add(Object)</code><strong>、</strong><code>remove(Object)</code><strong>、</strong><code>contains(Object)</code>**）均保证了时间复杂度为 **O(logN)**。</p>
+<h3 id="1-2-有序性保证"><a href="#1-2-有序性保证" class="headerlink" title="1.2 有序性保证"></a>1.2 有序性保证</h3><p><font color="red">注意</font>：子类如果要正确实现 <strong>Set</strong> 接口，则由 <strong>Set</strong> 维护的排序（无论是否提供显式比较器）必须与 <strong>equals()</strong> 方法保持一致。<br>因为 <strong>Set</strong> 接口的唯一性是根据 <strong><code>equals()</code></strong> 方法决定的，而 <strong>TreeSet</strong> 是使用 <strong><code>compareTo()</code></strong> 方法实现元素比较。<br>TreeSet 实例即使排序与 equals() 方法不一致也是正确的，只是没有遵守 Set 接口规范。</p>
+<h3 id="1-3-线程不安全"><a href="#1-3-线程不安全" class="headerlink" title="1.3 线程不安全"></a>1.3 线程不安全</h3><p><font color="red">注意</font>：<strong>TreeSet 类线程不同步</strong>。<br>如果多个线程同时访问 TreeSet，并且至少有一个线程修改了该 Set，则必须在外部进行同步。<br>实现同步的方法最好在创建 TreeSet 时完成，以防止对集合的意外不同步访问：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">SortedSet</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> Collections.synchronizedSortedSet(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>(...));<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-4-并发迭代"><a href="#1-4-并发迭代" class="headerlink" title="1.4 并发迭代"></a>1.4 并发迭代</h3><p>如果在创建迭代器之后的任何时候修改了TreeSet，除了通过迭代器自己的 **<code>remove()</code>**方法之外，迭代器将抛出 **<code>ConcurrentModificationException</code>**。</p>
+<hr>
+<h2 id="二、成员变量"><a href="#二、成员变量" class="headerlink" title="二、成员变量"></a>二、成员变量</h2><p><strong>TreeSet</strong> 底层由 <strong>TreeMap</strong> 实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> NavigableMap&lt;E,Object&gt; m;<br><br><span class="hljs-comment">// 关联 NavigableMap 中的 Object 虚拟值</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Object</span> <span class="hljs-variable">PRESENT</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、构造器"><a href="#三、构造器" class="headerlink" title="三、构造器"></a>三、构造器</h2><h3 id="空参构造器（遵循-Collection-接口规范）"><a href="#空参构造器（遵循-Collection-接口规范）" class="headerlink" title="空参构造器（遵循 Collection 接口规范）"></a>空参构造器（遵循 Collection 接口规范）</h3><p>使用 TreeMap 实例，比较器为默认自然排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeSet</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-built_in">this</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;E,Object&gt;());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="参数为-Collection-类型的构造器（遵循-Collection-接口规范）"><a href="#参数为-Collection-类型的构造器（遵循-Collection-接口规范）" class="headerlink" title="参数为 Collection 类型的构造器（遵循 Collection 接口规范）"></a>参数为 Collection 类型的构造器（遵循 Collection 接口规范）</h3><p>使用 TreeMap 实例，比较器为默认自然排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeSet</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span> &#123;<br>    <span class="hljs-built_in">this</span>();<br>    addAll(c);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="参数为-Comparator-类型的构造器"><a href="#参数为-Comparator-类型的构造器" class="headerlink" title="参数为 Comparator 类型的构造器"></a>参数为 Comparator 类型的构造器</h3><p>使用 TreeMap 实例，自定义比较器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeSet</span><span class="hljs-params">(Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; comparator)</span> &#123;<br>    <span class="hljs-built_in">this</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;&gt;(comparator));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="参数为-SortedSet-集合类型的构造器"><a href="#参数为-SortedSet-集合类型的构造器" class="headerlink" title="参数为 SortedSet 集合类型的构造器"></a>参数为 SortedSet 集合类型的构造器</h3><p>使用 TreeSet 实例，使用参数 SortedSet 的比较器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeSet</span><span class="hljs-params">(SortedSet&lt;E&gt; s)</span> &#123;<br>    <span class="hljs-built_in">this</span>(s.comparator());<br>    addAll(s);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="参数为-NavigableMap-类型的构造器"><a href="#参数为-NavigableMap-类型的构造器" class="headerlink" title="参数为 NavigableMap 类型的构造器"></a>参数为 NavigableMap 类型的构造器</h3><p>包访问权限，指定特定可导航的 Map 构造 TreeSet，用于子类扩展。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">TreeSet(NavigableMap&lt;E,Object&gt; m) &#123;<br>    <span class="hljs-built_in">this</span>.m = m;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、方法分析"><a href="#四、方法分析" class="headerlink" title="四、方法分析"></a>四、方法分析</h2><h3 id="4-1-继承自-Set-接口的方法"><a href="#4-1-继承自-Set-接口的方法" class="headerlink" title="4.1 继承自 Set 接口的方法"></a>4.1 继承自 Set 接口的方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 返回 map 中 keySet 的迭代器</span><br><span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.navigableKeySet().iterator();<br>&#125;<br><br><span class="hljs-comment">// 返回 set 的大小</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.size();<br>&#125;<br><br><span class="hljs-comment">// 返回 set 是否为空</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.isEmpty();<br>&#125;<br><br><span class="hljs-comment">// 返回 set 中是否包含元素 o</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">contains</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.containsKey(o);<br>&#125;<br><br><span class="hljs-comment">// 添加元素 e，并返回是否成功</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.put(e, PRESENT)==<span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-comment">// 删除元素 o，并返回是否删除成功</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.remove(o)==PRESENT;<br>&#125;<br><br><span class="hljs-comment">// 清空集合中的全部元素</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">clear</span><span class="hljs-params">()</span> &#123;<br>    m.clear();<br>&#125;<br><br><span class="hljs-comment">// 添加集合，按照集合返回</span><br><span class="hljs-keyword">public</span>  <span class="hljs-type">boolean</span> <span class="hljs-title function_">addAll</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span> &#123;<br>    <span class="hljs-comment">// 如果当前 set 集合中元素为空，使用集合 c 的比较器</span><br>    <span class="hljs-keyword">if</span> (m.size() == <span class="hljs-number">0</span> &amp;&amp; c.size() &gt; <span class="hljs-number">0</span> &amp;&amp; c <span class="hljs-keyword">instanceof</span> SortedSet &amp;&amp; m <span class="hljs-keyword">instanceof</span> TreeMap) &#123;<br>        SortedSet&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">E</span>&gt; set = (SortedSet&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">E</span>&gt;) c;<br>        TreeMap&lt;E,Object&gt; map = (TreeMap&lt;E, Object&gt;) m;<br>        Comparator&lt;?&gt; cc = set.comparator();<br>        Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; mc = map.comparator();<br>        <span class="hljs-keyword">if</span> (cc == mc || (cc != <span class="hljs-literal">null</span> &amp;&amp; cc.equals(mc))) &#123;<br>            map.addAllForTreeSet(set, PRESENT);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 调用 AbstractCollection 的方法，forEach循环依次添加</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.addAll(c);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-继承自-SortedSet-接口的方法"><a href="#4-2-继承自-SortedSet-接口的方法" class="headerlink" title="4.2 继承自 SortedSet 接口的方法"></a>4.2 继承自 SortedSet 接口的方法</h3><p>获取第一个元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">first</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.firstKey();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>获取最后一个元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">last</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.lastKey();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>获取集合的比较器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; comparator() &#123;<br>    <span class="hljs-keyword">return</span> m.comparator();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-继承自-NavigableSet-接口的方法"><a href="#4-3-继承自-NavigableSet-接口的方法" class="headerlink" title="4.3 继承自 NavigableSet 接口的方法"></a>4.3 继承自 NavigableSet 接口的方法</h3><h4 id="元素操作"><a href="#元素操作" class="headerlink" title="元素操作"></a>元素操作</h4><p>返回 Set 中<strong>大于</strong>指定元素的<strong>最小元素</strong>，如果没有这样的元素，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">higher</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.higherKey(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 中<strong>小于</strong>指定元素的<strong>最大元素</strong>，如果没有这样的元素，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">lower</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.lowerKey(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 中<strong>大于等于</strong>指定元素的<strong>最小元素</strong>，如果没有这样的元素，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">ceiling</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.ceilingKey(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 中<strong>小于等于</strong>指定元素的<strong>最大元素</strong>，如果没有这样的元素，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">floor</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> m.floorKey(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>删除并返回第一个（最低）元素，如果 Set 为空，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">pollFirst</span><span class="hljs-params">()</span> &#123;<br>    Map.Entry&lt;E,?&gt; e = m.pollFirstEntry();<br>    <span class="hljs-keyword">return</span> (e == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : e.getKey();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>删除并返回最后一个（最高）元素，如果 Set 为空，则返回 **<code>null</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">pollLast</span><span class="hljs-params">()</span> &#123;<br>    Map.Entry&lt;E,?&gt; e = m.pollLastEntry();<br>    <span class="hljs-keyword">return</span> (e == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : e.getKey();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="子集操作"><a href="#子集操作" class="headerlink" title="子集操作"></a>子集操作</h4><p>返回 Set 的部分视图，其元素 <strong>小于</strong>（或 <strong>等于</strong>，如果 <strong>inclusive</strong> 为 <strong><code>true</code><strong>）</strong>toElement</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> NavigableSet&lt;E&gt; <span class="hljs-title function_">headSet</span><span class="hljs-params">(E toElement, <span class="hljs-type">boolean</span> inclusive)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>&lt;&gt;(m.headMap(toElement, inclusive));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 的部分视图，其返回的元素 <strong>小于toElement</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> SortedSet&lt;E&gt; <span class="hljs-title function_">headSet</span><span class="hljs-params">(E toElement)</span> &#123;<br>    <span class="hljs-keyword">return</span> headSet(toElement, <span class="hljs-literal">false</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 的部分视图，其元素 <strong>大于</strong>（或 <strong>等于</strong>，如果 <strong>inclusive</strong> 为 <strong><code>true</code><strong>）</strong>fromElement</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> NavigableSet&lt;E&gt; <span class="hljs-title function_">tailSet</span><span class="hljs-params">(E fromElement, <span class="hljs-type">boolean</span> inclusive)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>&lt;&gt;(m.tailMap(fromElement, inclusive));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 的部分视图，其返回的元素 <strong>大于等于fromElement</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> SortedSet&lt;E&gt; <span class="hljs-title function_">tailSet</span><span class="hljs-params">(E fromElement)</span> &#123;<br>    <span class="hljs-keyword">return</span> tailSet(fromElement, <span class="hljs-literal">true</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 的部分视图，其元素范围从 <strong>fromElement</strong> 到 <strong>toElement</strong>。如果 fromElement 和 toElement 相等，则返回的集合为空，除非 <strong>fromInclusive</strong> 和 <strong>toInclusive</strong> 都为 **<code>true</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> NavigableSet&lt;E&gt; <span class="hljs-title function_">subSet</span><span class="hljs-params">(E fromElement, <span class="hljs-type">boolean</span> fromInclusive,</span><br><span class="hljs-params">                              E toElement, <span class="hljs-type">boolean</span> toInclusive)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>&lt;&gt;(m.subMap(fromElement, fromInclusive, toElement, toInclusive));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回 Set 的部分视图，其元素范围从 <strong>fromElement（包括）</strong> 到 <strong>toElement（不包括）</strong>。如果 fromElement 和 toElement 相等，则返回的集合为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> SortedSet&lt;E&gt; <span class="hljs-title function_">subSet</span><span class="hljs-params">(E fromElement, E toElement)</span> &#123;<br>    <span class="hljs-keyword">return</span> subSet(fromElement, <span class="hljs-literal">true</span>, toElement, <span class="hljs-literal">false</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="倒序操作"><a href="#倒序操作" class="headerlink" title="倒序操作"></a>倒序操作</h4><p>返回 Set 中元素的 <strong>逆序</strong> 视图。降序集合由此集合支持，因此对集合的更改也将反映在降序集合中，反之亦然。<br>返回集合的顺序等同于 **<code>Collections.reverseOrder(comparator())</code>**。表达式 <strong><code>s.descendingSet().descendingSet()</code></strong> 返回集合等效于原集合 s。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> NavigableSet&lt;E&gt; <span class="hljs-title function_">descendingSet</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>&lt;&gt;(m.descendingMap());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以 <strong>降序</strong> 返回此集合中元素的迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">descendingIterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> m.descendingKeySet().iterator();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-继承自-Collection-接口的方法"><a href="#4-4-继承自-Collection-接口的方法" class="headerlink" title="4.4 继承自 Collection 接口的方法"></a>4.4 继承自 Collection 接口的方法</h3><p>获得 TreeMap 中的分割器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Spliterator&lt;E&gt; <span class="hljs-title function_">spliterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> TreeMap.keySpliteratorFor(m);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-5-其他方法"><a href="#4-5-其他方法" class="headerlink" title="4.5 其他方法"></a>4.5 其他方法</h3><p>复制当前集合。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> &#123;<br>    TreeSet&lt;E&gt; clone;<br>    <span class="hljs-keyword">try</span> &#123;<br>        clone = (TreeSet&lt;E&gt;) <span class="hljs-built_in">super</span>.clone();<br>    &#125; <span class="hljs-keyword">catch</span> (CloneNotSupportedException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InternalError</span>(e);<br>    &#125;<br>    clone.m = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;&gt;(m);<br>    <span class="hljs-keyword">return</span> clone;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">writeObject</span><span class="hljs-params">(java.io.ObjectOutputStream s)</span><br>    <span class="hljs-keyword">throws</span> java.io.IOException &#123;<br>    <span class="hljs-comment">// Write out any hidden stuff</span><br>    s.defaultWriteObject();<br>    <span class="hljs-comment">// Write out Comparator</span><br>    s.writeObject(m.comparator());<br>    <span class="hljs-comment">// Write out size</span><br>    s.writeInt(m.size());<br>    <span class="hljs-comment">// Write out all elements in the proper order.</span><br>    <span class="hljs-keyword">for</span> (E e : m.keySet())<br>        s.writeObject(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">readObject</span><span class="hljs-params">(java.io.ObjectInputStream s)</span><br>    <span class="hljs-keyword">throws</span> java.io.IOException, ClassNotFoundException &#123;<br>    <span class="hljs-comment">// Read in any hidden stuff</span><br>    s.defaultReadObject();<br>    <span class="hljs-comment">// Read in Comparator</span><br>    <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>        Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; c = (Comparator&lt;? <span class="hljs-built_in">super</span> E&gt;) s.readObject();<br>    <span class="hljs-comment">// Create backing TreeMap</span><br>    TreeMap&lt;E,Object&gt; tm = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;&gt;(c);<br>    m = tm;<br>    <span class="hljs-comment">// Read in size</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> s.readInt();<br>    tm.readTreeSet(size, s, PRESENT);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81/" class="print-no-link">#源码</a>
+      
+        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="print-no-link">#集合框架</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TreeSet源码分析</div>
+      <div>https://cuilan.github.io/2019/08/20/java/TreeSet-source-analysis/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/21/java/AbstractQueue-source-analysis/" title="AbstractQueue源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">AbstractQueue源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/19/java/LinkedHashSet-source-analysis/" title="LinkedHashSet源码分析">
+                        <span class="hidden-mobile">LinkedHashSet源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

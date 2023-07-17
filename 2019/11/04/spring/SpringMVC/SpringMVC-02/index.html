@@ -1,116 +1,291 @@
-<!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
-  
 
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <title>2.SpringMVC核心分发器DispatcherServlet分析 | 翠兰 - Greenland</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、SpringMVC入口SpringMVC启动类为：org.springframework.web.servlet.DispatcherServlet">
-<meta name="keywords" content="Java,源码,SpringMVC">
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="一、SpringMVC入口SpringMVC启动类为：**org.springframework.web.servlet.DispatcherServlet**">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2.SpringMVC核心分发器DispatcherServlet分析">
 <meta property="og:url" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="一、SpringMVC入口SpringMVC启动类为：org.springframework.web.servlet.DispatcherServlet">
-<meta property="og:locale" content="default">
+<meta property="og:description" content="一、SpringMVC入口SpringMVC启动类为：**org.springframework.web.servlet.DispatcherServlet**">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
 <meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png">
 <meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png">
 <meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png">
-<meta property="og:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png">
-<meta property="og:updated_time" content="2020-06-22T15:35:54.612Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2.SpringMVC核心分发器DispatcherServlet分析">
-<meta name="twitter:description" content="一、SpringMVC入口SpringMVC启动类为：org.springframework.web.servlet.DispatcherServlet">
+<meta property="article:published_time" content="2019-11-04T07:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T10:55:33.720Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="源码">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png">
   
   
-    <link rel="icon" href="/favicon.png">
   
+  <title>2.SpringMVC核心分发器DispatcherServlet分析 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-</html>
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">翠兰 - Greenland</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Let the cat out of the bag.</a>
-        </h2>
-      
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2.SpringMVC核心分发器DispatcherServlet分析"></span>
+          
+        </div>
+
         
-          <a class="main-nav-link" href="/">Home</a>
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-11-04 15:00" pubdate>
+          2019年11月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          1k 字
         
-          <a class="main-nav-link" href="/atom.xml">rss</a>
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
         
-      </nav>
-      <nav id="sub-nav">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cuilan.github.io"></form>
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
   </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-spring/SpringMVC/SpringMVC-02" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/04/spring/SpringMVC/SpringMVC-02/" class="article-date">
-  <time datetime="2019-11-04T15:00:00.000Z" itemprop="datePublished">2019-11-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Spring/">Spring</a>
-  </div>
+</div>
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      2.SpringMVC核心分发器DispatcherServlet分析
-    </h1>
-  
+</div>
 
-      </header>
+  </header>
+
+  <main>
     
-    <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="一、SpringMVC入口"><a href="#一、SpringMVC入口" class="headerlink" title="一、SpringMVC入口"></a>一、SpringMVC入口</h2><p>SpringMVC启动类为：<strong><code>org.springframework.web.servlet.DispatcherServlet</code></strong></p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png" alt="DispatcherServlet继承关系" title="DispatcherServlet继承关系"></p>
-<a id="more"></a>
 
-<p>由此可以看出 <strong>DispatcherServlet</strong> 本质上是继承自 <strong><code>javax.servlet.Servlet</code></strong> 顶级接口，因此其生命周期为：<strong><code>init() --&gt; service() --&gt; destory()</code></strong>。</p>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2.SpringMVC核心分发器DispatcherServlet分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、SpringMVC入口"><a href="#一、SpringMVC入口" class="headerlink" title="一、SpringMVC入口"></a>一、SpringMVC入口</h2><p>SpringMVC启动类为：**<code>org.springframework.web.servlet.DispatcherServlet</code>**</p>
+<img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-1.png" srcset="/img/loading.gif" lazyload class="" title="DispatcherServlet继承关系 DispatcherServlet继承关系">
+
+<span id="more"></span>
+
+<p>由此可以看出 <strong>DispatcherServlet</strong> 本质上是继承自 <strong><code>javax.servlet.Servlet</code></strong> 顶级接口，因此其生命周期为：**<code>init() --&gt; service() --&gt; destory()</code>**。</p>
 <p>继承关系如下：</p>
 <ul>
 <li><strong><code>javax.servlet.Servlet</code></strong> <ul>
@@ -130,46 +305,15 @@
 </ul>
 </li>
 </ul>
-<p>所以，SpringMVC启动时，是由 servlet容器（tomcat）调用执行 <strong><code>init()</code></strong> 方法，而 <strong><code>HttpServletBean</code></strong> 中覆盖了 <strong><code>init()</code></strong>方法，并 <strong><code>final</code></strong> 修饰，<strong><code>DispatcherServlet</code></strong> 和 <strong><code>FrameworkServlet</code></strong> 中都无法再继续覆盖，因此启动时会调用 <strong><code>HttpServletBean.init()</code></strong> 方法。</p>
+<p>所以，SpringMVC启动时，是由 servlet容器（tomcat）调用执行 <strong><code>init()</code></strong> 方法，而 <strong><code>HttpServletBean</code></strong> 中覆盖了 <strong><code>init()</code><strong>方法，并 <strong><code>final</code></strong> 修饰，</strong><code>DispatcherServlet</code></strong> 和 <strong><code>FrameworkServlet</code></strong> 中都无法再继续覆盖，因此启动时会调用 <strong><code>HttpServletBean.init()</code></strong> 方法。</p>
 <hr>
 <h2 id="二、init-方法，对初始化过程进行处理"><a href="#二、init-方法，对初始化过程进行处理" class="headerlink" title="二、init()方法，对初始化过程进行处理"></a>二、init()方法，对初始化过程进行处理</h2><p>init() 方法执行过程大概分为三步：</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png" alt="HttpServletBean.init()方法" title="HttpServletBean.init()方法"></p>
-<h3 id="1-设置web-xml中的配置参数"><a href="#1-设置web-xml中的配置参数" class="headerlink" title="1.设置web.xml中的配置参数"></a>1.设置web.xml中的配置参数</h3><p><strong><code>ServletConfigPropertyValues</code></strong> 是 <strong><code>HttpServletBean</code></strong> 的内部静态类，构造过程中会使用 <strong><code>ServletConfig</code></strong> 对象找出 web.xml 配置文件中的配置参数并设置到 <strong><code>ServletConfigPropertyValues</code></strong> 中。</p>
-<h3 id="2-初始化BeanWrapper"><a href="#2-初始化BeanWrapper" class="headerlink" title="2.初始化BeanWrapper"></a>2.初始化BeanWrapper</h3><p>使用 <strong><code>BeanWrapper</code></strong> 来构造实例化 <strong><code>DispatcherServlet</code></strong> 对象（即：this当前对象），接着通过当前 this 对象的 <strong><code>getServletContext()</code></strong> 方法获取 servlet 上下文信息，并创建 <strong><code>ServletContextResourceLoader</code></strong> 对象，给 <strong>bw</strong> 注册 <strong><code>Resource</code></strong> 类型的属性编辑器，然后调用 <strong><code>initBeanWrapper()</code></strong> 进行初始化（空方法，供子类进行扩展），初始化后，给 bw 对象设置属性值，即 web.xml 中配置的参数值。</p>
-<h3 id="3-调用initServletBean-方法"><a href="#3-调用initServletBean-方法" class="headerlink" title="3.调用initServletBean()方法"></a>3.调用initServletBean()方法</h3><p>空方法，供子类进行扩展。</p>
-<p><strong>如</strong>：web.xml 中的 <strong><code>contextConfigLocation</code></strong> 参数，使用 <strong><code>BeanWrapper</code></strong> 构造，会将这个属性注入到子类 <strong><code>FrameworkServlet</code></strong> 的 <strong><code>contextConfigLocation</code></strong> 属性中，因为HttpServletBean中并没有定义该属性。</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-3.png" alt="web.xml配置文件" title="web.xml配置文件"></p>
+<img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-2.png" srcset="/img/loading.gif" lazyload class="" title="HttpServletBean.init( HttpServletBean.init()方法 %}方法) &lt;h3 id&#x3D;1-设置web-xml中的配置参数&gt;&lt;a href&#x3D;#1-设置web-xml中的配置参数 class&#x3D;headerlink title&#x3D;1.设置web.xml中的配置参数&gt;&lt;&#x2F;a&gt;1.设置web.xml中的配置参数&lt;&#x2F;h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;ServletConfigPropertyValues&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 是 &lt;strong&gt;&lt;code&gt;HttpServletBean&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 的内部静态类，构造过程中会使用 &lt;strong&gt;&lt;code&gt;ServletConfig&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 对象找出 web.xml 配置文件中的配置参数并设置到 &lt;strong&gt;&lt;code&gt;ServletConfigPropertyValues&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 中。&lt;&#x2F;p&gt; &lt;h3 id&#x3D;2-初始化BeanWrapper&gt;&lt;a href&#x3D;#2-初始化BeanWrapper class&#x3D;headerlink title&#x3D;2.初始化BeanWrapper&gt;&lt;&#x2F;a&gt;2.初始化BeanWrapper&lt;&#x2F;h3&gt;&lt;p&gt;使用 &lt;strong&gt;&lt;code&gt;BeanWrapper&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 来构造实例化 &lt;strong&gt;&lt;code&gt;DispatcherServlet&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 对象（即：this当前对象），接着通过当前 this 对象的 &lt;strong&gt;&lt;code&gt;getServletContext()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法获取 servlet 上下文信息，并创建 &lt;strong&gt;&lt;code&gt;ServletContextResourceLoader&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 对象，给 &lt;strong&gt;bw&lt;&#x2F;strong&gt; 注册 &lt;strong&gt;&lt;code&gt;Resource&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 类型的属性编辑器，然后调用 &lt;strong&gt;&lt;code&gt;initBeanWrapper()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 进行初始化（空方法，供子类进行扩展），初始化后，给 bw 对象设置属性值，即 web.xml 中配置的参数值。&lt;&#x2F;p&gt; &lt;h3 id&#x3D;3-调用initServletBean-方法&gt;&lt;a href&#x3D;#3-调用initServletBean-方法 class&#x3D;headerlink title&#x3D;3.调用initServletBean()方法&gt;&lt;&#x2F;a&gt;3.调用initServletBean()方法&lt;&#x2F;h3&gt;&lt;p&gt;空方法，供子类进行扩展。&lt;&#x2F;p&gt; &lt;p&gt;&lt;strong&gt;如&lt;&#x2F;strong&gt;：web.xml 中的 &lt;strong&gt;&lt;code&gt;contextConfigLocation&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 参数，使用 &lt;strong&gt;&lt;code&gt;BeanWrapper&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 构造，会将这个属性注入到子类 &lt;strong&gt;&lt;code&gt;FrameworkServlet&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 的 &lt;strong&gt;&lt;code&gt;contextConfigLocation&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 属性中，因为HttpServletBean中并没有定义该属性。&lt;&#x2F;p&gt; {% asset_img 02-3.png web.xml配置文件 web.xml配置文件">
+
 <hr>
-<h2 id="三、FrameworkServlet中进行初始化"><a href="#三、FrameworkServlet中进行初始化" class="headerlink" title="三、FrameworkServlet中进行初始化"></a>三、FrameworkServlet中进行初始化</h2><p>由于 HttpServletBean 中的 <strong><code>initServletBean()</code></strong> 方法为空方法，<strong><code>FrameworkServlet</code></strong> 中对其进行<strong>覆写</strong>：</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png" alt="initServletBean()方法" title="initServletBean()方法"></p>
-<p>SpringMVC启动时的几行日志即为此处输出，此方法重点关注 <strong>try代码块</strong> 中的代码。</p>
-<p>此处代码分为两部分：</p>
-<ul>
-<li><a href="#3_1">初始化WebApplicationContext</a></li>
-<li><a href="#3_2">初始化initFrameworkServlet</a></li>
-</ul>
-<h3 id="1-初始化WebApplicationContext"><a href="#1-初始化WebApplicationContext" class="headerlink" title="1.初始化WebApplicationContext"></a><a name="3_1">1.初始化WebApplicationContext</a></h3><p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-5.png" alt="initWebApplicationContext()方法" title="initWebApplicationContext()方法"></p>
-<ul>
-<li><p>第一段代码：初始化 <strong><code>webApplicationContext</code></strong> 属性，<strong><code>WebApplicationContext</code></strong> 是继承自 <strong><code>ApplicationContext</code></strong> 接口的子接口，该属性也就是 <strong>Spring容器上下文</strong>。</p>
-<p><strong>FrameworkServlet 的作用就是将 Servlet 与 Spring 容器关联</strong>。<strong><code>WebApplicationContextUtils.getWebApplicationContext(getServletContext())</code></strong> 得到根上下文。</p>
-</li>
-<li><p>第二段代码：DispatcherServlet 有一个以 <strong>WebApplicationContext</strong> 为参数的构造方法，当使用有 WebApplicationContext 参数的构造方法进行构造时执行第二段代码。</p>
-</li>
-<li><p>第三段代码：如果 WebApplicationContext 对象（<strong>wac</strong>）为空，则以 contextAttribute 属性（FrameworkServlet 中的 String 类型的 contextAttribute 属性）为key，在 ServletContext 中找到的 WebApplicationContext 对象。</p>
-</li>
-<li><p>第四段代码：如果 WebApplicationContext 对象仍然为空， 则创建 WebApplicationContext 并设置 <strong>根上下文（容器）</strong> 为 <strong>父上下文（父容器）</strong>，然后配置 ServletConfig、ServletContext 等实例到这个上下文中。</p>
-</li>
-<li><p>第五段代码：<strong><code>onRefresh(wac)</code></strong> 为模板方法，WebApplicationContext 创建成功后会进行调用，在 FrameworkServlet 中为空方法，在 <strong>子类 DispatcherServlet 中会覆写此方法</strong>。</p>
-</li>
-<li><p>第六段代码：将 WebApplicationContext 以参数的形式发布（设置）到 ServletContext 中。</p>
-</li>
-</ul>
-<h3 id="2-初始化initFrameworkServlet"><a href="#2-初始化initFrameworkServlet" class="headerlink" title="2.初始化initFrameworkServlet"></a><a name="3_2">2.初始化initFrameworkServlet</a></h3><p><strong><code>initFrameworkServlet()</code></strong> 方法并没有做任何处理，该方法主要是为了让子类覆写该方法并做一些需要处理的事情，但DispatcherServlet并未覆写该方法。</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-6.png" alt="initFrameworkServlet()方法" title="initFrameworkServlet()方法"></p>
-<p><font color="red">注意：</font></p>
-<p><strong>根上下文</strong> 是 web.xml 中配置的 <strong>ContextLoaderListener监听器</strong> 中根据 <strong><code>contextConfigLocation</code></strong> 路径生成的上下文。</p>
-<p>例如：以下这段配置文件中是根据 <strong><code>classpath:spring-mvc.xml</code></strong> 下的 xml 文件生成的根上下文。</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-7.png" alt="根上下文" title="根上下文"></p>
+<h2 id="三、FrameworkServlet中进行初始化"><a href="#三、FrameworkServlet中进行初始化" class="headerlink" title="三、FrameworkServlet中进行初始化"></a>三、FrameworkServlet中进行初始化</h2><p>由于 HttpServletBean 中的 <strong><code>initServletBean()</code></strong> 方法为空方法，**<code>FrameworkServlet</code>** 中对其进行<strong>覆写</strong>：</p>
+<img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-4.png" srcset="/img/loading.gif" lazyload class="" title="initServletBean( initServletBean()方法 %}方法) &lt;p&gt;SpringMVC启动时的几行日志即为此处输出，此方法重点关注 &lt;strong&gt;try代码块&lt;&#x2F;strong&gt; 中的代码。&lt;&#x2F;p&gt; &lt;p&gt;此处代码分为两部分：&lt;&#x2F;p&gt; &lt;ul&gt; &lt;li&gt;&lt;a href&#x3D;#3_1&gt;初始化WebApplicationContext&lt;&#x2F;a&gt;&lt;&#x2F;li&gt; &lt;li&gt;&lt;a href&#x3D;#3_2&gt;初始化initFrameworkServlet&lt;&#x2F;a&gt;&lt;&#x2F;li&gt; &lt;&#x2F;ul&gt; &lt;h3 id&#x3D;1-初始化WebApplicationContext&gt;&lt;a href&#x3D;#1-初始化WebApplicationContext class&#x3D;headerlink title&#x3D;1.初始化WebApplicationContext&gt;&lt;&#x2F;a&gt;&lt;a name&#x3D;3_1&gt;1.初始化WebApplicationContext&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;{% asset_img 02-5.png initWebApplicationContext( initWebApplicationContext()方法 %}方法) &lt;ul&gt; &lt;li&gt;&lt;p&gt;第一段代码：初始化 &lt;strong&gt;&lt;code&gt;webApplicationContext&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 属性，**&lt;code&gt;WebApplicationContext&lt;&#x2F;code&gt;** 是继承自 &lt;strong&gt;&lt;code&gt;ApplicationContext&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 接口的子接口，该属性也就是 &lt;strong&gt;Spring容器上下文&lt;&#x2F;strong&gt;。&lt;&#x2F;p&gt; &lt;p&gt;&lt;strong&gt;FrameworkServlet 的作用就是将 Servlet 与 Spring 容器关联&lt;&#x2F;strong&gt;。**&lt;code&gt;WebApplicationContextUtils.getWebApplicationContext(getServletContext())&lt;&#x2F;code&gt;** 得到根上下文。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;li&gt;&lt;p&gt;第二段代码：DispatcherServlet 有一个以 &lt;strong&gt;WebApplicationContext&lt;&#x2F;strong&gt; 为参数的构造方法，当使用有 WebApplicationContext 参数的构造方法进行构造时执行第二段代码。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;li&gt;&lt;p&gt;第三段代码：如果 WebApplicationContext 对象（&lt;strong&gt;wac&lt;&#x2F;strong&gt;）为空，则以 contextAttribute 属性（FrameworkServlet 中的 String 类型的 contextAttribute 属性）为key，在 ServletContext 中找到的 WebApplicationContext 对象。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;li&gt;&lt;p&gt;第四段代码：如果 WebApplicationContext 对象仍然为空， 则创建 WebApplicationContext 并设置 &lt;strong&gt;根上下文（容器）&lt;&#x2F;strong&gt; 为 &lt;strong&gt;父上下文（父容器）&lt;&#x2F;strong&gt;，然后配置 ServletConfig、ServletContext 等实例到这个上下文中。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;li&gt;&lt;p&gt;第五段代码：**&lt;code&gt;onRefresh(wac)&lt;&#x2F;code&gt;** 为模板方法，WebApplicationContext 创建成功后会进行调用，在 FrameworkServlet 中为空方法，在 &lt;strong&gt;子类 DispatcherServlet 中会覆写此方法&lt;&#x2F;strong&gt;。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;li&gt;&lt;p&gt;第六段代码：将 WebApplicationContext 以参数的形式发布（设置）到 ServletContext 中。&lt;&#x2F;p&gt; &lt;&#x2F;li&gt; &lt;&#x2F;ul&gt; &lt;h3 id&#x3D;2-初始化initFrameworkServlet&gt;&lt;a href&#x3D;#2-初始化initFrameworkServlet class&#x3D;headerlink title&#x3D;2.初始化initFrameworkServlet&gt;&lt;&#x2F;a&gt;&lt;a name&#x3D;3_2&gt;2.初始化initFrameworkServlet&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;initFrameworkServlet()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法并没有做任何处理，该方法主要是为了让子类覆写该方法并做一些需要处理的事情，但DispatcherServlet并未覆写该方法。&lt;&#x2F;p&gt; {% asset_img 02-6.png initFrameworkServlet( initFrameworkServlet()方法 %}方法) &lt;p&gt;&lt;font color&#x3D;red&gt;注意：&lt;&#x2F;font&gt;&lt;&#x2F;p&gt; &lt;p&gt;&lt;strong&gt;根上下文&lt;&#x2F;strong&gt; 是 web.xml 中配置的 &lt;strong&gt;ContextLoaderListener监听器&lt;&#x2F;strong&gt; 中根据 &lt;strong&gt;&lt;code&gt;contextConfigLocation&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 路径生成的上下文。&lt;&#x2F;p&gt; &lt;p&gt;例如：以下这段配置文件中是根据 &lt;strong&gt;&lt;code&gt;classpath:spring-mvc.xml&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 下的 xml 文件生成的根上下文。&lt;&#x2F;p&gt; {% asset_img 02-7.png 根上下文 根上下文">
+
 <hr>
 <h2 id="四、DispatcherServlet初始化各种接口的实现类"><a href="#四、DispatcherServlet初始化各种接口的实现类" class="headerlink" title="四、DispatcherServlet初始化各种接口的实现类"></a>四、DispatcherServlet初始化各种接口的实现类</h2><p>DispatcherServlet 覆写了 FrameworkServlet 中的 <strong><code>onRefresh()</code></strong> 方法。</p>
 <p><strong><code>initStrategies()</code></strong> 方法内部会初始化各个 <strong>策略接口的实现类</strong>。</p>
@@ -178,178 +322,377 @@
 <li>视图处理初始化 <strong><code>initViewResolvers(context)</code></strong> 方法：SpringMVC视图机制。</li>
 <li>请求映射处理初始化 <strong><code>initHandlerMappings(context)</code></strong> 方法：详解SpringMVC请求的时候是如何找到正确的Controller。</li>
 </ul>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png" alt="onRefresh()方法" title="onRefresh()方法"></p>
-<hr>
-<h2 id="五、总结各个Servlet的作用"><a href="#五、总结各个Servlet的作用" class="headerlink" title="五、总结各个Servlet的作用"></a>五、总结各个Servlet的作用</h2><ol>
-<li><strong>HttpServletBean</strong><br> 主要做一些初始化的工作，将 web.xml 中配置的参数设置到 Servlet 中。比如 servlet 标签的子标签 init-param 标签中配置的参数。</li>
-<li><strong>FrameworkServlet</strong><br> 将 Servlet 与 Spring 容器上下文关联。其实也就是初始化 FrameworkServlet 的属性 webApplicationContext，这个属性代表 SpringMVC 上下文，它有个父类上下文，既 web.xml 中配置的 ContextLoaderListener 监听器初始化的容器上下文。</li>
-<li><strong>DispatcherServlet</strong><br> 初始化各个功能的实现类。比如异常处理、视图处理、请求映射处理等。</li>
-</ol>
-<hr>
-<h2 id="六、DispatcherServlet处理请求过程"><a href="#六、DispatcherServlet处理请求过程" class="headerlink" title="六、DispatcherServlet处理请求过程"></a>六、DispatcherServlet处理请求过程</h2><h3 id="1-doGet-方法"><a href="#1-doGet-方法" class="headerlink" title="1.doGet()方法"></a>1.doGet()方法</h3><p>首先，当 HTTP 请求到 Servle t后，HttpServlet 提供了 service() 方法用于处理请求，service方法使用了模板方法设计模式，在内部对于 http 的 get 请求（或其他请求）会调用 doGet() 方法，SpringMVC 在 FrameworkServlet 中对 doGet() 方法进行了覆盖，在其方法内部调用了 <strong><code>processRequest(request, response)</code></strong> 方法。</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-9.png" alt="doGet()方法" title="doGet()方法"></p>
-<h3 id="2-processRequest-方法"><a href="#2-processRequest-方法" class="headerlink" title="2.processRequest()方法"></a>2.processRequest()方法</h3><p>进入 <strong><code>processRequest()</code></strong> 方法，得到与当前请求线程绑定的 LocalContext 和 ServletRequestAttributes 对象，然后执行 <strong><code>initContextHolders()</code></strong> 方法，让新构造的 LocalContext 和 ServletRequestAttributes 与当前请求线程绑定（通过ThreadLocal完成）。</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-10.png" alt="processRequest()方法" title="processRequest()方法"></p>
-<h3 id="3-doService-方法"><a href="#3-doService-方法" class="headerlink" title="3.doService()方法"></a>3.doService()方法</h3><p>DispatcherServlet覆写的 <strong><code>doService()</code></strong>方法：</p>
-<p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-11.png" alt="doService()方法" title="doService()方法"></p>
-<p>在 <strong><code>doService()</code></strong> 方法中判断，如果该请求是 include 请求，那么保存一份快照版本的 request 域中的请求参数，doDispatch() 方法结束后，这个快照版本的数据将会覆盖新的 request 域中的数据。最终请求到 <strong><code>doDispatch()</code></strong> 方法。</p>
-<h3 id="4-doDispatch-方法"><a href="#4-doDispatch-方法" class="headerlink" title="4.doDispatch()方法"></a>4.doDispatch()方法</h3><p><img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-12.png" alt="doDispatch()方法" title="doDispatch()方法"></p>
-<p>首先根据请求的路径找到 HandlerMethod（带有 Method 反射属性，也就是对应 Controller 中的方法），然后匹配路径对应的拦截器，有了 HandlerMethod 和拦截器构造个 HandlerExecutionChain 对象。</p>
-<p>HandlerExecutionChain 对象的获取是通过 HandlerMapping 接口提供的方法中得到。有了 HandlerExecutionChain 之后，通过 HandlerAdapter 对象进行处理得到 ModelAndView 对象，HandlerMethod 内部 handle 的时候，使用各种 HandlerMethodArgumentResolver 实现类处理 HandlerMethod 的参数，使用各种 HandlerMethodReturnValueHandler 实现类处理返回值。</p>
-<p>最终返回值被处理成 ModelAndView 对象，这期间发生的异常会被 HandlerExceptionResolver 接口实现类进行处理。</p>
-<hr>
-<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>本文分析了 SpringMVC 的入口 Servlet -&gt; DispatcherServlet 的作用，其中分析了父类 HttpServletBean 以及 FrameworkServlet 的作用。SpringMVC 的设计与 Struts2 完全不同，Struts2 采取的是一种完全和 web 容器隔离的解耦的机制，而 SpringMVC 就是基于最基本的 request 和 response 进行设计的。</p>
+<img src="/2019/11/04/spring/SpringMVC/SpringMVC-02/02-8.png" srcset="/img/loading.gif" lazyload class="" title="onRefresh( onRefresh()方法 %}方法) &lt;hr&gt; &lt;h2 id&#x3D;五、总结各个Servlet的作用&gt;&lt;a href&#x3D;#五、总结各个Servlet的作用 class&#x3D;headerlink title&#x3D;五、总结各个Servlet的作用&gt;&lt;&#x2F;a&gt;五、总结各个Servlet的作用&lt;&#x2F;h2&gt;&lt;ol&gt; &lt;li&gt;&lt;strong&gt;HttpServletBean&lt;&#x2F;strong&gt;&lt;br&gt; 主要做一些初始化的工作，将 web.xml 中配置的参数设置到 Servlet 中。比如 servlet 标签的子标签 init-param 标签中配置的参数。&lt;&#x2F;li&gt; &lt;li&gt;&lt;strong&gt;FrameworkServlet&lt;&#x2F;strong&gt;&lt;br&gt; 将 Servlet 与 Spring 容器上下文关联。其实也就是初始化 FrameworkServlet 的属性 webApplicationContext，这个属性代表 SpringMVC 上下文，它有个父类上下文，既 web.xml 中配置的 ContextLoaderListener 监听器初始化的容器上下文。&lt;&#x2F;li&gt; &lt;li&gt;&lt;strong&gt;DispatcherServlet&lt;&#x2F;strong&gt;&lt;br&gt; 初始化各个功能的实现类。比如异常处理、视图处理、请求映射处理等。&lt;&#x2F;li&gt; &lt;&#x2F;ol&gt; &lt;hr&gt; &lt;h2 id&#x3D;六、DispatcherServlet处理请求过程&gt;&lt;a href&#x3D;#六、DispatcherServlet处理请求过程 class&#x3D;headerlink title&#x3D;六、DispatcherServlet处理请求过程&gt;&lt;&#x2F;a&gt;六、DispatcherServlet处理请求过程&lt;&#x2F;h2&gt;&lt;h3 id&#x3D;1-doGet-方法&gt;&lt;a href&#x3D;#1-doGet-方法 class&#x3D;headerlink title&#x3D;1.doGet()方法&gt;&lt;&#x2F;a&gt;1.doGet()方法&lt;&#x2F;h3&gt;&lt;p&gt;首先，当 HTTP 请求到 Servle t后，HttpServlet 提供了 service() 方法用于处理请求，service方法使用了模板方法设计模式，在内部对于 http 的 get 请求（或其他请求）会调用 doGet() 方法，SpringMVC 在 FrameworkServlet 中对 doGet() 方法进行了覆盖，在其方法内部调用了 &lt;strong&gt;&lt;code&gt;processRequest(request, response)&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法。&lt;&#x2F;p&gt; {% asset_img 02-9.png doGet( doGet()方法 %}方法) &lt;h3 id&#x3D;2-processRequest-方法&gt;&lt;a href&#x3D;#2-processRequest-方法 class&#x3D;headerlink title&#x3D;2.processRequest()方法&gt;&lt;&#x2F;a&gt;2.processRequest()方法&lt;&#x2F;h3&gt;&lt;p&gt;进入 &lt;strong&gt;&lt;code&gt;processRequest()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法，得到与当前请求线程绑定的 LocalContext 和 ServletRequestAttributes 对象，然后执行 &lt;strong&gt;&lt;code&gt;initContextHolders()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法，让新构造的 LocalContext 和 ServletRequestAttributes 与当前请求线程绑定（通过ThreadLocal完成）。&lt;&#x2F;p&gt; {% asset_img 02-10.png processRequest( processRequest()方法 %}方法) &lt;h3 id&#x3D;3-doService-方法&gt;&lt;a href&#x3D;#3-doService-方法 class&#x3D;headerlink title&#x3D;3.doService()方法&gt;&lt;&#x2F;a&gt;3.doService()方法&lt;&#x2F;h3&gt;&lt;p&gt;DispatcherServlet覆写的 **&lt;code&gt;doService()&lt;&#x2F;code&gt;**方法：&lt;&#x2F;p&gt; {% asset_img 02-11.png doService( doService()方法 %}方法) &lt;p&gt;在 &lt;strong&gt;&lt;code&gt;doService()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法中判断，如果该请求是 include 请求，那么保存一份快照版本的 request 域中的请求参数，doDispatch() 方法结束后，这个快照版本的数据将会覆盖新的 request 域中的数据。最终请求到 &lt;strong&gt;&lt;code&gt;doDispatch()&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt; 方法。&lt;&#x2F;p&gt; &lt;h3 id&#x3D;4-doDispatch-方法&gt;&lt;a href&#x3D;#4-doDispatch-方法 class&#x3D;headerlink title&#x3D;4.doDispatch()方法&gt;&lt;&#x2F;a&gt;4.doDispatch()方法&lt;&#x2F;h3&gt;{% asset_img 02-12.png doDispatch( doDispatch()方法 %}方法) &lt;p&gt;首先根据请求的路径找到 HandlerMethod（带有 Method 反射属性，也就是对应 Controller 中的方法），然后匹配路径对应的拦截器，有了 HandlerMethod 和拦截器构造个 HandlerExecutionChain 对象。&lt;&#x2F;p&gt; &lt;p&gt;HandlerExecutionChain 对象的获取是通过 HandlerMapping 接口提供的方法中得到。有了 HandlerExecutionChain 之后，通过 HandlerAdapter 对象进行处理得到 ModelAndView 对象，HandlerMethod 内部 handle 的时候，使用各种 HandlerMethodArgumentResolver 实现类处理 HandlerMethod 的参数，使用各种 HandlerMethodReturnValueHandler 实现类处理返回值。&lt;&#x2F;p&gt; &lt;p&gt;最终返回值被处理成 ModelAndView 对象，这期间发生的异常会被 HandlerExceptionResolver 接口实现类进行处理。&lt;&#x2F;p&gt; &lt;hr&gt; &lt;h2 id&#x3D;七、总结&gt;&lt;a href&#x3D;#七、总结 class&#x3D;headerlink title&#x3D;七、总结&gt;&lt;&#x2F;a&gt;七、总结&lt;&#x2F;h2&gt;&lt;p&gt;本文分析了 SpringMVC 的入口 Servlet -&gt; DispatcherServlet 的作用，其中分析了父类 HttpServletBean 以及 FrameworkServlet 的作用。SpringMVC 的设计与 Struts2 完全不同，Struts2 采取的是一种完全和 web 容器隔离的解耦的机制，而 SpringMVC 就是基于最基本的 request 和 response 进行设计的。&lt;&#x2F;p&gt;">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/" data-id="ckbqnwqqt009qxwvmxshrxbvw" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li></ul>
-
-    </footer>
-  </div>
+<span class="category-chains">
+  
   
     
-<nav id="article-nav">
+      <span class="category-chain">
+        
+  <a href="/categories/Spring/" class="category-chain-item">Spring</a>
   
-    <a href="/2019/11/14/spring/SpringMVC/SpringMVC-03/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          3.SpringMVC的请求如何分发？
-        
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81/" class="print-no-link">#源码</a>
+      
+        <a href="/tags/SpringMVC/" class="print-no-link">#SpringMVC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2.SpringMVC核心分发器DispatcherServlet分析</div>
+      <div>https://cuilan.github.io/2019/11/04/spring/SpringMVC/SpringMVC-02/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年11月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/11/14/spring/SpringMVC/SpringMVC-03/" title="3.SpringMVC的请求如何分发？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">3.SpringMVC的请求如何分发？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/10/30/spring/SpringMVC/SpringMVC-01/" title="1.SpringMVC使用示例">
+                        <span class="hidden-mobile">1.SpringMVC使用示例</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
       </div>
-    </a>
-  
-  
-    <a href="/2019/10/30/spring/SpringMVC/SpringMVC-01/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">1.SpringMVC使用示例</div>
-    </a>
-  
-</nav>
+    </div>
 
-  
-</article>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaSE/">JavaSE</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java并发编程/">Java并发编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术分享/">技术分享</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/概率论与数理统计/">概率论与数理统计</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a></li></ul>
+
+
+  </aside>
+
+
     </div>
   </div>
+</div>
+
+
+
 
 
   
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web服务器/">Web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/目录/">目录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/统计学/">统计学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a></li></ul>
-    </div>
-  </div>
 
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Go/" style="font-size: 10px;">Go</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/SpringMVC/" style="font-size: 13.75px;">SpringMVC</a> <a href="/tags/Web服务器/" style="font-size: 11.25px;">Web服务器</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/中间件/" style="font-size: 11.25px;">中间件</a> <a href="/tags/多线程/" style="font-size: 16.25px;">多线程</a> <a href="/tags/并发/" style="font-size: 16.25px;">并发</a> <a href="/tags/概率论/" style="font-size: 11.25px;">概率论</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a> <a href="/tags/目录/" style="font-size: 12.5px;">目录</a> <a href="/tags/统计学/" style="font-size: 11.25px;">统计学</a> <a href="/tags/虚拟机/" style="font-size: 15px;">虚拟机</a> <a href="/tags/集合框架/" style="font-size: 17.5px;">集合框架</a>
-    </div>
-  </div>
-
-  
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li></ul>
-    </div>
-  </div>
 
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/06/15/kubernetes/k8s-install/">Kubernetes更换阿里云软件源</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/29/personal/chrome-plugin/">Chrome必备插件</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/14/spring/SpringMVC/SpringMVC-03/">3.SpringMVC的请求如何分发？</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/04/spring/SpringMVC/SpringMVC-02/">2.SpringMVC核心分发器DispatcherServlet分析</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/30/spring/SpringMVC/SpringMVC-01/">1.SpringMVC使用示例</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a><br>
-	  &copy; 2020 zhang.yan<br>
-	  &copy; Copyright 转载请附出处<br>
-	  <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span>次</span>
-	  <span class="post-meta-divider"> | </span>
-	  <span id="busuanzi_container_site_uv">本站访客数 <span id="busuanzi_value_site_uv"></span>人</span>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
-</footer>
+</div>
 
-<!-- 不蒜子 页面访问统计插件 -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-    <a href="/atom.xml" class="mobile-nav-link">rss</a>
-  
-</nav>
     
 
-<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
-<script src="/js/script.js"></script>
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
 
 
-  </div>
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

@@ -1,0 +1,767 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="子查询分类两种写法： 12SELECT * FROM t1 WHERE a IN (SELECT a FROM t2);SELECT * FROM (SELECT * FROM t1) AS t;  按返回结果集区分1. 标量子查询只返回一个单一值的子查询称之为标量子查询。 1SELECT * FROM t1 WHERE a IN (SELECT MAX(a) FROM t2);  2. 行子查询">
+<meta property="og:type" content="article">
+<meta property="og:title" content="五、关于子查询的优化">
+<meta property="og:url" content="https://cuilan.github.io/2020/10/28/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8E%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="子查询分类两种写法： 12SELECT * FROM t1 WHERE a IN (SELECT a FROM t2);SELECT * FROM (SELECT * FROM t1) AS t;  按返回结果集区分1. 标量子查询只返回一个单一值的子查询称之为标量子查询。 1SELECT * FROM t1 WHERE a IN (SELECT MAX(a) FROM t2);  2. 行子查询">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T10:55:33.728Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>五、关于子查询的优化 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="子查询分类，子查询执行原理，子查询优化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-10-29 00:00" pubdate>
+          2020年10月29日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">子查询分类，子查询执行原理，子查询优化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="子查询分类"><a href="#子查询分类" class="headerlink" title="子查询分类"></a>子查询分类</h1><p>两种写法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1) <span class="hljs-keyword">AS</span> t;<br></code></pre></td></tr></table></figure>
+
+<h2 id="按返回结果集区分"><a href="#按返回结果集区分" class="headerlink" title="按返回结果集区分"></a>按返回结果集区分</h2><h3 id="1-标量子查询"><a href="#1-标量子查询" class="headerlink" title="1. 标量子查询"></a>1. 标量子查询</h3><p>只返回一个单一值的子查询称之为标量子查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MAX</span>(a) <span class="hljs-keyword">FROM</span> t2);<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-行子查询"><a href="#2-行子查询" class="headerlink" title="2. 行子查询"></a>2. 行子查询</h3><p>只返回一条记录的子查询，不过这条记录需要包含多个列。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> (a, b) <span class="hljs-operator">=</span> (<span class="hljs-keyword">select</span> a, b <span class="hljs-keyword">FROM</span> t2 LIMIT <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-列子查询"><a href="#3-列子查询" class="headerlink" title="3. 列子查询"></a>3. 列子查询</h3><p>返回一个列的数据的子查询，包含多条记录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2);<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-表子查询"><a href="#4-表子查询" class="headerlink" title="4. 表子查询"></a>4. 表子查询</h3><p>子查询的结果既包含很多条记录，又包含很多个列。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> (a, b, c, ...) <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">select</span> a, b, c, ... <span class="hljs-keyword">FROM</span> t2);<br></code></pre></td></tr></table></figure>
+
+<h2 id="按与外层查询关系区分"><a href="#按与外层查询关系区分" class="headerlink" title="按与外层查询关系区分"></a>按与外层查询关系区分</h2><h3 id="1-相关子查询"><a href="#1-相关子查询" class="headerlink" title="1. 相关子查询"></a>1. 相关子查询</h3><p>如果子查询的执行需要依赖于外层查询的值，这个子查询称之为相关子查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-operator">=</span> t2.a);<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-不相关子查询"><a href="#2-不相关子查询" class="headerlink" title="2. 不相关子查询"></a>2. 不相关子查询</h3><p>如果子查询可以单独运行出结果，而不依赖于外层查询的值，这个子查询称之为不相关子查询。上面的几个子查询全部都可以看作不相关子查询。</p>
+<hr>
+<h1 id="子查询执行原理"><a href="#子查询执行原理" class="headerlink" title="子查询执行原理"></a>子查询执行原理</h1><h2 id="对于-不相关标量子查询-或-行子查询"><a href="#对于-不相关标量子查询-或-行子查询" class="headerlink" title="对于 不相关标量子查询 或 行子查询"></a>对于 不相关标量子查询 或 行子查询</h2><p>如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-operator">=</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2 LIMIT <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+
+<p>执行步骤：</p>
+<ol>
+<li>执行 <code>SELECT * FROM t2 LIMIT 1</code> 这个子查询。</li>
+<li>然后再将上一步子查询的结果当做外层查询的参数再执行外层查询 <code>SELECT * FROM t1 WHERE a = ...</code>。</li>
+</ol>
+<h2 id="对于-相关标量子查询-或-行子查询"><a href="#对于-相关标量子查询-或-行子查询" class="headerlink" title="对于 相关标量子查询 或 行子查询"></a>对于 相关标量子查询 或 行子查询</h2><p>如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> b <span class="hljs-operator">=</span> (<span class="hljs-keyword">SELECT</span> b <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-operator">=</span> t2.a LIMIT <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+
+<p>执行步骤：</p>
+<ol>
+<li>先从外层查询中获取一条记录，本例中也就是先从t1表中获取一条记录。</li>
+<li>然后从上一步骤中获取的那条记录中找出子查询中涉及到的值，本例中就是从t1表中获取的那条记录中找出t1.a列的值，然后执行子查询。</li>
+<li>最后根据子查询的查询结果来检测外层查询 <code>WHERE</code> 子句的条件是否成立，如果成立，就把外层查询的那条记录加入到结果集，否则就丢弃。</li>
+<li>再次执行第一步，获取第二条外层查询中的记录，依次类推。</li>
+</ol>
+<hr>
+<h1 id="IN-子查询优化"><a href="#IN-子查询优化" class="headerlink" title="IN 子查询优化"></a>IN 子查询优化</h1><p>如果子查询中记录条数比较多的情况，如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2);<br></code></pre></td></tr></table></figure>
+
+<p>对于上一步 <strong>相关标量子查询</strong> 或 <strong>行子查询</strong> ，如果子查询的结果集的记录比较少，那么按照上面的方式 把内外查询分别看成两个独立的查询，效率还算比较高。</p>
+<p>如果对于包含 <code>IN</code> 语句的子查询，结果集比较多，会导致以下问题：</p>
+<ul>
+<li>结果集太多，多到内容都放不下。</li>
+<li>对于外层查询来说，如果子查询的结果集太多，那就意味着 <code>IN</code> 子句中的参数特别多，这会导致：<ul>
+<li>无法有效的使用索引，只能对外层查询进行全表扫描。</li>
+<li>在对外层查询执行全表扫描时，由于 <code>IN</code> 子句中的参数太多，这会导致检测一条记录是否符合和 <code>IN</code> 子句中的参数匹配花费的时间太长。</li>
+</ul>
+</li>
+</ul>
+<h2 id="临时表"><a href="#临时表" class="headerlink" title="临时表"></a>临时表</h2><p>在 MySQL 中，不直接将 <strong>不相关子查询</strong> 的结果集当作外层查询的参数，而是将该结果集写入一个 <strong>临时表</strong> 里。写入临时表的过程是这样的：</p>
+<ul>
+<li>该临时表的列就是子查询结果集中的列。</li>
+<li>写入临时表的记录会被去重。<code>IN</code> 语句是判断某个操作数在不在某个集合中，集合中的值重不重复对整个 IN 语句的结果并不影响，所以我们在将结果集写入临时表时对记录进行去重可以让临时表变得更小。<br>临时表也是个表，只要为表中记录的所有列建立主键或者唯一索引就可以进行去重。</li>
+<li>一般情况下子查询结果集不会特别大，所以会为它建立基于内存的使用 <strong>Memory存储引擎</strong> 的临时表，而且会为该表建立 <strong>哈希索引</strong>。<br>IN 语句的本质就是判断某个操作数在不在某个集合里，如果集合中的数据建立了 哈希索引，那么这个匹配的过程就是很快的。</li>
+<li>如果子查询的结果集非常大，超过了系统变量 <strong><code>tmp_table_size</code></strong> 或者 <strong><code>max_heap_table_size</code></strong> ，临时表会转而使用 <strong>基于磁盘的存储引擎</strong> 来保存结果集中的记录，索引类型为 <strong>B+树索引</strong>。</li>
+</ul>
+<h2 id="物化表-Materialize"><a href="#物化表-Materialize" class="headerlink" title="物化表(Materialize)"></a>物化表(Materialize)</h2><p><strong>物化</strong>就是将子查询结果集中的记录保存到临时表的过程。存储子查询结果集的临时表称为<strong>物化表</strong>。正因为物化表中的记录都建立了索引(基于内存的物化表有哈希索引，基于磁盘的有B+树索引)，<br>通过索引执行 IN 语句判断某个操作数在不在子查询结果集中变得非常快，从而提升了子查询语句的性能。</p>
+<p>对于上面的查询，当把子查询进行物化之后，假设子查询物化表的名称为 <code>materialized_table</code> ，该物化表存储的子查询结果集的列为 <code>m_val</code> ，这个查询可以从以下两种角度来看待：</p>
+<ul>
+<li>从 <strong>表<code>t1</code></strong> 的角度来看待，整个查询的意思是：对于 <code>t1</code> 表中的每条记录来说，如果该记录的 <code>a</code> 列的值在子查询对应的物化表中，则该记录会被加入最终的结果集。</li>
+<li>从子查询 <strong>物化表</strong> 的角度来看待，整个查询的意思是：对于子查询物化表的每个值来说，如果能在 <code>t1</code> 表中找到对应的 <code>a</code> 列的值与该值相等的记录，那么就把这些记录加入到最终的结果集。</li>
+</ul>
+<h4 id="以上查询的优化"><a href="#以上查询的优化" class="headerlink" title="以上查询的优化"></a>以上查询的优化</h4><p>上边的查询相当于表 t1 和子查询物化表 materialized_table 进行内连接：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> materialized_table <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> m_val;<br></code></pre></td></tr></table></figure>
+
+<p>转化成内连接之后，查询优化器就可以评估不同连接顺序需要的成本是多少，选取成本最低的那种查询方式执行查询。</p>
+<h2 id="半连接（semi-join）"><a href="#半连接（semi-join）" class="headerlink" title="半连接（semi-join）"></a>半连接（semi-join）</h2><p>虽然将子查询进行物化之后再执行查询会有建立临时表的成本，但是可以将子查询转换为 <code>JOIN</code> 还是会更有效率一点的。</p>
+<blockquote>
+<p>如何不进行物化操作直接把子查询转换为连接呢？</p>
+</blockquote>
+<p>对比以下查询语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2);<br><span class="hljs-keyword">SELECT</span> t1.<span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> t2.a;<br></code></pre></td></tr></table></figure>
+
+<p>区别：第二个查询的结果没有 <strong>去重</strong>。</p>
+<p>所以 <strong>IN子查询</strong> 和 <strong>两表内连接</strong> 并不完全等价，但将子查询转换为连接可以充分发挥优化器的作用，所以MySQL提出了一个新概念 **半连接 (semi-join)**，<br>将 t1表 和 t2表 进行半连接的意思就是：对于 t1表 的某条记录来说，只关心在 t2表 中是否存在与之匹配的记录，而不关心具体有多少条记录与之匹配，最终的结果集中只保留 t1表 的记录。</p>
+<blockquote>
+<p><strong>semi-join</strong> 只是在 MySQL 内部采用的一种执行子查询的方式，MySQL并没有提供面向用户的semi-join语法。</p>
+</blockquote>
+<h3 id="1-Table-pullout（在子查询中的表上拉）"><a href="#1-Table-pullout（在子查询中的表上拉）" class="headerlink" title="1. Table pullout（在子查询中的表上拉）"></a>1. Table pullout（在子查询中的表上拉）</h3><p>直接将 <code>IN</code> 语句改为 <code>JOIN</code>。 </p>
+<p>当子查询的查询列表处只有主键或者唯一索引列时，可以直接把子查询中的表上拉到外层查询的 <code>FROM</code> 子句中，并把子查询中的搜索条件合并到外层查询的搜索条件中。</p>
+<p>如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- a是主键</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t2.b <span class="hljs-operator">=</span> <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+
+<p>优化后：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> t2.a <span class="hljs-keyword">WHERE</span> t2.b <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-DuplicateWeedout（重复值消除）"><a href="#2-DuplicateWeedout（重复值消除）" class="headerlink" title="2. DuplicateWeedout（重复值消除）"></a>2. DuplicateWeedout（重复值消除）</h3><p>利用主键去重，会产生临时表。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- e只是一个普通字段</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> e <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t2.b <span class="hljs-operator">=</span> <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+<p>转换为半连接查询后，t1表中的某条记录可能在t2表中有多条匹配的记录，所以该条记录可能多次被添加到最后的结果集中，为了消除重复，我们可以建立一个临时表，比方说这个临时表长这样:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> temp (<br>    id <span class="hljs-keyword">PRIMARY</span> KEY<br>);<br></code></pre></td></tr></table></figure>
+
+<p>这样在执行连接查询的过程中，每当某条t1表中的记录要加入结果集时，就首先把这条记录的主键值加入到这个临时表里，如果添加成功，说明之前这条t1表中的记录并没有加入最终的结果集，现在把该记录添加到最终的结果集;如果添加失败，说明这条之前这条t1表中的记录已经加入过最终的结果集，这里直接把它丢弃就好了，这种使用临时表消除semi-join结果集中的重复值的方式称之为DuplicateWeedout。</p>
+<h3 id="3-FirstMatch（首次匹配）"><a href="#3-FirstMatch（首次匹配）" class="headerlink" title="3. FirstMatch（首次匹配）"></a>3. FirstMatch（首次匹配）</h3><p>逻辑上的去重，不产生临时表。</p>
+<p>FirstMatch是一种最原始的半连接执行方式，先取一条外层查询的中的记录，然后到子查询的表中寻找符合匹配条件的记录，如果能找到一条，则将该外层查询的记录放入最终的结果集并且停止查找更多匹配的记录，如果找不到则把该外层查询的记录丢弃掉;然后再开始取下一条外层查询中的记录，重复上边这个过程。</p>
+<h3 id="4-LooseScan（松散索引扫描）"><a href="#4-LooseScan（松散索引扫描）" class="headerlink" title="4. LooseScan（松散索引扫描）"></a>4. LooseScan（松散索引扫描）</h3><p>利用 <code>Hash</code> 索引去重。</p>
+<h2 id="不能转换为半连接的情况"><a href="#不能转换为半连接的情况" class="headerlink" title="不能转换为半连接的情况"></a>不能转换为半连接的情况</h2><p><strong>注意：由于相关子查询并不是一个独立的查询，所以不能转换为物化表来执行查询。</strong></p>
+<p>以下几种情况 <strong>不能</strong> 转换为 <strong>semi-join</strong> ：</p>
+<ul>
+<li>外层查询的 <code>WHERE</code> 条件中有其他搜索条件与 <code>IN</code> 子查询组成布尔表达式使用 <code>OR</code> 连接。</li>
+<li>使用 <code>NOT IN</code> 而不是 <code>IN</code> 的情况。</li>
+<li>子查询中包含 <code>GROUP BY</code> <code>HAVING</code> 或者 <strong>聚集函数</strong> 的情况。</li>
+<li>子查询中包含 <code>UNION</code> 的情况。</li>
+</ul>
+<hr>
+<h1 id="对于派生表的优化"><a href="#对于派生表的优化" class="headerlink" title="对于派生表的优化"></a>对于派生表的优化</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> (<span class="hljs-keyword">SELECT</span> a, b <span class="hljs-keyword">FROM</span> t1) <span class="hljs-keyword">AS</span> t;<br></code></pre></td></tr></table></figure>
+
+<p>对于上面的sql，子查询是放在 from 后面的，这个子查询的结果相当于一个 <strong>派生表</strong>，表的名称是 t，有 a，b 两个字段。对于派生表，有两种执行方式：</p>
+<h2 id="把派生表物化"><a href="#把派生表物化" class="headerlink" title="把派生表物化"></a>把派生表物化</h2><p>可以将派生表的结果集写到一个 <strong>内部的临时表</strong> 中，然后就把这个物化表当作普通表一样参与查询。当然，在对派生表进行物化时，使用了一种称为 <strong>延迟物化</strong> 的策略，<br>也就是在查询中真正使用到派生表时才回去尝试物化派生表，而不是还没开始执行查询就把派生表物化掉。比如:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-operator">=</span> <span class="hljs-number">1</span>) <span class="hljs-keyword">AS</span> t <span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t.a <span class="hljs-operator">=</span> t2.a <span class="hljs-keyword">WHERE</span> t2.a <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<p>首先会先执行子查询，并找到满足 <code>a = 1</code> 的结果集，如果找不到，则不会进行物化。</p>
+<h2 id="将派生表和外层的表合并，也就是将查询重写为没有派生表的形式"><a href="#将派生表和外层的表合并，也就是将查询重写为没有派生表的形式" class="headerlink" title="将派生表和外层的表合并，也就是将查询重写为没有派生表的形式"></a>将派生表和外层的表合并，也就是将查询重写为没有派生表的形式</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-operator">=</span> <span class="hljs-number">1</span>) <span class="hljs-keyword">AS</span> t;<br></code></pre></td></tr></table></figure>
+
+<p>等价于：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
+      
+        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>五、关于子查询的优化</div>
+      <div>https://cuilan.github.io/2020/10/28/中间件/mysql/关于子查询的优化/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年10月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/01/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/Explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/" title="六、Explain关键字详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">六、Explain关键字详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8EJOIN%E7%9A%84%E4%BC%98%E5%8C%96/" title="四、关于JOIN的优化">
+                        <span class="hidden-mobile">四、关于JOIN的优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

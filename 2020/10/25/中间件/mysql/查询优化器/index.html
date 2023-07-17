@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。   优化步骤：  条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的访问方式的成本 选出成本最小的索引以及访问方式   开启查询优化器日志1234567891011-- 开启查询优化器日志SET optimizer_trace&#x3D;&quot;enabled&#x3D;on&quot;;-- 执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三、查询优化器">
+<meta property="og:url" content="https://cuilan.github.io/2020/10/25/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="对于一个 SQL 语句，查询优化器先看是不是能转换成 JOIN ，再将 JOIN 进行优化。   优化步骤：  条件优化 计算全表扫描成本 找出所有能用到的索引 针对每个索引计算不同的访问方式的成本 选出成本最小的索引以及访问方式   开启查询优化器日志1234567891011-- 开启查询优化器日志SET optimizer_trace&#x3D;&quot;enabled&#x3D;on&quot;;-- 执">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T10:55:33.728Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>三、查询优化器 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="查询优化器，查询优化器日志，查询优化原理分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-10-26 00:00" pubdate>
+          2020年10月26日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">查询优化器，查询优化器日志，查询优化原理分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>对于一个 SQL 语句，查询优化器先看是不是能转换成 <strong>JOIN</strong> ，再将 <strong>JOIN</strong> 进行优化。</p>
+</blockquote>
+<blockquote>
+<p>优化步骤：</p>
+<ol>
+<li>条件优化</li>
+<li>计算全表扫描成本</li>
+<li>找出所有能用到的索引</li>
+<li>针对每个索引计算不同的访问方式的成本</li>
+<li>选出成本最小的索引以及访问方式</li>
+</ol>
+</blockquote>
+<h1 id="开启查询优化器日志"><a href="#开启查询优化器日志" class="headerlink" title="开启查询优化器日志"></a>开启查询优化器日志</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 开启查询优化器日志</span><br><span class="hljs-keyword">SET</span> optimizer_trace<span class="hljs-operator">=</span>&quot;enabled=on&quot;;<br><br><span class="hljs-comment">-- 执行sql</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">WHERE</span> ......;<br><br><span class="hljs-comment">-- 查看优化器日志信息</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> information_schema.OPTIMIZER_TRACE;<br><br><span class="hljs-comment">-- 关闭查询优化器日志</span><br><span class="hljs-keyword">SET</span> optimizer_trace<span class="hljs-operator">=</span>&quot;enabled=off&quot;;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="理解查询优化器日志"><a href="#理解查询优化器日志" class="headerlink" title="理解查询优化器日志"></a>理解查询优化器日志</h1><h2 id="1-join-preparation-准备阶段"><a href="#1-join-preparation-准备阶段" class="headerlink" title="1. join_preparation 准备阶段"></a>1. join_preparation 准备阶段</h2><p>这步主要是进行准备工作，翻译语句工作，美化 SQL ，格式化等，如：将 <code>SELECT * FROM t1;</code> 转换为 <code>SELECT t1.a, t1.b, ...</code> 等。</p>
+<h2 id="2-join-optimization-优化阶段"><a href="#2-join-optimization-优化阶段" class="headerlink" title="2. join_optimization 优化阶段"></a>2. join_optimization 优化阶段</h2><p>最重要的一步，对 SQL 进行优化。</p>
+<h3 id="2-1-条件传递（condition-processing）"><a href="#2-1-条件传递（condition-processing）" class="headerlink" title="2.1 条件传递（condition_processing）"></a>2.1 条件传递（condition_processing）</h3><h4 id="等值传递（equality-propagation）"><a href="#等值传递（equality-propagation）" class="headerlink" title="等值传递（equality_propagation）"></a>等值传递（equality_propagation）</h4><p>优化相等变量的的值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> b <span class="hljs-keyword">AND</span> b <span class="hljs-operator">=</span> c <span class="hljs-keyword">AND</span> c <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br></code></pre></td></tr></table></figure>
+<p>上面这个 SQL 可以转换为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> <span class="hljs-number">5</span> <span class="hljs-keyword">AND</span> b <span class="hljs-operator">=</span> <span class="hljs-number">5</span> <span class="hljs-keyword">AND</span> c <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="常量传递（constant-propagation）"><a href="#常量传递（constant-propagation）" class="headerlink" title="常量传递（constant_propagation）"></a>常量传递（constant_propagation）</h4><p>优化常量，简化条件。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">AND</span> b <span class="hljs-operator">&gt;</span> a;<br></code></pre></td></tr></table></figure>
+<p>上面这个 SQL 可以转换为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">AND</span> b <span class="hljs-operator">&gt;</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="移除无用的条件（trivial-condition-removal）"><a href="#移除无用的条件（trivial-condition-removal）" class="headerlink" title="移除无用的条件（trivial_condition_removal）"></a>移除无用的条件（trivial_condition_removal）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">AND</span> <span class="hljs-number">1</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+<p>上面这个 SQL 可以转换为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">a <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-替换虚拟生成列（substitute-generated-columns）"><a href="#2-2-替换虚拟生成列（substitute-generated-columns）" class="headerlink" title="2.2 替换虚拟生成列（substitute_generated_columns）"></a>2.2 替换虚拟生成列（substitute_generated_columns）</h3><h3 id="2-3-表依赖详情（table-dependencies）"><a href="#2-3-表依赖详情（table-dependencies）" class="headerlink" title="2.3 表依赖详情（table_dependencies）"></a>2.3 表依赖详情（table_dependencies）</h3><p>分析表之间的依赖关系。</p>
+<h3 id="2-4-列出可用索引（ref-optimizer-key-uses）"><a href="#2-4-列出可用索引（ref-optimizer-key-uses）" class="headerlink" title="2.4 列出可用索引（ref_optimizer_key_uses）"></a>2.4 列出可用索引（ref_optimizer_key_uses）</h3><p>列出可用的索引，包括主键聚簇索引、二级索引等。</p>
+<h3 id="2-5-行估算成本（rows-estimation）"><a href="#2-5-行估算成本（rows-estimation）" class="headerlink" title="2.5 行估算成本（rows_estimation）"></a>2.5 行估算成本（rows_estimation）</h3><p>一个查询可以有不同的执行方案，可以选择某个索引进行查询，也可以选择全表扫描，查询优化器会选择其中成本最低的方案去执行查询。</p>
+<h4 id="I-O成本"><a href="#I-O成本" class="headerlink" title="I&#x2F;O成本"></a>I&#x2F;O成本</h4><p>InnoDB存储引擎都是将数据和索引都存储到磁盘上的，当我们想查询表中的记录时，需要先把数据或者索引加载到内存中然后再操作。这个从磁盘到内存这个加载的过程损耗的时间称之为I&#x2F;O成本。</p>
+<h4 id="CPU成本"><a href="#CPU成本" class="headerlink" title="CPU成本"></a>CPU成本</h4><p>读取以及检测记录是否满足对应的搜索条件、对结果集进行排序等这些操作损耗的时间称之为CPU成本。</p>
+<blockquote>
+<p>InnoDB存储引擎规定 <strong>读取一个页花费的成本默认是 1.0，读取及检测一条记录是否符合搜索条件的成本默认是 0.2</strong>。</p>
+</blockquote>
+<h3 id="2-6-对比执行计划（considered-execution-plans）"><a href="#2-6-对比执行计划（considered-execution-plans）" class="headerlink" title="2.6 对比执行计划（considered_execution_plans）"></a>2.6 对比执行计划（considered_execution_plans）</h3><p>对比各个执行计划的开销，选择最优的执行计划。</p>
+<h3 id="2-7-附加条件（attaching-conditions-to-tables）"><a href="#2-7-附加条件（attaching-conditions-to-tables）" class="headerlink" title="2.7 附加条件（attaching_conditions_to_tables）"></a>2.7 附加条件（attaching_conditions_to_tables）</h3><p>基于 considered_execution_plans 中选择的最优执行计划，改造原有 WHERE 条件，并针对表增加适当的附加条件，以便于单表数据的筛选。</p>
+<h3 id="2-8-最终优化（finalizing-table-conditions）"><a href="#2-8-最终优化（finalizing-table-conditions）" class="headerlink" title="2.8 最终优化（finalizing_table_conditions）"></a>2.8 最终优化（finalizing_table_conditions）</h3><h3 id="2-9-改善执行计划（refine-plan）"><a href="#2-9-改善执行计划（refine-plan）" class="headerlink" title="2.9 改善执行计划（refine_plan）"></a>2.9 改善执行计划（refine_plan）</h3><h2 id="3-join-explain-优化结果展示阶段"><a href="#3-join-explain-优化结果展示阶段" class="headerlink" title="3. join_explain 优化结果展示阶段"></a>3. join_explain 优化结果展示阶段</h2><p>生成优化器优化后的结果。</p>
+<hr>
+<h1 id="优化步骤"><a href="#优化步骤" class="headerlink" title="优化步骤"></a>优化步骤</h1><p>在一条单表查询语句真正执行之前，MySQL的查询优化器会找出执行该语句所有可能使用的方案，对比之后找出成本最低的方案，<br>这个成本最低的方案就是所谓的 <strong>执行计划</strong>，之后才会调用存储引擎提供的接口真正的执行查询。</p>
+<p>下面以一个实例来分析这些优化步骤，单表查询语句如下:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees.titles <span class="hljs-keyword">WHERE</span> emp_no <span class="hljs-operator">&gt;</span> <span class="hljs-string">&#x27;10101&#x27;</span> <span class="hljs-keyword">AND</span> emp_no <span class="hljs-operator">&lt;</span> <span class="hljs-string">&#x27;20000&#x27;</span> <span class="hljs-keyword">AND</span> to_date <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;1991-10-10&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-根据搜索条件，找出所有可能使用的索引"><a href="#1-根据搜索条件，找出所有可能使用的索引" class="headerlink" title="1. 根据搜索条件，找出所有可能使用的索引"></a>1. 根据搜索条件，找出所有可能使用的索引</h2><ul>
+<li><code>emp_no &gt; &#39;10101&#39;</code> ，这个搜索条件可以使用主键索引 <code>PRIMARY</code>。</li>
+<li><code>to_date = &#39;1991-10-10&#39;</code> ，这个搜索条件可以使用二级索引 <code>idx_titles_to_date</code>。</li>
+</ul>
+<p>上边的查询语句可能用到的索引，也就是 possible keys 只有 <code>PRIMARY</code> 和 <code>idx_titles_to_date</code>。</p>
+<h2 id="2-计算全表扫描的成本"><a href="#2-计算全表扫描的成本" class="headerlink" title="2. 计算全表扫描的成本"></a>2. 计算全表扫描的成本</h2><p>对于InnoDB存储引擎来说，全表扫描就是把 <strong>聚簇索引</strong> 中的记录依次 与 给定的搜索条件 做比较，把符合搜索条件的记录加入到结果集，<br>所以需要将聚簇索引对应的页面加载到内存中，然后再检测记录是否符合搜索条件。</p>
+<p><strong>查询成本 &#x3D; I&#x2F;O成本 + CPU成本</strong></p>
+<p>所以计算全表扫描的代价需要两个信息:</p>
+<ol>
+<li>聚簇索引占用的页面数</li>
+<li>该表中的记录数</li>
+</ol>
+<p>MySQL为每个表维护了一系列的统计信息，查看表的统计信息：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLE</span> STATUS <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;titles&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Rows"><a href="#Rows" class="headerlink" title="Rows"></a>Rows</h3><p><strong>表中的记录条数</strong></p>
+<p>对于使用 MyISAM 存储引擎的表来说，该值是准确的。</p>
+<p>对于使用 InnoDB 存储引擎的表来说，该值是一个估计值。</p>
+<h3 id="Data-length"><a href="#Data-length" class="headerlink" title="Data_length"></a>Data_length</h3><p><strong>表占用的存储空间字节数</strong></p>
+<p>对于使用 MyISAM 存储引擎的表来说，该值就是数据文件的大小。</p>
+<p>对于使用 InnoDB 存储引擎的表来说，该值就相当于聚簇索引占用的存储空间大小，也就是说可以这样计算该值的大小：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">Data_length</span> = 聚簇索引的页面数量 * 每个页面的大小<br></code></pre></td></tr></table></figure>
+
+<h3 id="计算案例中的全表扫描成本"><a href="#计算案例中的全表扫描成本" class="headerlink" title="计算案例中的全表扫描成本"></a>计算案例中的全表扫描成本</h3><p>titles 使用默认 16KB 的页面大小，根据上边查询结果显示 Data_length 的值是 20512768，所以可以反向推导出聚簇索引的页面数量为：</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tap">聚簇索引的页面数量 = Data_length /<span class="hljs-number"> 16 </span>/<span class="hljs-number"> 1024 </span>=<span class="hljs-number"> 20512768 </span>/<span class="hljs-number"> 16 </span>/<span class="hljs-number"> 1024 </span>= 1252<br></code></pre></td></tr></table></figure>
+
+<p>现已得到聚簇索引占用的页面数量以及该表记录数的估计值，所以就可以计算全表扫描成本了。但是 MySQL 在真实计算成本时会进行一些微调。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">I</span>/O成本 = <span class="hljs-number">1252</span> * <span class="hljs-number">1</span> = <span class="hljs-number">1252</span><br></code></pre></td></tr></table></figure>
+<p>1252 指的是聚簇索引占用的页面数，1.0 指的是加载一个页面的成本常数。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">CPU</span>成本 = <span class="hljs-number">442070</span> * <span class="hljs-number">0</span>.<span class="hljs-number">2</span> = <span class="hljs-number">88414</span><br></code></pre></td></tr></table></figure>
+<p>442070 指的是统计数据中表的记录数，对于InnoDB存储引擎来说是一个估计值，0.2 指的是访问一条记录所需的成本常数。</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tap">总成本 =<span class="hljs-number"> 1252 </span>+<span class="hljs-number"> 88414 </span>= 89666<br></code></pre></td></tr></table></figure>
+<p>综上所述，对于 titles 的全表扫描所需的总成本就是 <strong>89666</strong>。</p>
+<blockquote>
+<p>表中的记录其实都存储在聚簇索引对应B+树的叶子节点中，所以只要通过根节点获得了最左边的叶子节点，就可以沿着叶子节点组成的双向链表把所有记录都查看一遍。<br>也就是说全表扫描这个过程其实有的B+树内节点是不需要访问的，但是MySQL在计算全表扫描成本时直接使用聚簇索引占用的页面数作为计算I&#x2F;O成本的依据，是不区分内节点和叶子节点的。</p>
+</blockquote>
+<h2 id="3-计算-PRIMARY-需要的成本"><a href="#3-计算-PRIMARY-需要的成本" class="headerlink" title="3. 计算 PRIMARY 需要的成本"></a>3. 计算 PRIMARY 需要的成本</h2><p>计算 PRIMARY 需要多少成本的关键问题是：需要预估出根据对应的 <code>WHERE</code> 条件在主键索引B+树中存在多少条符合条件的记录。</p>
+<h3 id="范围区间数"><a href="#范围区间数" class="headerlink" title="范围区间数"></a>范围区间数</h3><p>当从索引中查询记录时，不管是 <code>=、in、&gt;、&lt;</code> 这些操作都需要从索引中确定一个范围，不论这个范围区间的索引占用了多少页面，查询优化器都粗略的认为读取索引的一个范围区间的I&#x2F;O成本和读取一个页面是相同的。<br>本例中使用 <code>PRIMARY</code> 的范围区间只有一个：<code>(10101, 20000)</code>，所以相当于访问这个范围区间的索引付出的I&#x2F;O成本就是：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">1 </span>* <span class="hljs-number">1.0</span> = <span class="hljs-number">1.0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="预估范围内的记录数"><a href="#预估范围内的记录数" class="headerlink" title="预估范围内的记录数"></a>预估范围内的记录数</h3><p>优化器需要计算索引的某个范围区间到底包含多少条记录，对于本例来说就是要计算 <code>PRIMARY</code> 在 <code>(10101, 20000)</code> 这个范围区间中包含多少条数据记录，计算过程：</p>
+<ol>
+<li>先根据 <code>emp_no &gt; 10101</code> 这个条件访问一下 <code>PRIMARY</code> 对应的B+树索引，找到满足 <code>emp_no &gt; 10101</code> 这个条件的第一条记录，把这条记录称为 <strong>区间最左记录</strong>。</li>
+<li>再根据 <code>emp_no &lt; 20000</code> 这个条件继续从 <code>PRIMARY</code> 对应的B+树索引中找出第一条满足这个条件的记录，把这条记录称为 <strong>区间最右记录</strong>。</li>
+<li>如果 <strong>区间最左记录</strong> 和 <strong>区间最右记录</strong> 相隔不太远(只要相隔不大于10个页面即可)，那就可以精确统计出满足 <code>emp_no &gt; &#39;10101&#39; AND emp_no &lt; &#39;20000&#39;</code> 条件的记录条数。<br>否则只沿着 区间最左记录 向右读10个页面，计算平均每个页面中包含多少记录，然后用这个平均值乘以 区间最左记录 和 区间最右记录 之间的页面数量就可以了。</li>
+</ol>
+<blockquote>
+<p>怎么估计 区间最左记录 和 区间最右记录 之间有多少个页面呢？</p>
+<p>计算它们父节点中对应的目录项记录之间隔着几条记录就可以了。</p>
+</blockquote>
+<p>根据上面的步骤可以算出来 <code>PRIMARY</code> 索引的记录条数，所以读取记录的CPU成本：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">CPU</span>成本 = <span class="hljs-number">26808</span> * <span class="hljs-number">0</span>.<span class="hljs-number">2</span> = <span class="hljs-number">5361</span>.<span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+<p>26808 是预估的需要读取的数据记录条数，0.2 是读取一条记录成本常数。</p>
+<p><strong>总成本</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">确定访问的IO成本</span> <span class="hljs-string">+</span> <span class="hljs-string">过滤数据的CPU成本</span> <span class="hljs-string">=</span> <span class="hljs-number">1.0</span> <span class="hljs-string">+</span> <span class="hljs-number">5361.6</span> <span class="hljs-string">=</span> <span class="hljs-number">5362.6</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-计算二级索引需要的成本"><a href="#4-计算二级索引需要的成本" class="headerlink" title="4. 计算二级索引需要的成本"></a>4. 计算二级索引需要的成本</h2><p>因为通过二级索引查询需要 <strong>回表</strong> ，所以计算二级索引需要的成本时还要加上回表的成本，而回表的成本就相当于下面这个SQL执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees.titles <span class="hljs-keyword">WHERE</span> 主键 <span class="hljs-keyword">IN</span> (主键值<span class="hljs-number">1</span>, 主键值<span class="hljs-number">2</span>, 主键值<span class="hljs-number">3</span>, ...);<br></code></pre></td></tr></table></figure>
+
+<p>所以 二级索引的成本 &#x3D; 辅助索引的查询成本 + 回表查询的成本</p>
+<h2 id="5-比较并选出最优"><a href="#5-比较并选出最优" class="headerlink" title="5. 比较并选出最优"></a>5. 比较并选出最优</h2><p>选择成本最小的索引。</p>
+<h2 id="6-NULL-值的处理"><a href="#6-NULL-值的处理" class="headerlink" title="6. NULL 值的处理"></a>6. NULL 值的处理</h2><p>对于 <code>NULL</code> 值，有三种理解：</p>
+<ol>
+<li>NULL 值代表一个不确定的值，每个 NULL 值都是独一无二的，在统计列不重复的时候应该都当做是独立的。</li>
+<li>NULL 值在业务上就是代表没有，所有的 NULL 值代表的意义是一样的，所以所有的 NULL 值都一样，在统计列不重复值的时候应该只算一个。</li>
+<li>NULL 完全没有意义，在统计列不重复值的时候应该忽略 NULL。</li>
+</ol>
+<p>InnoDB 提供了一个系统变量:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">GLOBAL</span> variables <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这个变量有三个值：</p>
+<ol>
+<li><code>nulls_equal</code>：认为所有 NULL 值都是相等的。这个值也是 <code>innodb_stats_method</code> 的默认值。如果某个索引列中 NULL 值特别多的话，<br>这种统计方式会让优化器认为某个列中平均一个值重复次数特别多，所以倾向于不使用索引进行访问。</li>
+<li><code>nulls_unequal</code>：认为所有 NULL 值都是不相等的。如果某个索引列中 NULL 值特别多的话，这种统计方式会让优化器认为某个列中平均一个值重复次数特别少，所以倾向于使用索引进行访问。</li>
+<li><code>nulls_ignored</code>：直接把 NULL 值忽略掉。</li>
+</ol>
+<blockquote>
+<p>最好不在索引列中存放 NULL 值才是正解。</p>
+</blockquote>
+<h2 id="7-控制执行计划"><a href="#7-控制执行计划" class="headerlink" title="7. 控制执行计划"></a>7. 控制执行计划</h2><p><strong>Index Hints</strong></p>
+<ul>
+<li><code>USE INDEX</code>：限制索引的使用范围，数据表里有很多索引，当MySQL对索引进行选择时，这些索引都在考虑的范围内。但有时我们希望 MySQL 只考虑几个索引，而不是全部的索引，<br>这就需要用到 <code>USE INDEX</code> 对查询语句进行设置。</li>
+<li><code>IGNORE INDEX</code>：限制不使用索引的范围。</li>
+<li><code>FORCE INDEX</code>：我们希望 MySQL 必须使用某一个索引(由于 MySQL 在查询时只能使用一个索引，因此只能强迫 MySQL 使用一个索引)。这就需要使用 <code>FORCE INDEX</code> 来完成这个功能。</li>
+</ul>
+<p>基本语法格式:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> table1 USE<span class="hljs-operator">|</span>IGNORE<span class="hljs-operator">|</span>FORCE INDEX (col1_index, col2_index) <span class="hljs-keyword">WHERE</span> col1 <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">AND</span> col2 <span class="hljs-operator">=</span> <span class="hljs-number">2</span> <span class="hljs-keyword">AND</span> col3 <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
+      
+        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>三、查询优化器</div>
+      <div>https://cuilan.github.io/2020/10/25/中间件/mysql/查询优化器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年10月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8EJOIN%E7%9A%84%E4%BC%98%E5%8C%96/" title="四、关于JOIN的优化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">四、关于JOIN的优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/24/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/B+%E6%A0%91%E7%B4%A2%E5%BC%95/" title="二、B+树索引">
+                        <span class="hidden-mobile">二、B+树索引</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

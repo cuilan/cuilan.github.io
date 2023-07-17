@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="java.util.List 接口直接继承自 java.util.Collection 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="List接口源码分析">
+<meta property="og:url" content="https://cuilan.github.io/2019/07/17/java/List-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="java.util.List 接口直接继承自 java.util.Collection 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/2019/07/17/java/List-source-analysis/List1.png">
+<meta property="article:published_time" content="2019-07-17T07:34:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T10:55:33.712Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="源码">
+<meta property="article:tag" content="集合框架">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/07/17/java/List-source-analysis/List1.png">
+  
+  
+  
+  <title>List接口源码分析 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CUILAN</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="List接口源码分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-17 15:34" pubdate>
+          2019年7月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">List接口源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong><code>java.util.List</code></strong> 接口直接继承自 <strong><code>java.util.Collection</code></strong> 接口，在 Collection 接口的功能之上添加了 List 功能特有的接口规范。</p>
+<img src="/2019/07/17/java/List-source-analysis/List1.png" srcset="/img/loading.gif" lazyload class="" title="List接口继承关系 List接口继承关系">
+
+<span id="more"></span>
+
+<h2 id="一、List接口特点"><a href="#一、List接口特点" class="headerlink" title="一、List接口特点"></a>一、List接口特点</h2><ul>
+<li><p><strong>有序</strong>集合。</p>
+</li>
+<li><p>该接口的子类实现可以精确控制列表中每个元素的插入位置，可以通过索引访问元素，并搜索列表中的元素。</p>
+</li>
+<li><p>与 Set 集合不同，通常允许重复元素，且允许 <strong><code>null</code></strong> 元素， <strong><code>null</code></strong> 元素也可重复。</p>
+</li>
+<li><p>List 接口提供了一个特殊的迭代器：**<code>java.util.ListIterator</code><strong>，它允许元素</strong>插入<strong>和</strong>替换<strong>，以及 <strong><code>java.util.Iterator</code></strong> 接口提供的常规操作之外的</strong>双向访问**。</p>
+</li>
+<li><p>还提供了一种从列表的指定位置开始的迭代器：**<code>listIterator(int index)</code>**。</p>
+</li>
+</ul>
+<hr>
+<h2 id="二、继承自-Collection-的方法"><a href="#二、继承自-Collection-的方法" class="headerlink" title="二、继承自 Collection 的方法"></a>二、继承自 Collection 的方法</h2><p>详细方法描述，见：<a href="/blog/2019/07/15/javase/Collection-source-analysis/"><strong><code>java.util.Collection</code></strong></a> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">contains</span><span class="hljs-params">(Object o)</span>;<br>Iterator&lt;E&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span>;<br>Object[] toArray();<br>&lt;T&gt; T[] toArray(T[] a);<br><br><span class="hljs-comment">// 修改操作</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(Object o)</span>;<br><br><span class="hljs-comment">// 批量操作</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">containsAll</span><span class="hljs-params">(Collection&lt;?&gt; c)</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">addAll</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">removeAll</span><span class="hljs-params">(Collection&lt;?&gt; c)</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-title function_">retainAll</span><span class="hljs-params">(Collection&lt;?&gt; c)</span>;<br><span class="hljs-keyword">void</span> <span class="hljs-title function_">clear</span><span class="hljs-params">()</span>;<br><br><span class="hljs-comment">// equals、hashCode</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">equals</span><span class="hljs-params">(Object o)</span>;<br><span class="hljs-type">int</span> <span class="hljs-title function_">hashCode</span><span class="hljs-params">()</span>;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">default</span> Spliterator&lt;E&gt; <span class="hljs-title function_">spliterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 返回一个有序分割迭代器</span><br>    <span class="hljs-keyword">return</span> Spliterators.spliterator(<span class="hljs-built_in">this</span>, Spliterator.ORDERED);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、List接口方法描述"><a href="#三、List接口方法描述" class="headerlink" title="三、List接口方法描述"></a>三、List接口方法描述</h2><h3 id="3-1-添加方法"><a href="#3-1-添加方法" class="headerlink" title="3.1 添加方法"></a>3.1 添加方法</h3><p>List 接口包含 <strong>四种添加方法</strong>：</p>
+<ul>
+<li>继承自 Collection 接口的</li>
+<li><strong>添加单个元素至末尾</strong></li>
+<li><strong>添加整个集合元素至末尾</strong></li>
+<li>以及 List 接口提供的</li>
+<li><strong>在指定位置插入单个元素</strong></li>
+<li><strong>在指定位置插入整个集合</strong></li>
+</ul>
+<h4 id="add-int-index-E-element-方法"><a href="#add-int-index-E-element-方法" class="headerlink" title="add(int index, E element)方法"></a>add(int index, E element)方法</h4><p>将指定元素插入当前列表中的指定位置，并将当前位置的元素（如果有）和之后的元素向右移动（增加其索引）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> index, E element)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="addAll-int-index-Collection-c-方法"><a href="#addAll-int-index-Collection-c-方法" class="headerlink" title="addAll(int index, Collection c)方法"></a>addAll(int index, Collection c)方法</h4><p>将指定集合中的所有元素插入到当前列表的指定位置。并将当前位置的元素（如果有）和之后的元素向右移动（增加其索引）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">addAll</span><span class="hljs-params">(<span class="hljs-type">int</span> index, Collection&lt;? extends E&gt; c)</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-索引相关操作"><a href="#3-2-索引相关操作" class="headerlink" title="3.2 索引相关操作"></a>3.2 索引相关操作</h3><h4 id="get-int-index-方法"><a href="#get-int-index-方法" class="headerlink" title="get(int index)方法"></a>get(int index)方法</h4><p>返回此列表中指定位置的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="set-方法"><a href="#set-方法" class="headerlink" title="set()方法"></a>set()方法</h4><p>将指定位置的元素替换为指定的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">set</span><span class="hljs-params">(<span class="hljs-type">int</span> index, E element)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="remove"><a href="#remove" class="headerlink" title="remove()"></a>remove()</h4><p>删除此列表中指定位置的元素。并将之后的元素向左移位（索引减一）。返回从列表中删除的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">remove</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="indexOf-Object-o-方法"><a href="#indexOf-Object-o-方法" class="headerlink" title="indexOf(Object o)方法"></a>indexOf(Object o)方法</h4><p>返回此列表中第一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。<br>即：返回<strong>最低索引</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">indexOf</span><span class="hljs-params">(Object o)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="lastIndexOf-Object-o-方法"><a href="#lastIndexOf-Object-o-方法" class="headerlink" title="lastIndexOf(Object o)方法"></a>lastIndexOf(Object o)方法</h4><p>返回此列表中最后一次出现的指定元素的索引，如果当前列表不包含该元素，则返回-1。<br>即：返回<strong>最高索引</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">lastIndexOf</span><span class="hljs-params">(Object o)</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-其他操作"><a href="#3-3-其他操作" class="headerlink" title="3.3 其他操作"></a>3.3 其他操作</h3><h4 id="replaceAll-方法"><a href="#replaceAll-方法" class="headerlink" title="replaceAll()方法"></a>replaceAll()方法</h4><p>替换列表中所有满足条件的元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">replaceAll</span><span class="hljs-params">(UnaryOperator&lt;E&gt; operator)</span> &#123;<br>    Objects.requireNonNull(operator);<br>    <span class="hljs-keyword">final</span> ListIterator&lt;E&gt; li = <span class="hljs-built_in">this</span>.listIterator();<br>    <span class="hljs-keyword">while</span> (li.hasNext()) &#123;<br>        li.set(operator.apply(li.next()));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="sort-方法"><a href="#sort-方法" class="headerlink" title="sort()方法"></a>sort()方法</h4><p>根据指定的比较器的顺序对当前列表进行排序。</p>
+<p>如果指定的比较器为 **<code>null</code>**，则当前列表中的所有元素都必须实现 <strong><code>Comparable</code></strong> 接口，并且应使用元素的自然顺序。列表必须是可修改的，但无需调整大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; c)</span> &#123;<br>    Object[] a = <span class="hljs-built_in">this</span>.toArray();<br>    Arrays.sort(a, (Comparator) c);<br>    ListIterator&lt;E&gt; i = <span class="hljs-built_in">this</span>.listIterator();<br>    <span class="hljs-keyword">for</span> (Object e : a) &#123;<br>        i.next();<br>        i.set((E) e);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="subList-方法"><a href="#subList-方法" class="headerlink" title="subList()方法"></a>subList()方法</h4><p>返回从起始索引（包含）至结束索引（不包含）的子列表。即：包含头不包含尾。<br>如果开始索引与结束索引相等，则返回空列表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;E&gt; <span class="hljs-title function_">subList</span><span class="hljs-params">(<span class="hljs-type">int</span> fromIndex, <span class="hljs-type">int</span> toIndex)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="listIterator-方法"><a href="#listIterator-方法" class="headerlink" title="listIterator()方法"></a>listIterator()方法</h4><p>返回当前列表中元素的 <strong><code>ListIterator</code></strong> 列表迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">ListIterator&lt;E&gt; <span class="hljs-title function_">listIterator</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="listIterator-int-index-方法"><a href="#listIterator-int-index-方法" class="headerlink" title="listIterator(int index)方法"></a>listIterator(int index)方法</h4><p>从指定索引位置开始，返回当前列表中元素的 <strong><code>ListIterator</code></strong> 列表迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">ListIterator&lt;E&gt; <span class="hljs-title function_">listIterator</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span>;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、ListIterator迭代器"><a href="#四、ListIterator迭代器" class="headerlink" title="四、ListIterator迭代器"></a>四、ListIterator迭代器</h2><p><strong><code>java.util.ListIterator</code></strong> 继承自 <strong><code>java.util.Iterator</code></strong> 接口，可实现从双端迭代。该迭代器允许在迭代期间对列表进行修改。</p>
+<p><strong><code>ListIterator</code></strong> 没有当前元素，它的迭代光标位置是位于元素之间的，长度为 n 的列表的迭代器具有 n+1 个可能的索引位置，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">列表元素：  Element(<span class="hljs-number">0</span>)   Element(<span class="hljs-number">1</span>)   Element(<span class="hljs-number">2</span>)   ... Element(n-<span class="hljs-number">1</span>)<br>索引位置: ^            ^            ^            ^                  ^<br></code></pre></td></tr></table></figure>
+
+<p>需要注意：**<code>remove()</code>** 方法和 <strong><code>set(Object)</code></strong> 方法没有根据光标位置进行操作；它们是对 <strong><code>next()</code></strong> 方法或 <strong><code>previous()</code></strong> 方法调用后返回的最后一个光标进行操作。</p>
+<h3 id="方法描述"><a href="#方法描述" class="headerlink" title="方法描述"></a>方法描述</h3><h4 id="hasNext-方法"><a href="#hasNext-方法" class="headerlink" title="hasNext()方法"></a>hasNext()方法</h4><p>如果当前列表迭代器从前向后遍历列表时还有下一个元素，则返回 **<code>true</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="next-方法"><a href="#next-方法" class="headerlink" title="next()方法"></a>next()方法</h4><p>返回当前列表中的下一个元素并向前移动光标位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">next</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="hasPrevious-方法"><a href="#hasPrevious-方法" class="headerlink" title="hasPrevious()方法"></a>hasPrevious()方法</h4><p>如果当前列表迭代器从后向前遍历列表时还有下一个元素，则返回 **<code>true</code>**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">hasPrevious</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="previous-方法"><a href="#previous-方法" class="headerlink" title="previous()方法"></a>previous()方法</h4><p>返回当前列表中的上一个元素并向后移动光标位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">previous</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="nextIndex-方法"><a href="#nextIndex-方法" class="headerlink" title="nextIndex()方法"></a>nextIndex()方法</h4><p>返回下一个元素的索引。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">nextIndex</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="previousIndex-方法"><a href="#previousIndex-方法" class="headerlink" title="previousIndex()方法"></a>previousIndex()方法</h4><p>返回上一个元素的索引。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">previousIndex</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove()方法"></a>remove()方法</h4><p>从当前列表中删除 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 返回的最后一个元素。<br>此方法只能在每次调用下一次或上一次时进行一次。<br>只有在最后一次调用 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 之后没有调用 <strong><code>add(E)</code></strong> 时才能进行此操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="set-E-e-方法"><a href="#set-E-e-方法" class="headerlink" title="set(E e)方法"></a>set(E e)方法</h4><p>用指定的元素替换 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 返回的最后一个元素。<br>只有在最后一次调用 <strong><code>next()</code></strong> 或 <strong><code>previous()</code></strong> 之后才调用 <strong><code>remove()</code></strong> 和 **<code>add(E)</code>**时，才能进行此调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">set</span><span class="hljs-params">(E e)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="add-E-e-方法"><a href="#add-E-e-方法" class="headerlink" title="add(E e)方法"></a>add(E e)方法</h4><p>将指定的元素插入当前列表。<br>元素将紧接在 <strong><code>next()</code></strong> 返回的元素之前插入（如果有），并且在 <strong><code>previous()</code></strong> 返回的元素之后插入（如果有）。<br>如果当前列表中不包含任何元素，则新元素将成为列表中的唯一元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span>;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaSE/" class="category-chain-item">JavaSE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81/" class="print-no-link">#源码</a>
+      
+        <a href="/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="print-no-link">#集合框架</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>List接口源码分析</div>
+      <div>https://cuilan.github.io/2019/07/17/java/List-source-analysis/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/18/java/Set-source-analysis/" title="Set接口源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Set接口源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/15/java/Collection-source-analysis/" title="Collection接口源码分析">
+                        <span class="hidden-mobile">Collection接口源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
