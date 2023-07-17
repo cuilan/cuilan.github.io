@@ -1,7 +1,5 @@
 # hexo-blog
 
-[![Build Status](https://travis-ci.com/cuilan/cuilan.github.io.svg?branch=master)](https://travis-ci.com/cuilan/cuilan.github.io)
-
 #### install
 
 * install hexo
