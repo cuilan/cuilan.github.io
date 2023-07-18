@@ -1,57 +1,69 @@
 # hexo-blog
 
-#### install
+个人博客
 
-* install hexo
+---
 
-```shell
-npm install hexo --save
+## Hexo
+
+#### Install
+
+```bash
+npm install hexo-cli -g
 ```
 
 * verify success
 
-```shell
+```bash
 hexo -v
 ```
 
-#### start use hexo
+#### Init
 
-* init
-
-```shell
-hexo init
-```
-
-* install dependents module
-
-```shell
+```bash
+hexo init blog
 npm install
 ```
 
-* create ports file
+#### Start hexo
 
-```shell
-hexo new [layout] <title>
-hexo n "filename"
-```
-
-* generate static html files
-
-```shell
-hexo generate
-hexo g
-```
-
-* start server
-
-```shell
+```bash
 hexo server
 hexo s
 ```
 
-* install images plugins
+#### Generate
 
-```shell
-npm install hexo-asset-image --save
+```bash
+hexo clean
+hexo generate
+hexo g
+```
+
+* create ports file
+
+```bash
+hexo new [layout] <title>
+hexo n "filename"
+```
+
+---
+
+# Hexo-asset-img
+
+```bash
+npm install hexo-asset-img --save
+```
+
+---
+
+# Theme
+
+## flud
+
+#### Install Update
+```bash
+npm install --save hexo-theme-fluid
+npm update --save hexo-theme-fluid
 ```
 
