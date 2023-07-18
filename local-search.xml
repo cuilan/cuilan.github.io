@@ -2310,30 +2310,5 @@
   
   
   
-  <entry>
-    <title>Hexo常用命令</title>
-    <link href="/2018/11/06/hexo/"/>
-    <url>/2018/11/06/hexo/</url>
-    
-    <content type="html"><![CDATA[<p>创建任意目录</p><p>开始安装：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm install hexo --save<br></code></pre></td></tr></table></figure><span id="more"></span><p>检测安装是否成功：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo -v<br></code></pre></td></tr></table></figure><p>初始化：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo init<br></code></pre></td></tr></table></figure><p>安装所需组件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm install<br></code></pre></td></tr></table></figure><p>创建文件： layout 可省略，默认使用 _config.yml 中的 default_layout 参数代替</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo new [layout] &lt;title&gt;<br>hexo n &quot;filename&quot;<br></code></pre></td></tr></table></figure><p>生成静态页面：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo generate<br>hexo g<br></code></pre></td></tr></table></figure><p>开启服务：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo server<br>hexo s<br></code></pre></td></tr></table></figure><p>安装本地图片上传插件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm install hexo-asset-img --save<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>环境搭建</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Hexo</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
   
 </search>
