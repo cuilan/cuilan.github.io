@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Get current branch
+br=`git branch | grep "*"`
+
 echo -e "\033[0;32mAuto commit and push to GitHub...\033[0m"
 
 # delete public folder.
@@ -16,5 +19,5 @@ fi
 git commit -m "$msg"
 
 # Push source and build repos.
-git push origin master
+git push origin ${br/* /}
 
