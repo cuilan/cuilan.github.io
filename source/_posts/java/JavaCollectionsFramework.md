@@ -2,38 +2,39 @@
 title: Java集合框架源码分析
 date: 2019-07-12 16:31:00
 tags:
-- Java
+- JAVA
 - 源码
 - 集合框架
 - 目录
 categories:
-- JavaSE
+- 目录
 ---
 
-## 接口
-<font style="font-size:18px;">
-**单列集合接口**
-<a href="/blog/2019/07/12/javase/Iterable-source-analysis/">java.lang.Iterable</a>&lt;Interface&gt;
-&emsp;<a href="/blog/2019/07/15/javase/Collection-source-analysis/">java.util.Collection</a>&lt;Interface&gt;
-&emsp;&emsp;<a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>&lt;Interface&gt;
-&emsp;&emsp;<a href="/blog/2019/07/18/javase/Set-source-analysis/">java.util.Set</a>&lt;Interface&gt;
-&emsp;&emsp;&emsp;<a href="/blog/2019/07/30/javase/SortedSet-source-analysis/">java.util.SortedSet</a>&lt;Interface&gt;
-&emsp;&emsp;&emsp;&emsp;<a href="/blog/2019/08/01/javase/NavigableSet-source-analysis/">java.util.NavigableSet</a>&lt;Interface&gt;
-&emsp;&emsp;<a href="/blog/2019/08/05/javase/Queue-source-analysis/">java.util.Queue</a>&lt;Interface&gt;
-&emsp;&emsp;&emsp;<a href="/blog/2019/08/06/javase/Deque-source-analysis/">java.util.Deque</a>&lt;Interface&gt;
+# 接口
 
-**双列集合接口**
-<a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>&lt;Interface&gt;
-&emsp;<a href="/blog/2019/08/27/javase/SortedMap-source-analysis/">java.util.SortedMap</a>&lt;Interface&gt;
-&emsp;&emsp;<a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/">java.util.NavigableMap</a>&lt;Interface&gt;
+## 单列集合接口
 
-</font>
+* [java.lang.Iterable](/2019/07/12/java/Iterable-source-analysis/)
+  * [java.util.Collection](/2019/07/15/java/Collection-source-analysis/)
+    * [java.util.List](/2019/07/17/java/List-source-analysis/)
+    * [java.util.Set](/2019/07/18/java/Set-source-analysis/)
+      * [java.util.SortedSet](/2019/07/30/java/SortedSet-source-analysis/)
+        * [java.util.NavigableSet](/2019/08/01/java/NavigableSet-source-analysis/)
+    * [java.util.Queue](/2019/08/05/java/Queue-source-analysis/)
+      * [java.util.Deque](/2019/08/06/java/Deque-source-analysis/)
 
----
+## 双列集合接口
 
-## 抽象类/类，继承关系，实现接口
-<font style="font-size:18px;">
-**单列集合类**
+* [java.util.Map](/2019/08/21/java/Map-source-analysis/)
+  * [java.util.SortedMap](/2019/08/27/java/SortedMap-source-analysis/)
+    * [java.util.NavigableMap](/2019/08/28/java/NavigableMap-source-analysis/)
+
+
+
+# 抽象类/类，继承关系，实现接口
+
+## 单列集合类
+
 <a href="/blog/2019/07/18/javase/AbstractCollection-source-analysis/">java.util.AbstractCollection</a>&lt;Abstract&gt; ------------------------- <a href="/blog/2019/07/15/javase/Collection-source-analysis/">java.util.Collection</a>
 &emsp;<a href="/blog/2019/07/24/javase/AbstractList-source-analysis/">java.util.AbstractList</a>&lt;Abstract&gt; ------------------------------- <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>
 &emsp;&emsp;<a href="/blog/2018/11/15/javase/array-list-source-analysis/">java.util.ArrayList</a>&lt;Class&gt; ------------------------------------ <a href="/blog/2019/07/17/javase/List-source-analysis/">java.util.List</a>, java.util.RandomAccess
@@ -48,15 +49,15 @@ categories:
 &emsp;<a href="/blog/2019/08/21/javase/AbstractQueue-source-analysis/">java.util.AbstractQueue</a>&lt;Abstract&gt; -------------------------- <a href="/blog/2019/08/05/javase/Queue-source-analysis/">java.util.Queue</a>
 &emsp;<a href="">java.util.ArrayDeque</a>&lt;Class&gt; ---------------------------------- <a href="/blog/2019/08/06/javase/Deque-source-analysis/">java.util.Deque</a>
 
-**双列集合类**
-<a href="/blog/2019/09/02/javase/AbstractMap-source-analysis/">java.util.AbstractMap</a>&lt;Abstract&gt; -------------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
-&emsp;<a href="/blog/2019/09/03/javase/HashMap-source-analysis/">java.util.HashMap</a>&lt;Class&gt; ------------------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
-&emsp;&emsp;<a href="/blog/2019/09/15/javase/LinkedHashMap-source-analysis/">java.util.LinkedHashMap</a>&lt;Class&gt; ------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
-&emsp;<a href="/blog/2019/09/17/javase/TreeMap-source-analysis/">java.util.TreeMap</a>&lt;Class&gt; --------------------------------------- <a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/">java.util.NavigableMap</a>
-&emsp;<a href="">java.util.WeakHashMap</a>&lt;Class&gt; ------------------------------ <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
-<a href="/blog/2019/09/17/javase/Dictionary-source-analysis/">java.util.Dictionary</a>&lt;Abstract&gt; 已过时
-&emsp;<a href="">java.util.Hashtable</a>&lt;Class&gt; 已过时 --------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
+## 双列集合类
+
+* [java.util.AbstractMap](/2019/09/02/java/AbstractMap-source-analysis/)&lt;Abstract&gt; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; [java.util.Map](/2019/08/21/java/Map-source-analysis/)
+* <a href="/blog/2019/09/02/javase/AbstractMap-source-analysis/">java.util.AbstractMap</a>&lt;Abstract&gt; -------------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
+  * <a href="/blog/2019/09/03/javase/HashMap-source-analysis/">java.util.HashMap</a>&lt;Class&gt; ------------------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
+    * <a href="/blog/2019/09/15/javase/LinkedHashMap-source-analysis/">java.util.LinkedHashMap</a>&lt;Class&gt; ------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
+  * <a href="/blog/2019/09/17/javase/TreeMap-source-analysis/">java.util.TreeMap</a>&lt;Class&gt; --------------------------------------- <a href="/blog/2019/08/28/javase/NavigableMap-source-analysis/">java.util.NavigableMap</a>
+  * <a href="">java.util.WeakHashMap</a>&lt;Class&gt; ------------------------------ <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
+* <a href="/blog/2019/09/17/javase/Dictionary-source-analysis/">java.util.Dictionary</a>&lt;Abstract&gt; 已过时
+  * <a href="">java.util.Hashtable</a>&lt;Class&gt; 已过时 --------------------------- <a href="/blog/2019/08/21/javase/Map-source-analysis/">java.util.Map</a>
 
 
-
-</font>
