@@ -2,11 +2,10 @@
 title: HashSet源码分析
 date: 2019-08-19 10:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.HashSet`** 类继承自 **`java.util.AbstractSet`** 抽象类，实现了 **`java.util.Set`**、**`java.lang.Cloneable`**、**`java.io.Serializable`** 接口。

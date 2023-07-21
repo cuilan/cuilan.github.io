@@ -1,12 +1,11 @@
 ---
 title: ArrayList源码分析
-date: 2018-11-15 22:26:53
+date: 2019-08-10 22:26:53
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 ArrayList应该算是日常开发中使用最多的List实现类。
@@ -26,7 +25,7 @@ ArrayList应该算是日常开发中使用最多的List实现类。
 
 **`java.util.ArrayList`** 继承 **`java.util.AbstractList`**，实现了 **`java.util.List`**、**`java.util.RandomAccess`**、 **`java.io.Serializable`** 接口。
 
-![ArrayList继承关系](array-list-source-analysis/array-list.png "ArrayList继承关系")
+![ArrayList继承关系](ArrayList-source-analysis/array-list.png "ArrayList继承关系")
 
 ---
 

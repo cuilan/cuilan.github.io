@@ -2,11 +2,10 @@
 title: HashMap源码分析
 date: 2019-09-03 17:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.HashMap`** 类继承了 **`java.util.AbstractMap`** 抽象类，实现了 **`java.util.Map`**、**`java.lang.Cloneable`**、**`java.io.Serializable`** 接口。

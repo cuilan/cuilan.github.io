@@ -2,11 +2,10 @@
 title: Dictionary抽象类源码分析
 date: 2019-09-17 16:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 ## 一、Dictionary特点或规范

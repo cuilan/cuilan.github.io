@@ -2,11 +2,10 @@
 title: AbstractQueue源码分析
 date: 2019-08-21 11:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.AbstractQueue`** 类继承自 **`java.util.AbstractCollection`** 抽象类，实现了 **`java.util.Queue`** 接口。

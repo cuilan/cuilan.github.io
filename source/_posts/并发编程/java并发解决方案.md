@@ -2,11 +2,10 @@
 title: Java并发解决方案
 date: 2019-03-04 23:11:08
 tags:
-- Java
-- 并发
+- JAVA
 - 多线程
 categories:
-- Java并发编程
+- 多线程
 ---
  
 **Java并发编程的缺陷**

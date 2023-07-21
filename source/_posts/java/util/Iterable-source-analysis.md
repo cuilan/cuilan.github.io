@@ -1,12 +1,11 @@
 ---
 title: Iterable接口源码分析
-date: 2019-07-12 10:18:22
+date: 2019-07-12 12:18:22
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 实现此接口的对象成为“for-each loop”语句的目标，即具有可迭代功能。

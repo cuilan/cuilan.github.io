@@ -2,11 +2,10 @@
 title: Java并发机制的底层实现原理（synchronized）
 date: 2019-03-21 00:16:03
 tags:
-- Java
-- 并发
+- JAVA
 - 多线程
 categories:
-- Java并发编程
+- 多线程
 ---
 
 synchronized 一般称之为重量级锁，在Java1.6中对 synchronized 进行了各种优化，在有些情况下它并不那么重了。

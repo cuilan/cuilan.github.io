@@ -2,11 +2,10 @@
 title: SortedMap接口源码分析
 date: 2019-08-27 23:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.SortedMap`** 接口直接继承自 **`java.util.Map`** 接口。

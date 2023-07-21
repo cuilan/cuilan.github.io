@@ -2,11 +2,10 @@
 title: Map接口源码分析
 date: 2019-08-21 15:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.Map`** 接口是双列集合的顶级接口。

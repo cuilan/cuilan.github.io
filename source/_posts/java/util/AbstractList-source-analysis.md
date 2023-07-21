@@ -2,11 +2,10 @@
 title: AbstractList源码分析
 date: 2019-07-24 10:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.AbstractList`** 抽象类继承了 **`java.util.AbstractCollection`** 类，实现了 **`java.util.List`** 接口。
