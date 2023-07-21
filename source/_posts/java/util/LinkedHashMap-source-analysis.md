@@ -2,11 +2,10 @@
 title: LinkedHashMap源码分析
 date: 2019-09-15 01:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.LinkedHashMap`** 类继承了 **`java.util.HashMap`** 类，实现了 **`java.util.Map`** 接口。

@@ -2,11 +2,10 @@
 title: Java并发机制的底层实现原理（volatile）
 date: 2019-03-05 23:20:27
 tags:
-- Java
-- 并发
+- JAVA
 - 多线程
 categories:
-- Java并发编程
+- 多线程
 ---
 
 Java中所使用的并发机制依赖于JVM的实现和CPU的指令。在多线程并发编程中 **synchronized** 和 **volatile** 都扮演着重要的角色。

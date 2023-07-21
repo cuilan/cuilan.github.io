@@ -2,11 +2,10 @@
 title: AbstractSequentialList源码分析
 date: 2019-08-09 12:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.AbstractSequentialList`** 抽象类继承自 **`java.util.AbstractList`** 抽象类。

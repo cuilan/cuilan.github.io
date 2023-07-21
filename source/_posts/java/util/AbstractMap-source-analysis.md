@@ -2,11 +2,10 @@
 title: AbstractMap源码分析
 date: 2019-09-02 17:00:00
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 **`java.util.AbstractMap`** 抽象类实现了 **`java.util.Map`** 接口。

@@ -2,11 +2,11 @@
 title: Java内存模型四（volatile内存语义）
 date: 2019-05-30 23:35:00
 tags:
-- Java
-- 并发
+- JAVA
 - 多线程
+- JMM
 categories:
-- Java并发编程
+- 多线程
 ---
 
 ## 1、volatile的特性

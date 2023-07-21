@@ -1,12 +1,12 @@
 ---
 title: Java中的锁-AbstractQueuedSynchronizer队列同步器
-date: 2019-09-19 12:00:00
+date: 2019-07-10 12:00:00
 tags:
-- Java
-- 并发
+- JAVA
 - 多线程
+- LOCK
 categories:
-- Java并发编程
+- 多线程
 ---
 
 **AbstractQueuedSynchronizer** 同步器提供了一个框架，用于构建 **先进先出(FIFO)** 等待队列的 **阻塞锁** 和 **相关同步器（信号量，事件等）**。它使用了一个 **int** 成员变量表示同步状态，通过 FIFO 队列来完成资源获取线程的排队工作。

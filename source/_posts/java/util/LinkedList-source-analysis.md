@@ -1,12 +1,11 @@
 ---
 title: LinkedList源码分析
-date: 2018-12-06 23:10:05
+date: 2019-08-12 23:10:05
 tags:
-- Java
+- JAVA
 - 源码
-- 集合框架
 categories:
-- JavaSE
+- 集合框架
 ---
 
 <a href="#1">一、LinkedList简介</a>
@@ -26,7 +25,7 @@ categories:
 
 ### 1.1 LinkedList 继承关系图
 
-![LinkedList继承关系](linked-list-source-analysis/linkedlist1.png "LinkedList继承关系")
+![LinkedList继承关系](LinkedList-source-analysis/linkedlist1.png "LinkedList继承关系")
 
 ### 1.2 LinkedList 的特性：
  - 实现了 **双链表** 结构
