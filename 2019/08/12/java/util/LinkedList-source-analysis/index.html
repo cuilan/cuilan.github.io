@@ -1,0 +1,819 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="一、LinkedList简介二、成员分析三、链表实现四、双端队列实现五、队列实现六、栈实现七、列表实现八、迭代器、分割器 一、LinkedList简介java.util.LinkedList 是 java.util.List 接口实现，是一个 链表 数据结构的实现，直接继承自 java.util.AbstractSequentialList 抽象有序集合，是一个有序的 List，同时实现了 jav">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinkedList源码分析">
+<meta property="og:url" content="https://cuilan.github.io/2019/08/12/java/util/LinkedList-source-analysis/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="一、LinkedList简介二、成员分析三、链表实现四、双端队列实现五、队列实现六、栈实现七、列表实现八、迭代器、分割器 一、LinkedList简介java.util.LinkedList 是 java.util.List 接口实现，是一个 链表 数据结构的实现，直接继承自 java.util.AbstractSequentialList 抽象有序集合，是一个有序的 List，同时实现了 jav">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/2019/08/12/java/util/LinkedList-source-analysis/linkedlist1.png">
+<meta property="article:published_time" content="2019-08-12T15:10:05.000Z">
+<meta property="article:modified_time" content="2023-07-21T10:29:01.352Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="源码">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/08/12/java/util/LinkedList-source-analysis/linkedlist1.png">
+  
+  
+  
+  <title>LinkedList源码分析 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Cuilan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LinkedList源码分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-12 23:10" pubdate>
+          2019年8月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          86 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LinkedList源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><a href="#1">一、LinkedList简介</a><br><a href="#2">二、成员分析</a><br><a href="#3">三、链表实现</a><br><a href="#4">四、双端队列实现</a><br><a href="#5">五、队列实现</a><br><a href="#6">六、栈实现</a><br><a href="#7">七、列表实现</a><br><a href="#8">八、迭代器、分割器</a></p>
+<h2 id="一、LinkedList简介"><a href="#一、LinkedList简介" class="headerlink" title="一、LinkedList简介"></a><a name="1">一、LinkedList简介</a></h2><p><strong><code>java.util.LinkedList</code></strong> 是 <strong><code>java.util.List</code></strong> 接口实现，是一个 <strong>链表</strong> 数据结构的实现，直接继承自 <strong><code>java.util.AbstractSequentialList</code></strong> 抽象有序集合，是一个有序的 List，同时实现了 <strong><code>java.util.List</code></strong> 、 <strong><code>java.util.Deque</code></strong> 接口，也具备 <strong>队列</strong> 、 <strong>双端队列</strong> 的功能。同时，LinkedList 也具有 <strong>栈</strong> 的数据结构。因此 LinkedList 可以满足多种使用场景，是一个功能齐全的集合。</p>
+<span id="more"></span>
+
+<h3 id="1-1-LinkedList-继承关系图"><a href="#1-1-LinkedList-继承关系图" class="headerlink" title="1.1 LinkedList 继承关系图"></a>1.1 LinkedList 继承关系图</h3><img src="/2019/08/12/java/util/LinkedList-source-analysis/linkedlist1.png" srcset="/img/loading.gif" lazyload class="" title="LinkedList继承关系 LinkedList继承关系">
+
+<h3 id="1-2-LinkedList-的特性："><a href="#1-2-LinkedList-的特性：" class="headerlink" title="1.2 LinkedList 的特性："></a>1.2 LinkedList 的特性：</h3><ul>
+<li>实现了 <strong>双链表</strong> 结构</li>
+<li>实现了 <strong>Queue(队列)</strong> 与 <strong>Deque(双端队列)</strong> 结构</li>
+<li>实现了 <strong>Stack(栈)</strong> 结构</li>
+<li>有序</li>
+<li>可重复</li>
+<li>线程不安全</li>
+<li>允许 <strong>null</strong> 值</li>
+<li>查询慢、增删快</li>
+<li>底层通过 <strong>Node<E></strong> 实现</li>
+</ul>
+<h3 id="1-3-线程同步问题"><a href="#1-3-线程同步问题" class="headerlink" title="1.3 线程同步问题"></a>1.3 线程同步问题</h3><p>由于 LinkedList 出于性能的考虑，并没有实现同步，因此在多线程环境下操作时，可能会引发线程安全问题。最好的解决办法是在创建时使用集合工具类 <strong><code>Collections.synchronizedList()</code></strong> 方法进行包装，以防止意外对列表的非同步访问。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">List</span> <span class="hljs-variable">list</span> <span class="hljs-operator">=</span> Collections.synchronizedList(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>(...));<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="二、成员分析"><a href="#二、成员分析" class="headerlink" title="二、成员分析"></a><a name="2">二、成员分析</a></h2><h3 id="2-1-成员变量"><a href="#2-1-成员变量" class="headerlink" title="2.1 成员变量"></a>2.1 成员变量</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 集合大小</span><br><span class="hljs-keyword">transient</span> <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 指向第一个节点的指针</span><br><span class="hljs-comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span><br><span class="hljs-comment"> *            (first.prev == null &amp;&amp; first.item != null)</span><br><span class="hljs-comment"> */</span><br> <span class="hljs-keyword">transient</span> Node&lt;E&gt; first;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 指向最后一个节点的指针</span><br><span class="hljs-comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span><br><span class="hljs-comment"> *            (last.next == null &amp;&amp; last.item != null)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">transient</span> Node&lt;E&gt; last;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-构造函数"><a href="#2-2-构造函数" class="headerlink" title="2.2 构造函数"></a>2.2 构造函数</h3><p>遵循 <strong><code>java.util.Collection</code></strong> 规范。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 空参构造器</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">LinkedList</span><span class="hljs-params">()</span> &#123;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 参数类型为 Collection 的构造器。</span><br><span class="hljs-comment"> * 按照集合的迭代器返回的顺序，构造一个包含指定集合元素的列表。</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@throws</span> NullPointerException 如果指定的集合为空，引发空指针异常</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">LinkedList</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span> &#123;<br>    <span class="hljs-comment">// 调用空参构造器</span><br>    <span class="hljs-built_in">this</span>();<br>    <span class="hljs-comment">// 添加所有元素</span><br>    addAll(c);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、链表实现"><a href="#三、链表实现" class="headerlink" title="三、链表实现"></a><a name="3">三、链表实现</a></h2><h3 id="3-1-Node内部类"><a href="#3-1-Node内部类" class="headerlink" title="3.1 Node内部类"></a>3.1 Node内部类</h3><p>内部类 Node 就是实际的节点，用于存放实际元素的地方。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 内部类 Node 节点</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>&lt;E&gt; &#123;<br>    <span class="hljs-comment">// 该节点存储的元素</span><br>    E item;<br>    <span class="hljs-comment">// 前一个节点的引用</span><br>    Node&lt;E&gt; next;<br>    <span class="hljs-comment">// 后一个节点的引用</span><br>    Node&lt;E&gt; prev;<br><br>    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;<br>        <span class="hljs-built_in">this</span>.item = element;<br>        <span class="hljs-built_in">this</span>.next = next;<br>        <span class="hljs-built_in">this</span>.prev = prev;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-连接方法"><a href="#3-2-连接方法" class="headerlink" title="3.2 连接方法"></a>3.2 连接方法</h3><h4 id="linkFirst-E-方法：前"><a href="#linkFirst-E-方法：前" class="headerlink" title="linkFirst(E) 方法：前"></a>linkFirst(E) 方法：前</h4><p>创建并连接第一个元素。</p>
+<ul>
+<li>创建一个 Node 节点</li>
+<li>将元素 E 放入其中</li>
+<li>前节点设置为 null</li>
+<li>后节点设置为 first 节点</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">linkFirst</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(<span class="hljs-literal">null</span>, e, f);<br>    first = newNode;<br>    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">null</span>)<br>        last = newNode;<br>    <span class="hljs-keyword">else</span><br>        f.prev = newNode;<br>    size++;<br>    modCount++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="linkLast-E-方法：后"><a href="#linkLast-E-方法：后" class="headerlink" title="linkLast(E) 方法：后"></a>linkLast(E) 方法：后</h4><p>创建并连接最后一个元素。</p>
+<ul>
+<li>创建一个 Node 节点</li>
+<li>将元素 E 放入其中</li>
+<li>前节点设置为 last 节点</li>
+<li>后节点设置为 null</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">linkLast</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; l = last;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(l, e, <span class="hljs-literal">null</span>);<br>    last = newNode;<br>    <span class="hljs-keyword">if</span> (l == <span class="hljs-literal">null</span>)<br>        first = newNode;<br>    <span class="hljs-keyword">else</span><br>        l.next = newNode;<br>    size++;<br>    modCount++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="linkBefore-E-Node-方法：中"><a href="#linkBefore-E-Node-方法：中" class="headerlink" title="linkBefore(E, Node) 方法：中"></a>linkBefore(E, Node) 方法：中</h4><p>在<strong>节点前（非空）</strong>插入一个元素。</p>
+<ul>
+<li>获取 succ 节点的前节点</li>
+<li>创建一个 Node 节点，并放入元素 E</li>
+<li>连接前节点和后节点</li>
+<li>判断前节点不为空，并将前节点的 next 节点设置为当前节点</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">linkBefore</span><span class="hljs-params">(E e, Node&lt;E&gt; succ)</span> &#123;<br>    <span class="hljs-comment">// assert succ != null;</span><br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; pred = succ.prev;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(pred, e, succ);<br>    succ.prev = newNode;<br>    <span class="hljs-keyword">if</span> (pred == <span class="hljs-literal">null</span>)<br>        first = newNode;<br>    <span class="hljs-keyword">else</span><br>        pred.next = newNode;<br>    size++;<br>    modCount++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-删除节点方法"><a href="#3-3-删除节点方法" class="headerlink" title="3.3 删除节点方法"></a>3.3 删除节点方法</h3><h4 id="unlinkFirst-Node-方法：前"><a href="#unlinkFirst-Node-方法：前" class="headerlink" title="unlinkFirst(Node) 方法：前"></a>unlinkFirst(Node) 方法：前</h4><p>删除并返回链表的第一个的节点（非空）。</p>
+<ul>
+<li>获取 f 节点的元素并返回</li>
+<li>获取 f 节点的 next 节点</li>
+<li>将 next 节点设置为 first 节点</li>
+<li>将 next 节点的前节点设置为 null</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> E <span class="hljs-title function_">unlinkFirst</span><span class="hljs-params">(Node&lt;E&gt; f)</span> &#123;<br>    <span class="hljs-comment">// 元素 f 是第一个，并且 f 不为空</span><br>    <span class="hljs-comment">// assert f == first &amp;&amp; f != null;</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">E</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> f.item;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; next = f.next;<br>    f.item = <span class="hljs-literal">null</span>;<br>    f.next = <span class="hljs-literal">null</span>; <span class="hljs-comment">// help GC，GC垃圾自动回收</span><br>    first = next;<br>    <span class="hljs-keyword">if</span> (next == <span class="hljs-literal">null</span>)<br>        last = <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">else</span><br>        next.prev = <span class="hljs-literal">null</span>;<br>    size--;<br>    modCount++;<br>    <span class="hljs-keyword">return</span> element;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="unlinkLast-Node-方法：后"><a href="#unlinkLast-Node-方法：后" class="headerlink" title="unlinkLast(Node) 方法：后"></a>unlinkLast(Node) 方法：后</h4><p>删除并返回链表的最后一个节点（非空）。</p>
+<ul>
+<li>获取 l 节点的元素并返回</li>
+<li>获取 l 节点的 prev 节点</li>
+<li>将 prev 节点设置为 last 节点</li>
+<li>将 prev 节点的后节点设置为 null</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> E <span class="hljs-title function_">unlinkLast</span><span class="hljs-params">(Node&lt;E&gt; l)</span> &#123;<br>    <span class="hljs-comment">// 元素 l 是最后一个，并且 l 不为空</span><br>    <span class="hljs-comment">// assert l == last &amp;&amp; l != null;</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">E</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> l.item;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; prev = l.prev;<br>    l.item = <span class="hljs-literal">null</span>;<br>    l.prev = <span class="hljs-literal">null</span>; <span class="hljs-comment">// help GC，GC垃圾自动回收</span><br>    last = prev;<br>    <span class="hljs-keyword">if</span> (prev == <span class="hljs-literal">null</span>)<br>        first = <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">else</span><br>        prev.next = <span class="hljs-literal">null</span>;<br>    size--;<br>    modCount++;<br>    <span class="hljs-keyword">return</span> element;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="unlink-Node-方法：中"><a href="#unlink-Node-方法：中" class="headerlink" title="unlink(Node) 方法：中"></a>unlink(Node) 方法：中</h4><p>删除并返回链表中的一个节点（非空）。</p>
+<ul>
+<li>获取 x 节点的元素并返回</li>
+<li>获取 x 节点的 prev、next 节点</li>
+<li>将 prev、next 链接</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java">E <span class="hljs-title function_">unlink</span><span class="hljs-params">(Node&lt;E&gt; x)</span> &#123;<br>    <span class="hljs-comment">// 元素 x 不为空</span><br>    <span class="hljs-comment">// assert x != null;</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">E</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> x.item;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; next = x.next;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; prev = x.prev;<br>    <span class="hljs-keyword">if</span> (prev == <span class="hljs-literal">null</span>) &#123;<br>        first = next;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        prev.next = next;<br>        x.prev = <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (next == <span class="hljs-literal">null</span>) &#123;<br>        last = prev;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        next.prev = prev;<br>        x.next = <span class="hljs-literal">null</span>;<br>    &#125;<br>    x.item = <span class="hljs-literal">null</span>;<br>    size--;<br>    modCount++;<br>    <span class="hljs-keyword">return</span> element;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、双端队列实现"><a href="#四、双端队列实现" class="headerlink" title="四、双端队列实现"></a><a name="4">四、双端队列实现</a></h2><h3 id="4-1-获取"><a href="#4-1-获取" class="headerlink" title="4.1 获取"></a>4.1 获取</h3><h4 id="getFirst-方法：头"><a href="#getFirst-方法：头" class="headerlink" title="getFirst() 方法：头"></a>getFirst() 方法：头</h4><p>获取并返回第一个元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">getFirst</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">null</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>    <span class="hljs-keyword">return</span> f.item;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="getLast-方法：尾"><a href="#getLast-方法：尾" class="headerlink" title="getLast() 方法：尾"></a>getLast() 方法：尾</h4><p>获取并返回最后一个元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">getLast</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; l = last;<br>    <span class="hljs-keyword">if</span> (l == <span class="hljs-literal">null</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>    <span class="hljs-keyword">return</span> l.item;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="peekFirst-方法：头"><a href="#peekFirst-方法：头" class="headerlink" title="peekFirst() 方法：头"></a>peekFirst() 方法：头</h4><p>获取并返回第一个元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">peekFirst</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">return</span> (f == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : f.item;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="peekLast-方法：尾"><a href="#peekLast-方法：尾" class="headerlink" title="peekLast() 方法：尾"></a>peekLast() 方法：尾</h4><p>获取并返回最后一个元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">peekLast</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; l = last;<br>    <span class="hljs-keyword">return</span> (l == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : l.item;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-删除"><a href="#4-2-删除" class="headerlink" title="4.2 删除"></a>4.2 删除</h3><h4 id="removeFirst-方法：头"><a href="#removeFirst-方法：头" class="headerlink" title="removeFirst() 方法：头"></a>removeFirst() 方法：头</h4><p>删除并返回第一个元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">removeFirst</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">null</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>    <span class="hljs-keyword">return</span> unlinkFirst(f);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="removeLast-方法：尾"><a href="#removeLast-方法：尾" class="headerlink" title="removeLast() 方法：尾"></a>removeLast() 方法：尾</h4><p>删除并返回最后一个元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">removeLast</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; l = last;<br>    <span class="hljs-keyword">if</span> (l == <span class="hljs-literal">null</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>    <span class="hljs-keyword">return</span> unlinkLast(l);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="pollFirst-方法：头"><a href="#pollFirst-方法：头" class="headerlink" title="pollFirst() 方法：头"></a>pollFirst() 方法：头</h4><p>删除并返回第一个元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">pollFirst</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">return</span> (f == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : unlinkFirst(f);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="pollLast-方法：尾"><a href="#pollLast-方法：尾" class="headerlink" title="pollLast() 方法：尾"></a>pollLast() 方法：尾</h4><p>删除并返回最后一个元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">pollLast</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; l = last;<br>    <span class="hljs-keyword">return</span> (l == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : unlinkLast(l);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="removeFirstOccurrence-Object-方法"><a href="#removeFirstOccurrence-Object-方法" class="headerlink" title="removeFirstOccurrence(Object) 方法"></a>removeFirstOccurrence(Object) 方法</h4><p>从头至尾（<strong>正序</strong>）删除第一次出现的元素 Object，依赖 <strong><code>remove(Object)</code></strong> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">removeFirstOccurrence</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">return</span> remove(o);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="removeLastOccurrence-Object-方法"><a href="#removeLastOccurrence-Object-方法" class="headerlink" title="removeLastOccurrence(Object) 方法"></a>removeLastOccurrence(Object) 方法</h4><p>从尾至头（<strong>倒序</strong>）删除第一次出现的元素 Object，依赖 <strong><code>unlink(Node)</code></strong> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">removeLastOccurrence</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">if</span> (o == <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// 非 null 元素</span><br>        <span class="hljs-comment">// 从 last 节点开始，向前循环迭代</span><br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="hljs-literal">null</span>; x = x.prev) &#123;<br>            <span class="hljs-keyword">if</span> (x.item == <span class="hljs-literal">null</span>) &#123;<br>                unlink(x);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// null 元素</span><br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="hljs-literal">null</span>; x = x.prev) &#123;<br>            <span class="hljs-keyword">if</span> (o.equals(x.item)) &#123;<br>                unlink(x);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-添加"><a href="#4-3-添加" class="headerlink" title="4.3 添加"></a>4.3 添加</h3><h4 id="addFirst-E-方法：头"><a href="#addFirst-E-方法：头" class="headerlink" title="addFirst(E) 方法：头"></a>addFirst(E) 方法：头</h4><p>在头部添加一个元素 E。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addFirst</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-comment">// 链接第一个元素</span><br>    linkFirst(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="addLast-E-方法：尾"><a href="#addLast-E-方法：尾" class="headerlink" title="addLast(E) 方法：尾"></a>addLast(E) 方法：尾</h4><p>在尾部添加一个元素 E。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addLast</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-comment">// 链接最后一个元素</span><br>    linkLast(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="offerFirst-E-方法：头"><a href="#offerFirst-E-方法：头" class="headerlink" title="offerFirst(E) 方法：头"></a>offerFirst(E) 方法：头</h4><p>在头部添加一个元素 E，并返回是否添加成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">offerFirst</span><span class="hljs-params">(E e)</span> &#123;<br>    addFirst(e);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="offerLast-E-方法：尾"><a href="#offerLast-E-方法：尾" class="headerlink" title="offerLast(E) 方法：尾"></a>offerLast(E) 方法：尾</h4><p>在尾部添加一个元素 E，并返回是否添加成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">offerLast</span><span class="hljs-params">(E e)</span> &#123;<br>    addLast(e);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-倒序迭代"><a href="#4-4-倒序迭代" class="headerlink" title="4.4 倒序迭代"></a>4.4 倒序迭代</h3><h4 id="descendingIterator-方法"><a href="#descendingIterator-方法" class="headerlink" title="descendingIterator() 方法"></a>descendingIterator() 方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">descendingIterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DescendingIterator</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、队列实现"><a href="#五、队列实现" class="headerlink" title="五、队列实现"></a><a name="5">五、队列实现</a></h2><h3 id="5-1-获取"><a href="#5-1-获取" class="headerlink" title="5.1 获取"></a>5.1 获取</h3><h4 id="element-方法"><a href="#element-方法" class="headerlink" title="element() 方法"></a>element() 方法</h4><p>获取头元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">element</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> getFirst();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="peek-方法"><a href="#peek-方法" class="headerlink" title="peek() 方法"></a>peek() 方法</h4><p>获取头元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">peek</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">return</span> (f == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : f.item;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-2-删除"><a href="#5-2-删除" class="headerlink" title="5.2 删除"></a>5.2 删除</h3><h4 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove() 方法"></a>remove() 方法</h4><p>删除头元素，如果为空抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">remove</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> removeFirst();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="poll-方法"><a href="#poll-方法" class="headerlink" title="poll() 方法"></a>poll() 方法</h4><p>删除头元素，如果为空则返回 null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">poll</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> Node&lt;E&gt; f = first;<br>    <span class="hljs-keyword">return</span> (f == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">null</span> : unlinkFirst(f);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-添加"><a href="#5-3-添加" class="headerlink" title="5.3 添加"></a>5.3 添加</h3><h4 id="offer-E-方法"><a href="#offer-E-方法" class="headerlink" title="offer(E) 方法"></a>offer(E) 方法</h4><p>在末尾添加一个元素 E，依赖 <strong><code>add(E)</code></strong> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">offer</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> add(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="add-E-方法"><a href="#add-E-方法" class="headerlink" title="add(E) 方法"></a>add(E) 方法</h4><p>在末尾添加一个元素 E。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;<br>    linkLast(e);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="六、栈实现"><a href="#六、栈实现" class="headerlink" title="六、栈实现"></a><a name="6">六、栈实现</a></h2><h4 id="push-E-方法"><a href="#push-E-方法" class="headerlink" title="push(E) 方法"></a>push(E) 方法</h4><p>将元素 E 压入栈顶，即：将元素 E 添加至栈的头部。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">push</span><span class="hljs-params">(E e)</span> &#123;<br>    addFirst(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="pop-方法"><a href="#pop-方法" class="headerlink" title="pop() 方法"></a>pop() 方法</h4><p>弹出栈顶元素，即：删除并返回栈的第一个元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">pop</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> removeFirst();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="七、列表实现"><a href="#七、列表实现" class="headerlink" title="七、列表实现"></a><a name="7">七、列表实现</a></h2><h3 id="7-1-元素操作"><a href="#7-1-元素操作" class="headerlink" title="7.1 元素操作"></a>7.1 元素操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 是否包含元素 o</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">contains</span><span class="hljs-params">(Object o)</span> &#123; <span class="hljs-keyword">return</span> indexOf(o) != -<span class="hljs-number">1</span>; &#125;<br><br><span class="hljs-comment">// 返回列表的大小</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> size; &#125;<br><br><span class="hljs-comment">// 删除指定元素</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">if</span> (o == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="hljs-literal">null</span>; x = x.next) &#123;<br>            <span class="hljs-keyword">if</span> (x.item == <span class="hljs-literal">null</span>) &#123;<br>                unlink(x);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="hljs-literal">null</span>; x = x.next) &#123;<br>            <span class="hljs-keyword">if</span> (o.equals(x.item)) &#123;<br>                unlink(x);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-comment">// 添加集合，默认添加至末尾</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">addAll</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span> &#123; <span class="hljs-keyword">return</span> addAll(size, c); &#125;<br><br><span class="hljs-comment">// 将集合添加到指定位置之后</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">addAll</span><span class="hljs-params">(<span class="hljs-type">int</span> index, Collection&lt;? extends E&gt; c)</span> &#123;<br>    checkPositionIndex(index);<br>    Object[] a = c.toArray();<br>    <span class="hljs-type">int</span> <span class="hljs-variable">numNew</span> <span class="hljs-operator">=</span> a.length;<br>    <span class="hljs-keyword">if</span> (numNew == <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    Node&lt;E&gt; pred, succ;<br>    <span class="hljs-keyword">if</span> (index == size) &#123;<br>        succ = <span class="hljs-literal">null</span>;<br>        pred = last;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        succ = node(index);<br>        pred = succ.prev;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (Object o : a) &#123;<br>        <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span> <span class="hljs-type">E</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> (E) o;<br>        Node&lt;E&gt; newNode = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(pred, e, <span class="hljs-literal">null</span>);<br>        <span class="hljs-keyword">if</span> (pred == <span class="hljs-literal">null</span>)<br>            first = newNode;<br>        <span class="hljs-keyword">else</span><br>            pred.next = newNode;<br>        pred = newNode;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (succ == <span class="hljs-literal">null</span>) &#123;<br>        last = pred;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        pred.next = succ;<br>        succ.prev = pred;<br>    &#125;<br>    size += numNew;<br>    modCount++;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">// 清除所有节点及连接，使 GC 回收效率更高</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">clear</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="hljs-literal">null</span>; ) &#123;<br>        Node&lt;E&gt; next = x.next;<br>        x.item = <span class="hljs-literal">null</span>;<br>        x.next = <span class="hljs-literal">null</span>;<br>        x.prev = <span class="hljs-literal">null</span>;<br>        x = next;<br>    &#125;<br>    first = last = <span class="hljs-literal">null</span>;<br>    size = <span class="hljs-number">0</span>;<br>    modCount++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-索引操作"><a href="#7-2-索引操作" class="headerlink" title="7.2 索引操作"></a>7.2 索引操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    checkElementIndex(index);<br>    <span class="hljs-keyword">return</span> node(index).item;<br>&#125;<br><br><span class="hljs-keyword">public</span> E <span class="hljs-title function_">set</span><span class="hljs-params">(<span class="hljs-type">int</span> index, E element)</span> &#123;<br>    checkElementIndex(index);<br>    Node&lt;E&gt; x = node(index);<br>    <span class="hljs-type">E</span> <span class="hljs-variable">oldVal</span> <span class="hljs-operator">=</span> x.item;<br>    x.item = element;<br>    <span class="hljs-keyword">return</span> oldVal;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> index, E element)</span> &#123;<br>    checkPositionIndex(index);<br>    <span class="hljs-keyword">if</span> (index == size)<br>        linkLast(element);<br>    <span class="hljs-keyword">else</span><br>        linkBefore(element, node(index));<br>&#125;<br><br><span class="hljs-keyword">public</span> E <span class="hljs-title function_">remove</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    checkElementIndex(index);<br>    <span class="hljs-keyword">return</span> unlink(node(index));<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isElementIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-keyword">return</span> index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt; size;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isPositionIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-keyword">return</span> index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt;= size;<br>&#125;<br><br><span class="hljs-keyword">private</span> String <span class="hljs-title function_">outOfBoundsMsg</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Index: &quot;</span>+index+<span class="hljs-string">&quot;, Size: &quot;</span>+size;<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">checkElementIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!isElementIndex(index))<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IndexOutOfBoundsException</span>(outOfBoundsMsg(index));<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">checkPositionIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!isPositionIndex(index))<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IndexOutOfBoundsException</span>(outOfBoundsMsg(index));<br>&#125;<br><br>Node&lt;E&gt; <span class="hljs-title function_">node</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    <span class="hljs-comment">// assert isElementIndex(index);</span><br>    <span class="hljs-keyword">if</span> (index &lt; (size &gt;&gt; <span class="hljs-number">1</span>)) &#123;<br>        Node&lt;E&gt; x = first;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; index; i++)<br>            x = x.next;<br>        <span class="hljs-keyword">return</span> x;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        Node&lt;E&gt; x = last;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> size - <span class="hljs-number">1</span>; i &gt; index; i--)<br>            x = x.prev;<br>        <span class="hljs-keyword">return</span> x;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-3-元素搜索操作"><a href="#7-3-元素搜索操作" class="headerlink" title="7.3 元素搜索操作"></a>7.3 元素搜索操作</h3><h4 id="indexOf-Object-方法"><a href="#indexOf-Object-方法" class="headerlink" title="indexOf(Object) 方法"></a>indexOf(Object) 方法</h4><p>返回此列表中第一次出现的指定元素的索引，如果此列表不包含该元素，则返回-1。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">indexOf</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (o == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="hljs-literal">null</span>; x = x.next) &#123;<br>            <span class="hljs-keyword">if</span> (x.item == <span class="hljs-literal">null</span>)<br>                <span class="hljs-keyword">return</span> index;<br>            index++;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="hljs-literal">null</span>; x = x.next) &#123;<br>            <span class="hljs-keyword">if</span> (o.equals(x.item))<br>                <span class="hljs-keyword">return</span> index;<br>            index++;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="lastIndexOf-Object-方法"><a href="#lastIndexOf-Object-方法" class="headerlink" title="lastIndexOf(Object) 方法"></a>lastIndexOf(Object) 方法</h4><p>返回此列表中指定元素最后一次出现的索引，如果此列表不包含该元素，则返回-1。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">lastIndexOf</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> size;<br>    <span class="hljs-keyword">if</span> (o == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="hljs-literal">null</span>; x = x.prev) &#123;<br>            index--;<br>            <span class="hljs-keyword">if</span> (x.item == <span class="hljs-literal">null</span>)<br>                <span class="hljs-keyword">return</span> index;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="hljs-literal">null</span>; x = x.prev) &#123;<br>            index--;<br>            <span class="hljs-keyword">if</span> (o.equals(x.item))<br>                <span class="hljs-keyword">return</span> index;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="八、迭代器、分割器"><a href="#八、迭代器、分割器" class="headerlink" title="八、迭代器、分割器"></a><a name="8">八、迭代器、分割器</a></h2><h3 id="ListItr"><a href="#ListItr" class="headerlink" title="ListItr"></a>ListItr</h3><p>略。</p>
+<h3 id="DescendingIterator"><a href="#DescendingIterator" class="headerlink" title="DescendingIterator"></a>DescendingIterator</h3><p>略。</p>
+<h3 id="LLSpliterator"><a href="#LLSpliterator" class="headerlink" title="LLSpliterator"></a>LLSpliterator</h3><p>略。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="category-chain-item">集合框架</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JAVA/" class="print-no-link">#JAVA</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81/" class="print-no-link">#源码</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LinkedList源码分析</div>
+      <div>https://cuilan.github.io/2019/08/12/java/util/LinkedList-source-analysis/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/16/java/util/AbstractSet-source-analysis/" title="AbstractSet源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">AbstractSet源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/10/java/util/ArrayList-source-analysis/" title="ArrayList源码分析">
+                        <span class="hidden-mobile">ArrayList源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-github-fill"></i> <a href="https://github.com/cuilan" target="_blank" rel="nofollow noopener"><span>cuilan</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

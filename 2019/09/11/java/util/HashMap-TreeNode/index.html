@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="继承关系：  java.util.Map.Entry Map 接口中的顶层实体接口。 java.util.HashMap.Node HashMap 中的单向链表节点。 java.util.LinkedHashMap.Entry LinkedHashMap 中的双向链表节点。 java.util.HashMap.TreeNode HashMap 中的红黑树节点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap.TreeNode类源码分析">
+<meta property="og:url" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="继承关系：  java.util.Map.Entry Map 接口中的顶层实体接口。 java.util.HashMap.Node HashMap 中的单向链表节点。 java.util.LinkedHashMap.Entry LinkedHashMap 中的双向链表节点。 java.util.HashMap.TreeNode HashMap 中的红黑树节点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/TreeNode1.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/BTree.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/RBTree.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/RotateLeft.png">
+<meta property="og:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/RotateRight.png">
+<meta property="article:published_time" content="2019-09-11T09:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-21T10:29:01.348Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="源码">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/TreeNode1.png">
+  
+  
+  
+  <title>HashMap.TreeNode类源码分析 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Cuilan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HashMap.TreeNode类源码分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-09-11 17:00" pubdate>
+          2019年9月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          64 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HashMap.TreeNode类源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>继承关系：</p>
+<ul>
+<li><strong><code>java.util.Map.Entry</code></strong> Map 接口中的顶层实体接口。<ul>
+<li><strong><code>java.util.HashMap.Node</code></strong> HashMap 中的单向链表节点。<ul>
+<li><strong><code>java.util.LinkedHashMap.Entry</code></strong> LinkedHashMap 中的双向链表节点。<ul>
+<li><strong><code>java.util.HashMap.TreeNode</code></strong> HashMap 中的红黑树节点。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="/2019/09/11/java/util/HashMap-TreeNode/TreeNode1.png" srcset="/img/loading.gif" lazyload class="" title="TreeNode继承关系 TreeNode继承关系">
+
+<span id="more"></span>
+
+<hr>
+<h2 id="一、HashMap节点内部类"><a href="#一、HashMap节点内部类" class="headerlink" title="一、HashMap节点内部类"></a>一、HashMap节点内部类</h2><p>HashMap 中节点内部类有两种实现：</p>
+<ul>
+<li>链表节点：**<code>HashMap.Node</code>**</li>
+<li>红黑树节点：**<code>HashMap.TreeNode</code>**</li>
+</ul>
+<p>有关 HashMap 数据结构、方法分析、哈希冲突 及 链表实现等，见：<a href="/blog/2019/09/03/javase/HashMap-source-analysis/"><strong>HashMap源码分析</strong></a>。</p>
+<hr>
+<h2 id="二、链表-红黑树-相互转换的方法"><a href="#二、链表-红黑树-相互转换的方法" class="headerlink" title="二、链表-红黑树 相互转换的方法"></a>二、链表-红黑树 相互转换的方法</h2><h3 id="treeifyBin-Node-int-方法"><a href="#treeifyBin-Node-int-方法" class="headerlink" title="treeifyBin(Node, int) 方法"></a>treeifyBin(Node, int) 方法</h3><p>转换为红黑树结构：根据 hash 值计算待转换的链表在 哈希表(<strong><code>table</code></strong>) 的位置，如果否满足转换为红黑树的条件，就进行转换。</p>
+<p><strong>执行过程分析：</strong></p>
+<ul>
+<li>哈希表（数组）是否已初始化：<ul>
+<li>未初始化，调用 <strong><code>resize()</code></strong> 进行初始化。</li>
+<li>或已初始化，判断哈希表的长度是否小于 64：<ul>
+<li>小于 64，不考虑使用红黑树结构，调用 <strong><code>resize()</code></strong> 重新计算大小。</li>
+<li>大于等于 64，转换为红黑树结构。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">treeifyBin</span><span class="hljs-params">(Node&lt;K,V&gt;[] tab, <span class="hljs-type">int</span> hash)</span> &#123;<br>    <span class="hljs-type">int</span> n, index; Node&lt;K,V&gt; e;<br>    <span class="hljs-comment">// 如果哈希表 tab 没有初始化，或长度小于最小 64，则 resize()</span><br>    <span class="hljs-keyword">if</span> (tab == <span class="hljs-literal">null</span> || (n = tab.length) &lt; MIN_TREEIFY_CAPACITY) &#123; resize(); &#125;<br>    <span class="hljs-comment">// 根据 hash 计算哈希表的位置，并将该位置的链表转换为红黑树</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((e = tab[index = (n - <span class="hljs-number">1</span>) &amp; hash]) != <span class="hljs-literal">null</span>) &#123;<br>        TreeNode&lt;K,V&gt; hd = <span class="hljs-literal">null</span>;<br>        TreeNode&lt;K,V&gt; tl = <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">do</span> &#123;<br>            <span class="hljs-comment">// 将链表节点替换为红黑树节点</span><br>            TreeNode&lt;K,V&gt; p = replacementTreeNode(e, <span class="hljs-literal">null</span>);<br>            <span class="hljs-keyword">if</span> (tl == <span class="hljs-literal">null</span>)<br>                hd = p;<br>            <span class="hljs-keyword">else</span> &#123;<br>                p.prev = tl;<br>                tl.next = p;<br>            &#125;<br>            tl = p;<br>        &#125; <span class="hljs-keyword">while</span> ((e = e.next) != <span class="hljs-literal">null</span>);<br>        <span class="hljs-keyword">if</span> ((tab[index] = hd) != <span class="hljs-literal">null</span>)<br>            hd.treeify(tab); <span class="hljs-comment">// 转换为红黑树</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="newTreeNode-int-K-V-Node-方法"><a href="#newTreeNode-int-K-V-Node-方法" class="headerlink" title="newTreeNode(int, K, V, Node) 方法"></a>newTreeNode(int, K, V, Node) 方法</h3><p>创建一个新的树节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">TreeNode&lt;K,V&gt; <span class="hljs-title function_">newTreeNode</span><span class="hljs-params">(<span class="hljs-type">int</span> hash, K key, V value, Node&lt;K,V&gt; next)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeNode</span>&lt;&gt;(hash, key, value, next);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="replacementNode-Node-Node-方法"><a href="#replacementNode-Node-Node-方法" class="headerlink" title="replacementNode(Node, Node) 方法"></a>replacementNode(Node, Node) 方法</h3><p>将树节点转换为链表节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Node&lt;K,V&gt; <span class="hljs-title function_">replacementNode</span><span class="hljs-params">(Node&lt;K,V&gt; p, Node&lt;K,V&gt; next)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(p.hash, p.key, p.value, next);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="replacementTreeNode-Node-Node-方法"><a href="#replacementTreeNode-Node-Node-方法" class="headerlink" title="replacementTreeNode(Node, Node) 方法"></a>replacementTreeNode(Node, Node) 方法</h3><p>将链表节点转换为树节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">TreeNode&lt;K,V&gt; <span class="hljs-title function_">replacementTreeNode</span><span class="hljs-params">(Node&lt;K,V&gt; p, Node&lt;K,V&gt; next)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeNode</span>&lt;&gt;(p.hash, p.key, p.value, next);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、二叉树-红黑树"><a href="#三、二叉树-红黑树" class="headerlink" title="三、二叉树 - 红黑树"></a>三、二叉树 - <font color="red">红</font>黑树</h2><h3 id="3-1-二叉树"><a href="#3-1-二叉树" class="headerlink" title="3.1 二叉树"></a>3.1 二叉树</h3><p><strong>二叉树</strong> 又叫二叉排序树、二叉查找树。<br>性能：</p>
+<ul>
+<li>在完全二叉树的情况下，时间复杂度为：**O(logn)**。</li>
+<li>在极端情况下，二叉树实际上会变成链表结构，每次操作都将遍历链表，时间复杂度为：**O(n)**。</li>
+</ul>
+<img src="/2019/09/11/java/util/HashMap-TreeNode/BTree.png" srcset="/img/loading.gif" lazyload class="" title="二叉树 二叉树">
+
+<p>二叉树的缺陷就在于不能实现<strong>自平衡</strong>。</p>
+<h3 id="3-2-红黑树"><a href="#3-2-红黑树" class="headerlink" title="3.2 红黑树"></a>3.2 红黑树</h3><p>红黑树是一种 <strong>自平衡二叉查找树</strong>，它满足 <strong>五条规则</strong>：</p>
+<ul>
+<li>每个节点必须是红色或黑色；</li>
+<li>根节点必须是黑色；</li>
+<li>每个叶子节点都是黑色的空节点；</li>
+<li>如果节点是红色，则它的子节点必须是黑色（反之不一定）；</li>
+<li>从根节点到叶节点或空子节点的每条路径，必须包含相同数目的黑色节点（即：<strong>相同的黑色高度</strong>）。</li>
+</ul>
+<img src="/2019/09/11/java/util/HashMap-TreeNode/RBTree.png" srcset="/img/loading.gif" lazyload class="" title="红黑树 红黑树">
+
+<p>红黑树是通过 <strong>变色、<a href="#left">左旋</a>、<a href="#right">右旋</a></strong> 来保持自平衡的。</p>
+<hr>
+<h2 id="四、TreeNode实现代码"><a href="#四、TreeNode实现代码" class="headerlink" title="四、TreeNode实现代码"></a>四、TreeNode实现代码</h2><h3 id="4-1-成员属性"><a href="#4-1-成员属性" class="headerlink" title="4.1 成员属性"></a>4.1 成员属性</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 继承 LinkedHashMap.Entry</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeNode</span>&lt;K,V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">LinkedHashMap</span>.Entry&lt;K,V&gt; &#123;<br>    TreeNode&lt;K,V&gt; parent; <span class="hljs-comment">// 链接父节点</span><br>    TreeNode&lt;K,V&gt; left; <span class="hljs-comment">// 链接左节点</span><br>    TreeNode&lt;K,V&gt; right; <span class="hljs-comment">// 链接右节点</span><br>    TreeNode&lt;K,V&gt; prev; <span class="hljs-comment">// 链接前一个节点，转换为链表时需要</span><br>    <span class="hljs-type">boolean</span> red; <span class="hljs-comment">// 红黑树颜色</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-构造器"><a href="#4-2-构造器" class="headerlink" title="4.2 构造器"></a>4.2 构造器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">TreeNode(<span class="hljs-type">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;<br>    <span class="hljs-built_in">super</span>(hash, key, val, next);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-核心方法分析"><a href="#4-3-核心方法分析" class="headerlink" title="4.3 核心方法分析"></a>4.3 核心方法分析</h3><h4 id="root-根节点"><a href="#root-根节点" class="headerlink" title="root() 根节点"></a>root() 根节点</h4><p>根节点，其父节点 parent 必须为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> TreeNode&lt;K,V&gt; <span class="hljs-title function_">root</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">for</span> (TreeNode&lt;K,V&gt; r = <span class="hljs-built_in">this</span>, p;;) &#123;<br>        <span class="hljs-keyword">if</span> ((p = r.parent) == <span class="hljs-literal">null</span>)<br>            <span class="hljs-keyword">return</span> r;<br>        r = p;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="rotateLeft-左旋"><a href="#rotateLeft-左旋" class="headerlink" title="rotateLeft() 左旋"></a><a name="left">rotateLeft() 左旋</a></h4><img src="/2019/09/11/java/util/HashMap-TreeNode/RotateLeft.png" srcset="/img/loading.gif" lazyload class="" title="左旋 左旋">
+
+<p><strong>执行过程分析：</strong></p>
+<ul>
+<li>p 节点不能为空，且 p 的右节点不为空，并将 p 的右节点赋值给 r。</li>
+<li>如果 r 的左节点(rl) 不为空，赋值给 p 的右节点。</li>
+<li>将 p 的父节点(pp) 赋值给 r 的父节点，并判断 pp 是否为空：<ul>
+<li>如果 pp 不为空，则将作为 r 的父节点。</li>
+<li>如果 pp 为空，说明 r 已经是根节点，按照规则根节点一定是黑色。</li>
+</ul>
+</li>
+<li>判断 p 节点是 pp 节点的左节点还是右节点，并赋值。</li>
+<li>将 p 变更为 r 的左节点。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &lt;K,V&gt; TreeNode&lt;K,V&gt; <span class="hljs-title function_">rotateLeft</span><span class="hljs-params">(TreeNode&lt;K,V&gt; root, TreeNode&lt;K,V&gt; p)</span> &#123;<br>    TreeNode&lt;K,V&gt; r, pp, rl;<br>    <span class="hljs-keyword">if</span> (p != <span class="hljs-literal">null</span> &amp;&amp; (r = p.right) != <span class="hljs-literal">null</span>) &#123;<br><br>        <span class="hljs-comment">// 判断 r 的左节点是否为空</span><br>        <span class="hljs-keyword">if</span> ((rl = p.right = r.left) != <span class="hljs-literal">null</span>)<br>            rl.parent = p;<br><br>        <span class="hljs-comment">// 是否为根节点，是否需要变色</span><br>        <span class="hljs-keyword">if</span> ((pp = r.parent = p.parent) == <span class="hljs-literal">null</span>)<br>            (root = r).red = <span class="hljs-literal">false</span>;<br><br>        <span class="hljs-comment">// 判断 p 是 pp 的左节点还是右节点</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pp.left == p)<br>            pp.left = r; <span class="hljs-comment">// 左节点</span><br>        <span class="hljs-keyword">else</span><br>            pp.right = r; <span class="hljs-comment">// 右节点</span><br><br>        <span class="hljs-comment">// 将 p 变更为 r 的左节点</span><br>        r.left = p;<br>        p.parent = r;<br>    &#125;<br>    <span class="hljs-keyword">return</span> root;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="rotateRight-右旋"><a href="#rotateRight-右旋" class="headerlink" title="rotateRight() 右旋"></a><a name="right">rotateRight() 右旋</a></h4><img src="/2019/09/11/java/util/HashMap-TreeNode/RotateRight.png" srcset="/img/loading.gif" lazyload class="" title="右旋 右旋">
+
+<p><strong>执行过程分析：</strong></p>
+<ul>
+<li>p 节点不能为空，且 p 的左节点不为空，并将 p 的左节点赋值给 l。</li>
+<li>如果 l 的右节点(lr) 不为空，赋值给 p 的左节点。</li>
+<li>将 p 的父节点(pp) 赋值给 l 的父节点，并判断 pp 是否为空：<ul>
+<li>如果 pp 不为空，则将作为 l 的父节点。</li>
+<li>如果 pp 为空，说明 l 已经是根节点，按照规则根节点一定是黑色。</li>
+</ul>
+</li>
+<li>判断 p 节点是 pp 节点的左节点还是右节点，并赋值。</li>
+<li>将 p 变更为 l 的右节点。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &lt;K,V&gt; TreeNode&lt;K,V&gt; <span class="hljs-title function_">rotateRight</span><span class="hljs-params">(TreeNode&lt;K,V&gt; root, TreeNode&lt;K,V&gt; p)</span> &#123;<br>    TreeNode&lt;K,V&gt; l, pp, lr;<br>    <span class="hljs-keyword">if</span> (p != <span class="hljs-literal">null</span> &amp;&amp; (l = p.left) != <span class="hljs-literal">null</span>) &#123;<br><br>        <span class="hljs-comment">// 判断 l 的右节点是否为空</span><br>        <span class="hljs-keyword">if</span> ((lr = p.left = l.right) != <span class="hljs-literal">null</span>)<br>            lr.parent = p;<br><br>        <span class="hljs-comment">// 是否为根节点，是否需要变色</span><br>        <span class="hljs-keyword">if</span> ((pp = l.parent = p.parent) == <span class="hljs-literal">null</span>)<br>            (root = l).red = <span class="hljs-literal">false</span>;<br><br>        <span class="hljs-comment">// 判断 p 是 pp 的左节点还是右节点</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pp.right == p)<br>            pp.right = l;<br>        <span class="hljs-keyword">else</span><br>            pp.left = l;<br><br>        <span class="hljs-comment">// 将 p 变更为 l 的右节点</span><br>        l.right = p;<br>        p.parent = l;<br>    &#125;<br>    <span class="hljs-keyword">return</span> root;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="getTreeNode-find-查找"><a href="#getTreeNode-find-查找" class="headerlink" title="getTreeNode() &amp; find() 查找"></a>getTreeNode() &amp; find() 查找</h4><p>从树中查找元素，广度优先搜索。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> TreeNode&lt;K,V&gt; <span class="hljs-title function_">getTreeNode</span><span class="hljs-params">(<span class="hljs-type">int</span> h, Object k)</span> &#123;<br>    <span class="hljs-keyword">return</span> ((parent != <span class="hljs-literal">null</span>) ? root() : <span class="hljs-built_in">this</span>).find(h, k, <span class="hljs-literal">null</span>);<br>&#125;<br><br><span class="hljs-keyword">final</span> TreeNode&lt;K,V&gt; <span class="hljs-title function_">find</span><span class="hljs-params">(<span class="hljs-type">int</span> h, Object k, Class&lt;?&gt; kc)</span> &#123;<br>    TreeNode&lt;K,V&gt; p = <span class="hljs-built_in">this</span>;<br>    <span class="hljs-keyword">do</span> &#123;<br>        <span class="hljs-type">int</span> ph, dir; K pk;<br>        TreeNode&lt;K,V&gt; pl = p.left, pr = p.right, q;<br>        <span class="hljs-keyword">if</span> ((ph = p.hash) &gt; h)<br>            p = pl; <span class="hljs-comment">// p.hash 大于 h，说明该节点在 p 的左边</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ph &lt; h)<br>            p = pr; <span class="hljs-comment">// p.hash 小于 h，说明该节点在 p 的右边</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((pk = p.key) == k || (k != <span class="hljs-literal">null</span> &amp;&amp; k.equals(pk)))<br>            <span class="hljs-keyword">return</span> p;  <span class="hljs-comment">// p.hash 等于 h，说明该节点就是 p 节点</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pl == <span class="hljs-literal">null</span>)<br>            p = pr;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pr == <span class="hljs-literal">null</span>)<br>            p = pl;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((kc != <span class="hljs-literal">null</span> ||<br>                  (kc = comparableClassFor(k)) != <span class="hljs-literal">null</span>) &amp;&amp;<br>                 (dir = compareComparables(kc, k, pk)) != <span class="hljs-number">0</span>)<br>            p = (dir &lt; <span class="hljs-number">0</span>) ? pl : pr;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((q = pr.find(h, k, kc)) != <span class="hljs-literal">null</span>)<br>            <span class="hljs-keyword">return</span> q;<br>        <span class="hljs-keyword">else</span><br>            p = pl;<br>    &#125; <span class="hljs-keyword">while</span> (p != <span class="hljs-literal">null</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="putTreeVal-balanceInsertion"><a href="#putTreeVal-balanceInsertion" class="headerlink" title="putTreeVal() &amp; balanceInsertion()"></a>putTreeVal() &amp; balanceInsertion()</h4><p><strong><code>putTreeVal()</code><strong>：插入新树节点，通过比较决定放置在左节点还是右节点，</strong>同时维护了链表的结构</strong>。</p>
+<p><strong><code>balanceInsertion()</code><strong>：平衡树的结构，</strong>变色</strong>、<strong>左旋</strong> 或 <strong>右旋</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &lt;K,V&gt; TreeNode&lt;K,V&gt; <span class="hljs-title function_">balanceInsertion</span><span class="hljs-params">(TreeNode&lt;K,V&gt; root, TreeNode&lt;K,V&gt; x)</span> &#123;<br>    x.red = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">for</span> (TreeNode&lt;K,V&gt; xp, xpp, xppl, xppr;;) &#123;<br>        <span class="hljs-keyword">if</span> ((xp = x.parent) == <span class="hljs-literal">null</span>) &#123;<br>            x.red = <span class="hljs-literal">false</span>;<br>            <span class="hljs-keyword">return</span> x;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!xp.red || (xpp = xp.parent) == <span class="hljs-literal">null</span>)<br>            <span class="hljs-keyword">return</span> root;<br>        <span class="hljs-keyword">if</span> (xp == (xppl = xpp.left)) &#123;<br>            <span class="hljs-keyword">if</span> ((xppr = xpp.right) != <span class="hljs-literal">null</span> &amp;&amp; xppr.red) &#123;<br>                xppr.red = <span class="hljs-literal">false</span>;<br>                xp.red = <span class="hljs-literal">false</span>;<br>                xpp.red = <span class="hljs-literal">true</span>;<br>                x = xpp;<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">if</span> (x == xp.right) &#123;<br>                    root = rotateLeft(root, x = xp);<br>                    xpp = (xp = x.parent) == <span class="hljs-literal">null</span> ? <span class="hljs-literal">null</span> : xp.parent;<br>                &#125;<br>                <span class="hljs-keyword">if</span> (xp != <span class="hljs-literal">null</span>) &#123;<br>                    xp.red = <span class="hljs-literal">false</span>;<br>                    <span class="hljs-keyword">if</span> (xpp != <span class="hljs-literal">null</span>) &#123;<br>                        xpp.red = <span class="hljs-literal">true</span>;<br>                        root = rotateRight(root, xpp);<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">if</span> (xppl != <span class="hljs-literal">null</span> &amp;&amp; xppl.red) &#123;<br>                xppl.red = <span class="hljs-literal">false</span>;<br>                xp.red = <span class="hljs-literal">false</span>;<br>                xpp.red = <span class="hljs-literal">true</span>;<br>                x = xpp;<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">if</span> (x == xp.left) &#123;<br>                    root = rotateRight(root, x = xp);<br>                    xpp = (xp = x.parent) == <span class="hljs-literal">null</span> ? <span class="hljs-literal">null</span> : xp.parent;<br>                &#125;<br>                <span class="hljs-keyword">if</span> (xp != <span class="hljs-literal">null</span>) &#123;<br>                    xp.red = <span class="hljs-literal">false</span>;<br>                    <span class="hljs-keyword">if</span> (xpp != <span class="hljs-literal">null</span>) &#123;<br>                        xpp.red = <span class="hljs-literal">true</span>;<br>                        root = rotateLeft(root, xpp);<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="removeTreeNode-balanceDeletion"><a href="#removeTreeNode-balanceDeletion" class="headerlink" title="removeTreeNode() &amp; balanceDeletion()"></a>removeTreeNode() &amp; balanceDeletion()</h4><p><strong><code>removeTreeNode()</code><strong>：删除节点，</strong>同时维护了链表的结构</strong>。</p>
+<p><strong><code>balanceDeletion()</code><strong>：平衡树的结构，</strong>变色</strong>、<strong>左旋</strong> 或 <strong>右旋</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &lt;K,V&gt; TreeNode&lt;K,V&gt; <span class="hljs-title function_">balanceDeletion</span><span class="hljs-params">(TreeNode&lt;K,V&gt; root,</span><br><span class="hljs-params">                                           TreeNode&lt;K,V&gt; x)</span> &#123;<br>    <span class="hljs-keyword">for</span> (TreeNode&lt;K,V&gt; xp, xpl, xpr;;)  &#123;<br>        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span> || x == root)<br>            <span class="hljs-keyword">return</span> root;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((xp = x.parent) == <span class="hljs-literal">null</span>) &#123;<br>            x.red = <span class="hljs-literal">false</span>;<br>            <span class="hljs-keyword">return</span> x;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x.red) &#123;<br>            x.red = <span class="hljs-literal">false</span>;<br>            <span class="hljs-keyword">return</span> root;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((xpl = xp.left) == x) &#123;<br>            <span class="hljs-keyword">if</span> ((xpr = xp.right) != <span class="hljs-literal">null</span> &amp;&amp; xpr.red) &#123;<br>                xpr.red = <span class="hljs-literal">false</span>;<br>                xp.red = <span class="hljs-literal">true</span>;<br>                root = rotateLeft(root, xp);<br>                xpr = (xp = x.parent) == <span class="hljs-literal">null</span> ? <span class="hljs-literal">null</span> : xp.right;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (xpr == <span class="hljs-literal">null</span>)<br>                x = xp;<br>            <span class="hljs-keyword">else</span> &#123;<br>                TreeNode&lt;K,V&gt; sl = xpr.left, sr = xpr.right;<br>                <span class="hljs-keyword">if</span> ((sr == <span class="hljs-literal">null</span> || !sr.red) &amp;&amp;<br>                    (sl == <span class="hljs-literal">null</span> || !sl.red)) &#123;<br>                    xpr.red = <span class="hljs-literal">true</span>;<br>                    x = xp;<br>                &#125;<br>                <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">if</span> (sr == <span class="hljs-literal">null</span> || !sr.red) &#123;<br>                        <span class="hljs-keyword">if</span> (sl != <span class="hljs-literal">null</span>)<br>                            sl.red = <span class="hljs-literal">false</span>;<br>                        xpr.red = <span class="hljs-literal">true</span>;<br>                        root = rotateRight(root, xpr);<br>                        xpr = (xp = x.parent) == <span class="hljs-literal">null</span> ?<br>                            <span class="hljs-literal">null</span> : xp.right;<br>                    &#125;<br>                    <span class="hljs-keyword">if</span> (xpr != <span class="hljs-literal">null</span>) &#123;<br>                        xpr.red = (xp == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">false</span> : xp.red;<br>                        <span class="hljs-keyword">if</span> ((sr = xpr.right) != <span class="hljs-literal">null</span>)<br>                            sr.red = <span class="hljs-literal">false</span>;<br>                    &#125;<br>                    <span class="hljs-keyword">if</span> (xp != <span class="hljs-literal">null</span>) &#123;<br>                        xp.red = <span class="hljs-literal">false</span>;<br>                        root = rotateLeft(root, xp);<br>                    &#125;<br>                    x = root;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// symmetric</span><br>            <span class="hljs-keyword">if</span> (xpl != <span class="hljs-literal">null</span> &amp;&amp; xpl.red) &#123;<br>                xpl.red = <span class="hljs-literal">false</span>;<br>                xp.red = <span class="hljs-literal">true</span>;<br>                root = rotateRight(root, xp);<br>                xpl = (xp = x.parent) == <span class="hljs-literal">null</span> ? <span class="hljs-literal">null</span> : xp.left;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (xpl == <span class="hljs-literal">null</span>)<br>                x = xp;<br>            <span class="hljs-keyword">else</span> &#123;<br>                TreeNode&lt;K,V&gt; sl = xpl.left, sr = xpl.right;<br>                <span class="hljs-keyword">if</span> ((sl == <span class="hljs-literal">null</span> || !sl.red) &amp;&amp;<br>                    (sr == <span class="hljs-literal">null</span> || !sr.red)) &#123;<br>                    xpl.red = <span class="hljs-literal">true</span>;<br>                    x = xp;<br>                &#125;<br>                <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">if</span> (sl == <span class="hljs-literal">null</span> || !sl.red) &#123;<br>                        <span class="hljs-keyword">if</span> (sr != <span class="hljs-literal">null</span>)<br>                            sr.red = <span class="hljs-literal">false</span>;<br>                        xpl.red = <span class="hljs-literal">true</span>;<br>                        root = rotateLeft(root, xpl);<br>                        xpl = (xp = x.parent) == <span class="hljs-literal">null</span> ?<br>                            <span class="hljs-literal">null</span> : xp.left;<br>                    &#125;<br>                    <span class="hljs-keyword">if</span> (xpl != <span class="hljs-literal">null</span>) &#123;<br>                        xpl.red = (xp == <span class="hljs-literal">null</span>) ? <span class="hljs-literal">false</span> : xp.red;<br>                        <span class="hljs-keyword">if</span> ((sl = xpl.left) != <span class="hljs-literal">null</span>)<br>                            sl.red = <span class="hljs-literal">false</span>;<br>                    &#125;<br>                    <span class="hljs-keyword">if</span> (xp != <span class="hljs-literal">null</span>) &#123;<br>                        xp.red = <span class="hljs-literal">false</span>;<br>                        root = rotateRight(root, xp);<br>                    &#125;<br>                    x = root;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="treeify-untreeify"><a href="#treeify-untreeify" class="headerlink" title="treeify() &amp; untreeify()"></a>treeify() &amp; untreeify()</h4><p>**<code>treeify()</code>**：由链表结构转换为红黑树结构。</p>
+<p>**<code>untreeify()</code>**：由红黑树结构转换为链表结构。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="category-chain-item">集合框架</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JAVA/" class="print-no-link">#JAVA</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81/" class="print-no-link">#源码</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HashMap.TreeNode类源码分析</div>
+      <div>https://cuilan.github.io/2019/09/11/java/util/HashMap-TreeNode/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年9月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/09/14/java/util/LinkedHashMap-source-analysis/" title="LinkedHashMap源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LinkedHashMap源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/09/03/java/util/HashMap-source-analysis/" title="HashMap源码分析">
+                        <span class="hidden-mobile">HashMap源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-github-fill"></i> <a href="https://github.com/cuilan" target="_blank" rel="nofollow noopener"><span>cuilan</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
