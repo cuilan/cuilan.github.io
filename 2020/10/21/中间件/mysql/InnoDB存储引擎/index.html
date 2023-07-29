@@ -16,17 +16,16 @@
   <meta name="author" content="zhang.yan">
   <meta name="keywords" content="博客">
   
-    <meta name="description" content="InnoDB 数据页的结构操作系统的局部性原理。操作系统一般的页大小为 4kb。 在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： 16kb &#x3D; 16384字节。 查看 InnoDB 存储引擎的默认页大小： 1SHOW GLOBAL STATUS LIKE &amp;#x27;Innodb_page_size&amp;#x27;;  一个 Inn">
+    <meta name="description" content="InnoDb存储引擎，InnoDb行格式，数据页的结构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一、InnoDb存储引擎">
 <meta property="og:url" content="https://cuilan.github.io/2020/10/21/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="InnoDB 数据页的结构操作系统的局部性原理。操作系统一般的页大小为 4kb。 在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： 16kb &#x3D; 16384字节。 查看 InnoDB 存储引擎的默认页大小： 1SHOW GLOBAL STATUS LIKE &amp;#x27;Innodb_page_size&amp;#x27;;  一个 Inn">
+<meta property="og:description" content="InnoDb存储引擎，InnoDb行格式，数据页的结构">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-21T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-07-21T10:29:01.368Z">
+<meta property="article:modified_time" content="2023-07-29T10:00:22.638Z">
 <meta property="article:author" content="zhang.yan">
-<meta property="article:tag" content="中间件">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="InnoDb存储引擎，InnoDb行格式，数据页的结构"></span>
+            <span id="subtitle" data-typed-text="一、InnoDb存储引擎"></span>
           
         </div>
 
@@ -269,17 +268,17 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">InnoDb存储引擎，InnoDb行格式，数据页的结构</h1>
+            <h1 id="seo-header">一、InnoDb存储引擎</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="InnoDB-数据页的结构"><a href="#InnoDB-数据页的结构" class="headerlink" title="InnoDB 数据页的结构"></a>InnoDB 数据页的结构</h1><p>操作系统的局部性原理。操作系统一般的页大小为 <strong>4kb</strong>。</p>
-<p>在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： <strong>16kb &#x3D; 16384字节</strong>。</p>
+<p>在 MySQL InnoDb 存储引擎中，页是 InnoDB 管理存储空间的基本单位，一个页的大小默认为： <strong>16kb &#x3D; 16384 字节</strong>。</p>
 <p>查看 InnoDB 存储引擎的默认页大小：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SHOW GLOBAL STATUS LIKE &#x27;Innodb_page_size&#x27;;<br></code></pre></td></tr></table></figure>
 
-<p>一个 InnoDB 数据页的存储空间大致被划分为 <strong>7个部分</strong> ，有的部分占用的字节数是确定的，有的部分占用的字节数是不确定的。</p>
+<p>一个 InnoDB 数据页的存储空间大致被划分为 <strong>7 个部分</strong> ，有的部分占用的字节数是确定的，有的部分占用的字节数是不确定的。</p>
 <table>
 <thead>
 <tr>
@@ -341,15 +340,15 @@
 <thead>
 <tr>
 <th align="center">变长字段长度列表</th>
-<th align="center">NULL标志位</th>
+<th align="center">NULL 标志位</th>
 <th align="center">记录头信息</th>
-<th align="center">列1数据</th>
-<th align="center">列2数据</th>
+<th align="center">列 1 数据</th>
+<th align="center">列 2 数据</th>
 <th align="center">……</th>
 </tr>
 </thead>
 </table>
-<h3 id="记录的额外信息"><a href="#记录的额外信息" class="headerlink" title="记录的额外信息"></a>记录的额外信息</h3><p>这部分信息是服务器为了描述这条记录而不得不额外添加的一些信息，这些额外信息分为3类：</p>
+<h3 id="记录的额外信息"><a href="#记录的额外信息" class="headerlink" title="记录的额外信息"></a>记录的额外信息</h3><p>这部分信息是服务器为了描述这条记录而不得不额外添加的一些信息，这些额外信息分为 3 类：</p>
 <ul>
 <li>变长字段长度列表</li>
 <li>NULL 值列表</li>
@@ -366,7 +365,7 @@
 <li>二进制位的值为 <strong>1</strong> 时，代表该列的值 <strong>为 NULL</strong>。</li>
 <li>二进制位的值为 <strong>0</strong> 时，代表该列的值 <strong>不为 NULL</strong>。</li>
 </ul>
-<h3 id="记录头信息"><a href="#记录头信息" class="headerlink" title="记录头信息"></a>记录头信息</h3><p>除了变长字段长度列表、NULL 值列表之外，还有一个用于描述记录的记录头信息，它是由固定的 <strong>5个字节</strong> 组成。5个字节也就是 <strong>40个二进制位</strong>，不同的位代表不同的意思，如下表：</p>
+<h3 id="记录头信息"><a href="#记录头信息" class="headerlink" title="记录头信息"></a>记录头信息</h3><p>除了变长字段长度列表、NULL 值列表之外，还有一个用于描述记录的记录头信息，它是由固定的 <strong>5 个字节</strong> 组成。5 个字节也就是 <strong>40 个二进制位</strong>，不同的位代表不同的意思，如下表：</p>
 <table>
 <thead>
 <tr>
@@ -376,12 +375,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td align="center">预留位1</td>
+<td align="center">预留位 1</td>
 <td align="center">1</td>
 <td align="left">没有使用</td>
 </tr>
 <tr>
-<td align="center">预留位2</td>
+<td align="center">预留位 2</td>
 <td align="center">1</td>
 <td align="left">没有使用</td>
 </tr>
@@ -408,7 +407,7 @@
 <tr>
 <td align="center">record_type</td>
 <td align="center">3</td>
-<td align="left">表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+<td align="left">表示当前记录的类型，0 表示普通记录，1 表示 B+树非叶子节点记录，2 表示最小记录，3 表示最大记录</td>
 </tr>
 <tr>
 <td align="center">next_record</td>
@@ -429,19 +428,19 @@
 <tbody><tr>
 <td align="center">row_id</td>
 <td align="center">否</td>
-<td align="center">6字节</td>
-<td align="left">行id，唯一标识一条记录</td>
+<td align="center">6 字节</td>
+<td align="left">行 id，唯一标识一条记录</td>
 </tr>
 <tr>
 <td align="center">transaction_id</td>
 <td align="center">是</td>
-<td align="center">6字节</td>
-<td align="left">事务id</td>
+<td align="center">6 字节</td>
+<td align="left">事务 id</td>
 </tr>
 <tr>
 <td align="center">roll_pointer</td>
 <td align="center">是</td>
-<td align="center">7字节</td>
+<td align="center">7 字节</td>
 <td align="left">回滚指针</td>
 </tr>
 </tbody></table>
@@ -449,23 +448,23 @@
 <p>实际上这几个列的真正名称其实是：<strong>DB_ROW_ID</strong>、<strong>DB_TRX_ID</strong>、<strong>DB_ROLL_PTR</strong>。</p>
 <p>一个表没有手动定义主键，则会选取一个 <strong>Unique</strong> 键作为主键，如果连 <strong>Unique</strong> 键都没有定义，则会为该表默认添加一个名为 <strong>row_id</strong> 的隐藏列作为主键。<br>所以 <strong>row_id</strong> 是在没有自定义主键以及 <strong>Unique</strong> 键的情况下才会存在的。</p>
 </blockquote>
-<h3 id="行溢出数据"><a href="#行溢出数据" class="headerlink" title="行溢出数据"></a>行溢出数据</h3><p>VARCHAR(M) 类型的列最多可以占用 65535个字节。其中的 M 代表该类型最多存储的字符数量，如果我们使用 ASCII 字符集的话，一个字符就代表一个字节。</p>
+<h3 id="行溢出数据"><a href="#行溢出数据" class="headerlink" title="行溢出数据"></a>行溢出数据</h3><p>VARCHAR(M) 类型的列最多可以占用 65535 个字节。其中的 M 代表该类型最多存储的字符数量，如果我们使用 ASCII 字符集的话，一个字符就代表一个字节。</p>
 <p>测试：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE varchar_size_test (<br>   c VARCHAR(65535)<br>) CHARSET=ASCII ROW_FORMAT=Compact;<br><br>ERROR 1118 (42000): Row size too large.<br></code></pre></td></tr></table></figure>
 
-<p>报错信息：MySQL 对一条记录占用的最大存储空间是有限制的，除 BLOB 或者 TEXT 类型的列之外，其他所有的列（不包括隐藏列和记录头信息）占用的字符长度加起来不能超过65535个字节。<br>这个65535个字节除了列本身的数据之外，还包括一些其他的数据，比如说为了存储一个 VARCHAR(M) 类型的列，其实需要占用3部分存储空间：</p>
+<p>报错信息：MySQL 对一条记录占用的最大存储空间是有限制的，除 BLOB 或者 TEXT 类型的列之外，其他所有的列（不包括隐藏列和记录头信息）占用的字符长度加起来不能超过 65535 个字节。<br>这个 65535 个字节除了列本身的数据之外，还包括一些其他的数据，比如说为了存储一个 VARCHAR(M) 类型的列，其实需要占用 3 部分存储空间：</p>
 <ol>
 <li>真实数据</li>
 <li>变长字段真实数据的长度</li>
 <li>NULL 值标识</li>
 </ol>
-<p>如果该 VARCHAR 类型的列没有 NOT NULL 属性，那最多只能存储65532个字节的数据，因为变长字段的长度占用2个字节，NUL 值标识需要占用1个字节。</p>
+<p>如果该 VARCHAR 类型的列没有 NOT NULL 属性，那最多只能存储 65532 个字节的数据，因为变长字段的长度占用 2 个字节，NUL 值标识需要占用 1 个字节。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE varchar_size_test (<br>   c VARCHAR(65532)<br>) CHARSET=ASCII ROW_FORMAT=Compact;<br><br>Query OK, 0 rows affected (0.02 sec)<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE varchar_size_test (<br>   c VARCHAR(65533) NOT NULL<br>) CHARSET=ASCII ROW_FORMAT=Compact;<br><br>Query OK, 0 rows affected (0.02 sec)<br></code></pre></td></tr></table></figure>
 
-<h3 id="记录中的数据太多产生的溢出"><a href="#记录中的数据太多产生的溢出" class="headerlink" title="记录中的数据太多产生的溢出"></a>记录中的数据太多产生的溢出</h3><p>一个页的大小一般是 <strong>16KB</strong> ，页就是 <strong>16384字节</strong> ，而一个 VARCHAR(M) 类型的列就最多可以存储 <strong>65533个字节</strong> ，这样就可能出现一个页存放不了一条记录。</p>
-<p> 在 Compact 和 Reduntant 行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的一部分数据，把剩余的数据分散存储在几个其他的页中，<br> 然而记录的真实数据处用 <strong>20个字节</strong> 存储指向这些页的地址（当然这20个字节还包括这些分散在其他页面中的数据的占用的字节数），从而可以找到剩余数据所在的页。</p>
+<h3 id="记录中的数据太多产生的溢出"><a href="#记录中的数据太多产生的溢出" class="headerlink" title="记录中的数据太多产生的溢出"></a>记录中的数据太多产生的溢出</h3><p>一个页的大小一般是 <strong>16KB</strong> ，页就是 <strong>16384 字节</strong> ，而一个 VARCHAR(M) 类型的列就最多可以存储 <strong>65533 个字节</strong> ，这样就可能出现一个页存放不了一条记录。</p>
+<p>在 Compact 和 Reduntant 行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的一部分数据，把剩余的数据分散存储在几个其他的页中，<br>然而记录的真实数据处用 <strong>20 个字节</strong> 存储指向这些页的地址（当然这 20 个字节还包括这些分散在其他页面中的数据的占用的字节数），从而可以找到剩余数据所在的页。</p>
 <h2 id="Dynamic-和-Compressed-行格式"><a href="#Dynamic-和-Compressed-行格式" class="headerlink" title="Dynamic 和 Compressed 行格式"></a>Dynamic 和 Compressed 行格式</h2><p>这两种行格式类似于 Compact 行格式，仅在处理行溢出数据时有所不同，它们不会在记录的真实数据处存储一部分数据，而是把所有的数据都存储到其他页面中，只在记录的真实数据处存储其他页面的地址。<br>另外，Compressed 行格式会采用压缩算法对页面进行压缩。</p>
 <hr>
 <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>产生过程</p>
@@ -520,7 +519,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/MySQL/" class="category-chain-item">MySQL</a>
   
   
 
@@ -534,8 +533,6 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
       
         <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
       

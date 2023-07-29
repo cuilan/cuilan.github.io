@@ -16,12 +16,12 @@
   <meta name="author" content="zhang.yan">
   <meta name="keywords" content="博客">
   
-    <meta name="description" content="一、Nginx的反向代理  优势 隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
+    <meta name="description" content="一、Nginx 的反向代理  优势 隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nginx高级">
 <meta property="og:url" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="一、Nginx的反向代理  优势 隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
+<meta property="og:description" content="一、Nginx 的反向代理  优势 隔离内部服务器，提高安全性。 可以在代理服务器上增加缓存，减少后端服务器的压力，提高性能。 方便横向扩展。 AIO（异步非阻塞）动静分离，提高性能。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high1.png">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high2.png">
@@ -30,9 +30,9 @@
 <meta property="og:image" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high5.png">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high6.png">
 <meta property="article:published_time" content="2018-11-12T04:19:23.000Z">
-<meta property="article:modified_time" content="2023-07-21T10:29:01.368Z">
+<meta property="article:modified_time" content="2023-07-29T10:00:22.642Z">
 <meta property="article:author" content="zhang.yan">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cuilan.github.io/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high1.png">
   
@@ -280,7 +280,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、Nginx的反向代理"><a href="#一、Nginx的反向代理" class="headerlink" title="一、Nginx的反向代理"></a>一、Nginx的反向代理</h1><img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high1.png" srcset="/img/loading.gif" lazyload class="" title="Nginx反向代理">
+                <h1 id="一、Nginx-的反向代理"><a href="#一、Nginx-的反向代理" class="headerlink" title="一、Nginx 的反向代理"></a>一、Nginx 的反向代理</h1><img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high1.png" srcset="/img/loading.gif" lazyload class="" title="Nginx反向代理">
 
 <h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ol>
 <li>隔离内部服务器，提高安全性。</li>
@@ -290,64 +290,73 @@
 </ol>
 <span id="more"></span>
 
-<h2 id="反向代理配置"><a href="#反向代理配置" class="headerlink" title="反向代理配置"></a>反向代理配置</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs perl">location / &#123;<br>    proxy_pass http:<span class="hljs-regexp">//</span>www.baidu.com;<br>&#125;<br>    <br><span class="hljs-comment"># proxy_pass [可以是 IP、IP:port 或 域名]</span><br>location /cuilan &#123;<br>    proxy_set_header Host $host;<br>    proxy_set_header X-Real-IP $remote_addr;<br>    proxy_set_header X-Forwarded-For $http_x_forwarded_for;<br>    proxy_pass http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">0</span>.<span class="hljs-number">200</span>:<span class="hljs-number">8080</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="反向代理配置"><a href="#反向代理配置" class="headerlink" title="反向代理配置"></a>反向代理配置</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs perl">location / &#123;<br>    proxy_pass http:<span class="hljs-regexp">//</span>www.baidu.com;<br>&#125;<br><br><span class="hljs-comment"># proxy_pass [可以是 IP、IP:port 或 域名]</span><br>location /cuilan &#123;<br>    proxy_set_header Host $host;<br>    proxy_set_header X-Real-IP $remote_addr;<br>    proxy_set_header X-Forwarded-For $http_x_forwarded_for;<br>    proxy_pass http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">0</span>.<span class="hljs-number">200</span>:<span class="hljs-number">8080</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h1 id="二、Nginx的负载均衡"><a href="#二、Nginx的负载均衡" class="headerlink" title="二、Nginx的负载均衡"></a>二、Nginx的负载均衡</h1><p>目前主流的负载均衡器：<strong>Nginx、LVS、HAProxy</strong></p>
-<h2 id="upstream"><a href="#upstream" class="headerlink" title="upstream"></a>upstream</h2><p>upstream 是 nginx 服务器的一个重要模块，upstream 模块实现在轮询客户端IP之间实现后端的负载均衡，<strong>ip_hash算法</strong>。</p>
+<h1 id="二、Nginx-的负载均衡"><a href="#二、Nginx-的负载均衡" class="headerlink" title="二、Nginx 的负载均衡"></a>二、Nginx 的负载均衡</h1><p>目前主流的负载均衡器：<strong>Nginx、LVS、HAProxy</strong></p>
+<h2 id="upstream"><a href="#upstream" class="headerlink" title="upstream"></a>upstream</h2><p>upstream 是 nginx 服务器的一个重要模块，upstream 模块实现在轮询客户端 IP 之间实现后端的负载均衡，<strong>ip_hash 算法</strong>。</p>
 <h2 id="配置负载均衡"><a href="#配置负载均衡" class="headerlink" title="配置负载均衡"></a>配置负载均衡</h2><p>修改 <strong>nginx.conf</strong></p>
-<h3 id="1-轮询"><a href="#1-轮询" class="headerlink" title="1.轮询"></a>1.轮询</h3><p>无法保证session。</p>
+<h3 id="1-轮询"><a href="#1-轮询" class="headerlink" title="1.轮询"></a>1.轮询</h3><p>无法保证 session。</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">upstream</span> xxx &#123;<br>    <span class="hljs-attribute">server</span> ip:port;<br>    <span class="hljs-attribute">server</span> ip:port;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high2.png" srcset="/img/loading.gif" lazyload class="" title="轮询">
 
-<h3 id="2-ip-hash"><a href="#2-ip-hash" class="headerlink" title="2.ip_hash"></a>2.ip_hash</h3><p>访问固定的一台后端服务器，可以保证session。</p>
+<h3 id="2-ip-hash"><a href="#2-ip-hash" class="headerlink" title="2.ip_hash"></a>2.ip_hash</h3><p>访问固定的一台后端服务器，可以保证 session。</p>
 <img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high3.png" srcset="/img/loading.gif" lazyload class="" title="ip_hash">
 
-<h3 id="3-权重-weight"><a href="#3-权重-weight" class="headerlink" title="3.权重(weight)"></a>3.权重(weight)</h3><p>分配轮询的比重，weight值越高，访问的几率越大，权重值跟请求几率成正比。</p>
+<h3 id="3-权重-weight"><a href="#3-权重-weight" class="headerlink" title="3.权重(weight)"></a>3.权重(weight)</h3><p>分配轮询的比重，weight 值越高，访问的几率越大，权重值跟请求几率成正比。</p>
 <img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high4.png" srcset="/img/loading.gif" lazyload class="" title="权重">
 
 <h3 id="4-响应时间"><a href="#4-响应时间" class="headerlink" title="4.响应时间"></a>4.响应时间</h3><p>响应时间最短的优先分配。</p>
 <img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high5.png" srcset="/img/loading.gif" lazyload class="" title="响应时间">
 
-<h3 id="5-url-hash"><a href="#5-url-hash" class="headerlink" title="5.url_hash"></a>5.url_hash</h3><p>根据url计算来确定访问哪台主机，配置hash。</p>
+<h3 id="5-url-hash"><a href="#5-url-hash" class="headerlink" title="5.url_hash"></a>5.url_hash</h3><p>根据 url 计算来确定访问哪台主机，配置 hash。</p>
 <img src="/2018/11/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-high/nginx-high6.png" srcset="/img/loading.gif" lazyload class="" title="url_hash">
 
-<h1 id="三、进程模型及工作原理"><a href="#三、进程模型及工作原理" class="headerlink" title="三、进程模型及工作原理"></a>三、进程模型及工作原理</h1><p>Master&#x2F;Worker进程模型</p>
-<h2 id="Master进程"><a href="#Master进程" class="headerlink" title="Master进程"></a>Master进程</h2><ol>
+<h1 id="三、进程模型及工作原理"><a href="#三、进程模型及工作原理" class="headerlink" title="三、进程模型及工作原理"></a>三、进程模型及工作原理</h1><p>Master&#x2F;Worker 进程模型</p>
+<h2 id="Master-进程"><a href="#Master-进程" class="headerlink" title="Master 进程"></a>Master 进程</h2><ol>
 <li>接受外界的信号：kill -QUIT &#x2F; kill -HUP</li>
-<li>向各个Worker进程发送信号。</li>
-<li>监控Worker的运行状态。</li>
-<li>当Worker进程因异常退出，会自动重新启动新的Worker进程。</li>
+<li>向各个 Worker 进程发送信号。</li>
+<li>监控 Worker 的运行状态。</li>
+<li>当 Worker 进程因异常退出，会自动重新启动新的 Worker 进程。</li>
 </ol>
-<h2 id="Worker进程"><a href="#Worker进程" class="headerlink" title="Worker进程"></a>Worker进程</h2><ol>
+<h2 id="Worker-进程"><a href="#Worker-进程" class="headerlink" title="Worker 进程"></a>Worker 进程</h2><ol>
 <li>处理客户端请求。</li>
 <li>同步锁。</li>
 </ol>
-<h2 id="Nginx模块"><a href="#Nginx模块" class="headerlink" title="Nginx模块"></a>Nginx模块</h2><ol>
-<li>核心模块：<strong>http模块、event模块、mail模块</strong></li>
+<h2 id="Nginx-模块"><a href="#Nginx-模块" class="headerlink" title="Nginx 模块"></a>Nginx 模块</h2><ol>
+<li>核心模块：<strong>http 模块、event 模块、mail 模块</strong></li>
 <li>基础模块</li>
 <li>第三方模块</li>
 </ol>
-<h1 id="四、Nginx-keepalived实现高可用"><a href="#四、Nginx-keepalived实现高可用" class="headerlink" title="四、Nginx + keepalived实现高可用"></a>四、Nginx + keepalived实现高可用</h1><p>keepalived：基于VRRP（虚拟路由器冗余器）来实现对web服务的高可用方案。</p>
+<h1 id="四、Nginx-keepalived-实现高可用"><a href="#四、Nginx-keepalived-实现高可用" class="headerlink" title="四、Nginx + keepalived 实现高可用"></a>四、Nginx + keepalived 实现高可用</h1><p>keepalived：基于 VRRP（虚拟路由器冗余器）来实现对 web 服务的高可用方案。</p>
 <h2 id="安装-keepalived"><a href="#安装-keepalived" class="headerlink" title="安装 keepalived"></a>安装 keepalived</h2><ol>
-<li><p>下载 <strong>keepalived</strong>，并解压： <strong><code>tar -zxvf keepalived-1.3.4.tar.gz</code></strong></p>
-</li>
-<li><p>配置：</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#keepalived启动时会默认读取/etc/keepalived/keepalived.conf配置文件。</span><br>./configure --prefix=/usr/soft/keepalived/keepalived-1.3.4-bin/ --sysconf=/etc/<br></code></pre></td></tr></table></figure>
-<p>  依赖OpenSSL，安装OpenSSL：</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install openssl-devel<br></code></pre></td></tr></table></figure></li>
-<li><p><strong>make &amp;&amp; make install</strong></p>
-</li>
-<li><p>建立软连接(安装路径下)：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">ln</span> -s /usr/soft/keepalived/keepalived-1.3.5-bin/sbin/keepalived /sbin/<br></code></pre></td></tr></table></figure></li>
-<li><p>复制启动脚本，配置服务（源码包下）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">cp</span> /usr/soft/keepalived/keepalived-1.3.5/keepalived/etc/init.d/keepalived /etc/init.d/<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>将配置添加入服务（CentOS下）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo chkconfig --add keepalived<br>chkconfig keepalived on<br><span class="hljs-comment"># 启动服务</span><br>sudo service keepalived start<br></code></pre></td></tr></table></figure></li>
+<li>下载 <strong>keepalived</strong>，并解压： <strong><code>tar -zxvf keepalived-1.3.4.tar.gz</code></strong></li>
+<li>配置：</li>
 </ol>
-<h2 id="keepalived配置文件"><a href="#keepalived配置文件" class="headerlink" title="keepalived配置文件"></a><strong>keepalived配置文件</strong></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs bash">global_defs &#123; (全局配置，配置告警邮件服务器)<br>    router_id LVS_DEVEL (唯一识别<span class="hljs-built_in">id</span>)<br>&#125;<br>vrrp_instance VI_1 &#123;       (VRRP实例)<br>    state MASTER / BACKUP  (设置主从)<br>    interface eth0         (设置网卡，通过ifconfig命令查看)<br>    virtual_router_id 51   (虚拟路由器<span class="hljs-built_in">id</span>)<br>    priority 100           (设置权重，大的为Master)<br>    virtual_ipaddress &#123;    (设置对外的虚拟ip)<br>        192.168.0.100<br>    &#125;<br>&#125;<br>vrrp_script chk_nginx_service &#123; (vrrp_script指定检测脚本，对应名称自定义)<br>    script <span class="hljs-string">&quot;/usr/soft/nginx/nginx-1.10.3-bin/sbin/nginx_service.sh&quot;</span><br>    interval 3<br>    weight -10<br>&#125;<br>virtual_server 192.168.0.100 80 &#123;   (LVS配置，映射VRRP虚拟ip)<br>    real_server 192.168.0.200 80 &#123;  (真实服务器地址)<br>    weight 1                        (权重)<br>    TCP_GET &#123;                       (TCP连接)<br>        connect_timeout 3           (连接超时时间)<br>        nb_get_retry 3<br>        delay_before_retry 3<br>        connect_port 80             (重新连接监听的端口)<br>    &#125;<br>    &#125;<br>    track_script &#123;                  (配置检测nginx的脚本，指向vrrp_script)<br>        chk_nginx_service<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#keepalived启动时会默认读取/etc/keepalived/keepalived.conf配置文件。</span><br>./configure --prefix=/usr/soft/keepalived/keepalived-1.3.4-bin/ --sysconf=/etc/<br></code></pre></td></tr></table></figure>
 
-<h2 id="nginx-service-sh"><a href="#nginx-service-sh" class="headerlink" title="nginx_service.sh"></a>nginx_service.sh</h2><p>nginx安装目录下的检测nginx运行状态的脚本（nginx_service.sh）</p>
+<p>依赖 OpenSSL，安装 OpenSSL：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install openssl-devel<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>make &amp;&amp; make install</strong></li>
+<li>建立软连接(安装路径下)：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">ln</span> -s /usr/soft/keepalived/keepalived-1.3.5-bin/sbin/keepalived /sbin/<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>复制启动脚本，配置服务（源码包下）：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">cp</span> /usr/soft/keepalived/keepalived-1.3.5/keepalived/etc/init.d/keepalived /etc/init.d/<br></code></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>将配置添加入服务（CentOS 下）：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo chkconfig --add keepalived<br>chkconfig keepalived on<br><span class="hljs-comment"># 启动服务</span><br>sudo service keepalived start<br></code></pre></td></tr></table></figure>
+
+<h2 id="keepalived-配置文件"><a href="#keepalived-配置文件" class="headerlink" title="keepalived 配置文件"></a><strong>keepalived 配置文件</strong></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs bash">global_defs &#123; (全局配置，配置告警邮件服务器)<br>    router_id LVS_DEVEL (唯一识别<span class="hljs-built_in">id</span>)<br>&#125;<br>vrrp_instance VI_1 &#123;       (VRRP实例)<br>    state MASTER / BACKUP  (设置主从)<br>    interface eth0         (设置网卡，通过ifconfig命令查看)<br>    virtual_router_id 51   (虚拟路由器<span class="hljs-built_in">id</span>)<br>    priority 100           (设置权重，大的为Master)<br>    virtual_ipaddress &#123;    (设置对外的虚拟ip)<br>        192.168.0.100<br>    &#125;<br>&#125;<br>vrrp_script chk_nginx_service &#123; (vrrp_script指定检测脚本，对应名称自定义)<br>    script <span class="hljs-string">&quot;/usr/soft/nginx/nginx-1.10.3-bin/sbin/nginx_service.sh&quot;</span><br>    interval 3<br>    weight -10<br>&#125;<br>virtual_server 192.168.0.100 80 &#123;   (LVS配置，映射VRRP虚拟ip)<br>    real_server 192.168.0.200 80 &#123;  (真实服务器地址)<br>    weight 1                        (权重)<br>    TCP_GET &#123;                       (TCP连接)<br>        connect_timeout 3           (连接超时时间)<br>        nb_get_retry 3<br>        delay_before_retry 3<br>        connect_port 80             (重新连接监听的端口)<br>    &#125;<br>    &#125;<br>    track_script &#123;                  (配置检测nginx的脚本，指向vrrp_script)<br>        chk_nginx_service<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="nginx-service-sh"><a href="#nginx-service-sh" class="headerlink" title="nginx_service.sh"></a>nginx_service.sh</h2><p>nginx 安装目录下的检测 nginx 运行状态的脚本（nginx_service.sh）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>PATH=/bin:/sbin:/usr/bin:/usr/sbin<br>A=`ps -C nginx --no-header | <span class="hljs-built_in">wc</span> -l`<br><span class="hljs-keyword">if</span> [ <span class="hljs-variable">$A</span> -eq 0 ]<br><span class="hljs-keyword">then</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;nginx service is died&#x27;</span><br>service keepalived stop<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
 
                 
@@ -367,7 +376,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/Nginx/" class="category-chain-item">Nginx</a>
   
   
 
@@ -382,7 +391,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
+        <a href="/tags/Nginx/" class="print-no-link">#Nginx</a>
       
     </div>
   

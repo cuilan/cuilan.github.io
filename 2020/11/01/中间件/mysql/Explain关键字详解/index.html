@@ -16,17 +16,16 @@
   <meta name="author" content="zhang.yan">
   <meta name="keywords" content="博客">
   
-    <meta name="description" content="Explain关键字   列名 描述    id 在一个大的查询语句中每个SELECT关键字都对应一个唯一的id   select_type SELECT关键字对应的那个查询的类型   table 表名   partitions 匹配的分区信息   type 针对单表的访问方法   possible_keys 可能用到的索引   key 实际使用的索引   key_len 实际使用的索引长度">
+    <meta name="description" content="Explain关键字">
 <meta property="og:type" content="article">
 <meta property="og:title" content="六、Explain关键字详解">
 <meta property="og:url" content="https://cuilan.github.io/2020/11/01/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/Explain%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="Explain关键字   列名 描述    id 在一个大的查询语句中每个SELECT关键字都对应一个唯一的id   select_type SELECT关键字对应的那个查询的类型   table 表名   partitions 匹配的分区信息   type 针对单表的访问方法   possible_keys 可能用到的索引   key 实际使用的索引   key_len 实际使用的索引长度">
+<meta property="og:description" content="Explain关键字">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-07-21T10:29:01.368Z">
+<meta property="article:modified_time" content="2023-07-29T10:00:22.638Z">
 <meta property="article:author" content="zhang.yan">
-<meta property="article:tag" content="中间件">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Explain关键字"></span>
+            <span id="subtitle" data-typed-text="六、Explain关键字详解"></span>
           
         </div>
 
@@ -269,12 +268,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Explain关键字</h1>
+            <h1 id="seo-header">六、Explain关键字详解</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Explain关键字"><a href="#Explain关键字" class="headerlink" title="Explain关键字"></a>Explain关键字</h1><table>
+                <h1 id="Explain-关键字"><a href="#Explain-关键字" class="headerlink" title="Explain 关键字"></a>Explain 关键字</h1><table>
 <thead>
 <tr>
 <th align="left">列名</th>
@@ -283,11 +282,11 @@
 </thead>
 <tbody><tr>
 <td align="left">id</td>
-<td align="left">在一个大的查询语句中每个SELECT关键字都对应一个唯一的id</td>
+<td align="left">在一个大的查询语句中每个 SELECT 关键字都对应一个唯一的 id</td>
 </tr>
 <tr>
 <td align="left">select_type</td>
-<td align="left">SELECT关键字对应的那个查询的类型</td>
+<td align="left">SELECT 关键字对应的那个查询的类型</td>
 </tr>
 <tr>
 <td align="left">table</td>
@@ -331,7 +330,7 @@
 </tr>
 </tbody></table>
 <hr>
-<h1 id="各字段详解"><a href="#各字段详解" class="headerlink" title="各字段详解"></a>各字段详解</h1><h2 id="id"><a href="#id" class="headerlink" title="id"></a>id</h2><p>查询语句中每出现一个<code>SELECT</code> 关键字，MySQL 就会为它分配一个唯一的id值。这个id值就是 EXPLAIN 语句的第一个列。<br>对于连接查询来说，一个 SELECT 关键字后边的 FROM 子句中可以跟随多个表，所以在连接查询的执行计划中，每个表都会对应一条记录，但是这些记录的id值都是相同的。</p>
+<h1 id="各字段详解"><a href="#各字段详解" class="headerlink" title="各字段详解"></a>各字段详解</h1><h2 id="id"><a href="#id" class="headerlink" title="id"></a>id</h2><p>查询语句中每出现一个<code>SELECT</code> 关键字，MySQL 就会为它分配一个唯一的 id 值。这个 id 值就是 EXPLAIN 语句的第一个列。<br>对于连接查询来说，一个 SELECT 关键字后边的 FROM 子句中可以跟随多个表，所以在连接查询的执行计划中，每个表都会对应一条记录，但是这些记录的 id 值都是相同的。</p>
 <h2 id="select-type"><a href="#select-type" class="headerlink" title="select_type"></a>select_type</h2><p>每一个 SELECT 关键字代表的小查询都定义了一个称之为 <code>select_type</code> 的属性，意思是我们只要知道了某个小查询的 select_type 属性，就知道了这个小查询在整个大查询中扮演了一个什么角色。</p>
 <h3 id="1-SIMPLE"><a href="#1-SIMPLE" class="headerlink" title="1. SIMPLE"></a>1. SIMPLE</h3><p>查询语句中不包含 <code>UNION</code> 或者 子查询 的查询都算作是 <code>SIMPLE</code> 类型。<br>连接查询也是 <code>SIMPLE</code> 类型。</p>
 <h3 id="2-PRIMARY"><a href="#2-PRIMARY" class="headerlink" title="2. PRIMARY"></a>2. PRIMARY</h3><p>对于包含 <code>UNION</code>、<code>UNION ALL</code> 或者 <strong>子查询</strong> 的大查询来说，它是由几个小查询组成的，其中最左边的那个查询的 <code>select_type</code> 值就是 <code>PRIMARY</code>。</p>
@@ -341,7 +340,7 @@
 <h3 id="3-UNION"><a href="#3-UNION" class="headerlink" title="3. UNION"></a>3. UNION</h3><p>对于包含 <code>UNION</code> 或者 <code>UNION ALL</code> 的大查询来说，它是由几个小查询组成的，其中除了最左边的那个小查询以外，其余的小查询的 <code>select_type</code> 值就是 <code>UNION</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> EXPLAIN <span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">UNION</span> <span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2;<br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+</span><br><span class="hljs-operator">|</span> id <span class="hljs-operator">|</span> select_type  <span class="hljs-operator">|</span> <span class="hljs-keyword">table</span>      <span class="hljs-operator">|</span> partitions <span class="hljs-operator">|</span> type  <span class="hljs-operator">|</span> possible_keys <span class="hljs-operator">|</span> key     <span class="hljs-operator">|</span> key_len <span class="hljs-operator">|</span> <span class="hljs-keyword">ref</span>  <span class="hljs-operator">|</span> <span class="hljs-keyword">rows</span> <span class="hljs-operator">|</span> filtered <span class="hljs-operator">|</span> Extra           <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">PRIMARY</span>      <span class="hljs-operator">|</span> t1         <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> index <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>          <span class="hljs-operator">|</span> idx_bcd <span class="hljs-operator">|</span> <span class="hljs-number">15</span>      <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span>    <span class="hljs-number">8</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> index     <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">UNION</span>        <span class="hljs-operator">|</span> t2         <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> index <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>          <span class="hljs-operator">|</span> <span class="hljs-keyword">PRIMARY</span> <span class="hljs-operator">|</span> <span class="hljs-number">4</span>       <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span>    <span class="hljs-number">3</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> index     <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span><span class="hljs-keyword">NULL</span><span class="hljs-operator">|</span> <span class="hljs-keyword">UNION</span> <span class="hljs-keyword">RESULT</span> <span class="hljs-operator">|</span> <span class="hljs-operator">&lt;</span>union1,<span class="hljs-number">2</span><span class="hljs-operator">&gt;</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> <span class="hljs-keyword">ALL</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>          <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span>     <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> temporary <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+</span><br><span class="hljs-number">3</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span>, <span class="hljs-number">1</span> warning (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
 
-<h3 id="4-UNION-RESULT"><a href="#4-UNION-RESULT" class="headerlink" title="4. UNION RESULT"></a>4. UNION RESULT</h3><p>MySQL选择使用 <strong>临时表</strong> 来完成 <code>UNION</code> 查询的 <strong>去重</strong> 工作，针对该临时表的查询的 <code>select_type</code> 就是 <code>UNION RESULT</code>。见上边 <strong>UNION</strong> 例子。</p>
+<h3 id="4-UNION-RESULT"><a href="#4-UNION-RESULT" class="headerlink" title="4. UNION RESULT"></a>4. UNION RESULT</h3><p>MySQL 选择使用 <strong>临时表</strong> 来完成 <code>UNION</code> 查询的 <strong>去重</strong> 工作，针对该临时表的查询的 <code>select_type</code> 就是 <code>UNION RESULT</code>。见上边 <strong>UNION</strong> 例子。</p>
 <h3 id="5-SUBQUERY"><a href="#5-SUBQUERY" class="headerlink" title="5. SUBQUERY"></a>5. SUBQUERY</h3><p><strong>非相关子查询</strong>，<code>select_type</code> 为 <code>SUBQUERY</code> 的子查询由于会被 <strong>物化</strong>，所以只需要执行一遍。见上边 <strong>PRIMARY</strong> 中的例子。</p>
 <h3 id="6-DEPENDENT-SUBQUERY-独立子查询"><a href="#6-DEPENDENT-SUBQUERY-独立子查询" class="headerlink" title="6. DEPENDENT SUBQUERY 独立子查询"></a>6. DEPENDENT SUBQUERY 独立子查询</h3><p><strong>相关子查询</strong>，<code>select_type</code> 为 <code>DEPENDENT SUBQUERY</code> 的查询可能会被执行多次。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> a <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> a <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-operator">=</span> t2.a) <span class="hljs-keyword">OR</span> c <span class="hljs-operator">=</span><span class="hljs-number">1</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------------+-------+------------+--------+---------------+---------+---------+--------------+------+----------+--------------------------+</span><br><span class="hljs-operator">|</span> id <span class="hljs-operator">|</span> select_type        <span class="hljs-operator">|</span> <span class="hljs-keyword">table</span> <span class="hljs-operator">|</span> partitions <span class="hljs-operator">|</span> type   <span class="hljs-operator">|</span> possible_keys <span class="hljs-operator">|</span> key     <span class="hljs-operator">|</span> key_len <span class="hljs-operator">|</span> <span class="hljs-keyword">ref</span>          <span class="hljs-operator">|</span> <span class="hljs-keyword">rows</span> <span class="hljs-operator">|</span> filtered <span class="hljs-operator">|</span> Extra                    <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------------+-------+------------+--------+---------------+---------+---------+--------------+------+----------+--------------------------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">PRIMARY</span>            <span class="hljs-operator">|</span> t1    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> <span class="hljs-keyword">ALL</span>    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>          <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>         <span class="hljs-operator">|</span>    <span class="hljs-number">8</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> <span class="hljs-keyword">where</span>              <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">2</span> <span class="hljs-operator">|</span> DEPENDENT SUBQUERY <span class="hljs-operator">|</span> t2    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> eq_ref <span class="hljs-operator">|</span> <span class="hljs-keyword">PRIMARY</span>       <span class="hljs-operator">|</span> <span class="hljs-keyword">PRIMARY</span> <span class="hljs-operator">|</span> <span class="hljs-number">4</span>       <span class="hljs-operator">|</span> zy_test.t1.a <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> <span class="hljs-keyword">where</span>; <span class="hljs-keyword">Using</span> index <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+--------------------+-------+------------+--------+---------------+---------+---------+--------------+------+----------+--------------------------+</span><br><span class="hljs-number">2</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span>, <span class="hljs-number">2</span> warnings (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
@@ -367,7 +366,7 @@
 <h3 id="4-ref"><a href="#4-ref" class="headerlink" title="4. ref"></a>4. ref</h3><p>当通过普通的二级索引列与常量进行等值匹配时来查询某个表，那么对该表的访问方法就可能是 <code>ref</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> b <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+------+---------------+---------+---------+-------+------+----------+-------+</span><br><span class="hljs-operator">|</span> id <span class="hljs-operator">|</span> select_type <span class="hljs-operator">|</span> <span class="hljs-keyword">table</span> <span class="hljs-operator">|</span> partitions <span class="hljs-operator">|</span> type <span class="hljs-operator">|</span> possible_keys <span class="hljs-operator">|</span> key     <span class="hljs-operator">|</span> key_len <span class="hljs-operator">|</span> <span class="hljs-keyword">ref</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">rows</span> <span class="hljs-operator">|</span> filtered <span class="hljs-operator">|</span> Extra <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+------+---------------+---------+---------+-------+------+----------+-------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span> <span class="hljs-operator">|</span> SIMPLE      <span class="hljs-operator">|</span> t1    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> <span class="hljs-keyword">ref</span>  <span class="hljs-operator">|</span> idx_bcd       <span class="hljs-operator">|</span> idx_bcd <span class="hljs-operator">|</span> <span class="hljs-number">5</span>       <span class="hljs-operator">|</span> const <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>  <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+------+---------------+---------+---------+-------+------+----------+-------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span>, <span class="hljs-number">1</span> warning (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
 
-<h3 id="5-ref-or-null"><a href="#5-ref-or-null" class="headerlink" title="5. ref_or_null"></a>5. ref_or_null</h3><p>当对普通二级索引进行等值匹配查询，该索引列的值也可以是NULL值时，那么对该表的访问方法就可能是 <code>ref_or_null</code>。</p>
+<h3 id="5-ref-or-null"><a href="#5-ref-or-null" class="headerlink" title="5. ref_or_null"></a>5. ref_or_null</h3><p>当对普通二级索引进行等值匹配查询，该索引列的值也可以是 NULL 值时，那么对该表的访问方法就可能是 <code>ref_or_null</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> b <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">OR</span> b <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+-------------+---------------+---------+---------+-------+------+----------+-----------------------+</span><br><span class="hljs-operator">|</span> id <span class="hljs-operator">|</span> select_type <span class="hljs-operator">|</span> <span class="hljs-keyword">table</span> <span class="hljs-operator">|</span> partitions <span class="hljs-operator">|</span> type        <span class="hljs-operator">|</span> possible_keys <span class="hljs-operator">|</span> key     <span class="hljs-operator">|</span> key_len <span class="hljs-operator">|</span> <span class="hljs-keyword">ref</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">rows</span> <span class="hljs-operator">|</span> filtered <span class="hljs-operator">|</span> Extra                 <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+-------------+---------------+---------+---------+-------+------+----------+-----------------------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span> <span class="hljs-operator">|</span> SIMPLE      <span class="hljs-operator">|</span> t1    <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>       <span class="hljs-operator">|</span> ref_or_null <span class="hljs-operator">|</span> idx_bcd       <span class="hljs-operator">|</span> idx_bcd <span class="hljs-operator">|</span> <span class="hljs-number">5</span>       <span class="hljs-operator">|</span> const <span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span>   <span class="hljs-number">100.00</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">Using</span> index <span class="hljs-keyword">condition</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">----+-------------+-------+------------+-------------+---------------+---------+---------+-------+------+----------+-----------------------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span>, <span class="hljs-number">1</span> warning (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
 
 <h3 id="6-index-merge"><a href="#6-index-merge" class="headerlink" title="6. index_merge"></a>6. index_merge</h3><p>索引合并。</p>
@@ -392,8 +391,8 @@
 <h2 id="key-len"><a href="#key-len" class="headerlink" title="key_len"></a>key_len</h2><p><code>key_len</code> 列表示当优化器决定使用某个索引执行查询时，该索引记录的最大长度，它是由这三个部分构成的：</p>
 <ul>
 <li>对于使用固定长度类型的索引列来说，它实际占用的存储空间的最大长度就是该固定值，对于指定字符集的变长类型的索引列来说，比如某个索引列的类型是 <code>VARCHAR(100)</code>，使用的字符集是 <code>utf8</code>，那么该列实际占用的最大存储空间就是 <strong>100 × 3 &#x3D; 300</strong> 个字节。</li>
-<li>如果该索引列可以存储 <code>NULL</code> 值，则 <code>key_len</code> 比不可以存储 <code>NULL</code> 值时多1个字节。</li>
-<li>对于变长字段来说，都会有2个字节的空间来存储该变长列的实际长度。</li>
+<li>如果该索引列可以存储 <code>NULL</code> 值，则 <code>key_len</code> 比不可以存储 <code>NULL</code> 值时多 1 个字节。</li>
+<li>对于变长字段来说，都会有 2 个字节的空间来存储该变长列的实际长度。</li>
 </ul>
 <h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p>当使用索引列等值匹配的条件去执行查询时，也就是在访问方法是 <code>const</code>、<code>eq_ref</code>、<code>ref</code>、<code>ref_or_null</code>、<code>unique_subquery</code>、<code>index_subquery</code> 其中之一时，<code>ref</code> 列展示的就是与索引列作等值匹配的东西是什么，比如只是一个常数或者是某个列。</p>
 <h2 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h2><p>如果查询优化器决定使用全表扫描的方式对某个表执行查询时，执行计划的 <code>rows</code> 列就代表预计需要扫描的行数，如果使用索引来执行查询时，执行计划的 <code>rows</code> 列就代表预计扫描的索引记录行数。</p>
@@ -403,16 +402,16 @@
 <p>从执行计划的 <code>key</code> 列中可以看出来，该查询使用 <code>PRIMARY</code> 索引来执行查询，从 <code>rows</code> 列可以看出满足 <code>a &gt; 1</code> 的记录有 1 条。<br>执行计划的 <code>filtered</code> 列就代表查询优化器预测在这 1 条记录中，有多少条记录满足其余的搜索条件，也就是 <code>b = 1</code> 这个条件的百分比。此处 <code>filtered</code> 列的值是 <strong>87.50</strong>，<br>说明查询优化器预测在 1 条记录中有 <strong>87.50%</strong> 的记录满足 <code>b = 1</code> 这个条件。</p>
 <p>对于单表查询来说，这个 <code>filtered</code> 列的值没什么意义，我们更关注在连接查询中驱动表对应的执行计划记录的 <code>filtered</code> 值。</p>
 <h2 id="Extra"><a href="#Extra" class="headerlink" title="Extra"></a>Extra</h2><p>Extra 列是用来说明一些额外信息的，我们可以通过这些额外信息来更准确的理解 MySQL 到底将如何执行给定的查询语句。</p>
-<h2 id="No-tables-used"><a href="#No-tables-used" class="headerlink" title="No tables used"></a>No tables used</h2><p>当查询语句的没有FROM子句时将会提示该额外信息。</p>
+<h2 id="No-tables-used"><a href="#No-tables-used" class="headerlink" title="No tables used"></a>No tables used</h2><p>当查询语句的没有 FROM 子句时将会提示该额外信息。</p>
 <h2 id="Impossible-WHERE"><a href="#Impossible-WHERE" class="headerlink" title="Impossible WHERE"></a>Impossible WHERE</h2><p>查询语句的 <code>WHERE</code> 子句永远为 <code>FALSE</code> 时将会提示该额外信息。</p>
 <h2 id="No-matching-min-max-row"><a href="#No-matching-min-max-row" class="headerlink" title="No matching min&#x2F;max row"></a>No matching min&#x2F;max row</h2><p>当查询列表处有 <code>MIN</code> 或者 <code>MAX</code> 聚集函数，但是并没有符合 <code>WHERE</code> 子句中的搜索条件的记录时，将会提示该额外信息。</p>
 <h2 id="Using-index"><a href="#Using-index" class="headerlink" title="Using index"></a>Using index</h2><p>当查询列表以及搜索条件中只包含属于某个索引的列，也就是在可以使用索引覆盖的情况下，在 <code>Extra</code> 列将会提示该额外信息。</p>
-<h2 id="Using-index-condition"><a href="#Using-index-condition" class="headerlink" title="Using index condition"></a>Using index condition</h2><p>有些搜索条件中虽然出现了索引列，但却不能使用到索引(在MySQL 5.6版本后加入的新特性)。</p>
+<h2 id="Using-index-condition"><a href="#Using-index-condition" class="headerlink" title="Using index condition"></a>Using index condition</h2><p>有些搜索条件中虽然出现了索引列，但却不能使用到索引(在 MySQL 5.6 版本后加入的新特性)。</p>
 <h2 id="Using-where"><a href="#Using-where" class="headerlink" title="Using where"></a>Using where</h2><p>当使用全表扫描来执行对某个表的查询，并且该语句的 <code>WHERE</code> 子句中有针对该表的搜索条件时，在 Extra 列中会提示上述额外信息。</p>
-<h2 id="Using-join-buffer-Block-Nested-Loop"><a href="#Using-join-buffer-Block-Nested-Loop" class="headerlink" title="Using join buffer(Block Nested Loop)"></a>Using join buffer(Block Nested Loop)</h2><p>在连接查询执行过程中，当被驱动表不能有效的利用索引加快访问速度，MySQL一般会为其分配一块名叫 <code>join buffer</code> 的内存块来加快查询速度。</p>
+<h2 id="Using-join-buffer-Block-Nested-Loop"><a href="#Using-join-buffer-Block-Nested-Loop" class="headerlink" title="Using join buffer(Block Nested Loop)"></a>Using join buffer(Block Nested Loop)</h2><p>在连接查询执行过程中，当被驱动表不能有效的利用索引加快访问速度，MySQL 一般会为其分配一块名叫 <code>join buffer</code> 的内存块来加快查询速度。</p>
 <h2 id="Using-filesort"><a href="#Using-filesort" class="headerlink" title="Using filesort"></a>Using filesort</h2><p>很多情况下排序操作无法使用到索引，只能在内存中(记录较少的时候)或者磁盘中(记录较多的时候)进行排序，<br>这种在内存中或者磁盘上进行排序的方式统称为 **文件排序(英文名:filesort)**。<br>如果某个查询需要使用文件排序的方式执行查询，就会在执行计划的 Extra 列中显示 <code>Using filesort</code> 提示。</p>
 <h2 id="Using-temporary"><a href="#Using-temporary" class="headerlink" title="Using temporary"></a>Using temporary</h2><p>在许多查询的执行过程中，MySQL 可能会借助 <strong>临时表</strong> 来完成一些功能，比如 <strong>去重</strong>、<strong>排序</strong> 之类的，<br>比如在执行许多包含 <code>DISTINCT</code>、<code>GROUP BY</code>、<code>UNION</code> 等子句的查询过程中，如果不能有效利用索引来完成查询，<br>MySQL 很有可能寻求通过建立内部的临时表来执行查询。如果查询中使用到了内部的临时表，在执行计划的 Extra 列将会显示 <code>Using temporary</code> 提示。</p>
-<h2 id="Start-temporary、End-temporary"><a href="#Start-temporary、End-temporary" class="headerlink" title="Start temporary、End temporary"></a>Start temporary、End temporary</h2><p>查询优化器会优先尝试将 <code>IN</code> 子查询转换成 semi-join，而semi-join又有好多种执行策略，当执行策略为 <code>DuplicateWeedout</code> 时，<br>也就是通过建立临时表来实现为外层查询中的记录进行去重操作时，驱动表查询执行计划的 Extra 列将显示 <code>Start temporary</code> 提示，<br>被驱动表查询执行计划的 Extra 列将显示 <code>End temporary</code> 提示。</p>
+<h2 id="Start-temporary、End-temporary"><a href="#Start-temporary、End-temporary" class="headerlink" title="Start temporary、End temporary"></a>Start temporary、End temporary</h2><p>查询优化器会优先尝试将 <code>IN</code> 子查询转换成 semi-join，而 semi-join 又有好多种执行策略，当执行策略为 <code>DuplicateWeedout</code> 时，<br>也就是通过建立临时表来实现为外层查询中的记录进行去重操作时，驱动表查询执行计划的 Extra 列将显示 <code>Start temporary</code> 提示，<br>被驱动表查询执行计划的 Extra 列将显示 <code>End temporary</code> 提示。</p>
 <h2 id="FirstMatch-表名"><a href="#FirstMatch-表名" class="headerlink" title="FirstMatch(表名)"></a>FirstMatch(表名)</h2><p>在将 <code>IN</code> 子查询转为 semi-join 时，如果采用的是 <code>FirstMatch</code> 执行策略，则在被驱动表执行计划的 Extra 列就是显示 <code>FirstMatch(tbl_name)</code> 提示。</p>
 <hr>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="性能按-type-排序"><a href="#性能按-type-排序" class="headerlink" title="性能按 type 排序"></a>性能按 type 排序</h2><p><strong>system &gt; const &gt; eq_ref &gt; ref &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL</strong></p>
@@ -420,15 +419,15 @@
 <li><code>Using index</code> : 用了覆盖索引</li>
 <li><code>Using index condition</code> : 用了条件索引(索引下推)</li>
 <li><code>Using where</code> : 从索引查出来数据后继续用 <code>where</code> 条件过滤</li>
-<li><code>Using join buffer(Block Nested Loop)</code> : join 的时候利用了 join buffer(优化策略:去除外连接、增 大join buffer大小)</li>
+<li><code>Using join buffer(Block Nested Loop)</code> : join 的时候利用了 join buffer(优化策略:去除外连接、增 大 join buffer 大小)</li>
 <li><code>Using filesort</code> : 用了文件排序，排序的时候没有用到索引</li>
 <li><code>Using temporary</code> : 用了临时表(优化策略:增加条件以减少结果集、增加索引，思路就是要么减少待排序的数量，要么就提前排好序)</li>
 <li><code>Start temporary</code>, <code>End temporary</code> : 子查询的时候，可以优化成半连接，但是使用的是通过临时表来去重</li>
 <li><code>FirstMatch(tbl_name)</code> : 子查询的时候，可以优化成半连接，但是使用的是直接进行数据比较来去重</li>
 </ul>
 <h2 id="常见优化手段"><a href="#常见优化手段" class="headerlink" title="常见优化手段"></a>常见优化手段</h2><ol>
-<li>SQL语句中 <code>IN</code> 包含的值不应过多，不能超过200个，200个以内查询优化器计算成本时比较精准，超过200个是估算的成本，另外建议能用 <code>between</code> 就不要用 <code>in</code>，这样就可以使用 <code>range</code> 索引了。</li>
-<li><code>SELECT</code> 语句务必指明字段名称: <code>SELECT *</code> 增加很多不必要的消耗(cpu、io、内存、网络带宽);<br>增加了使用覆盖索引的可能性;当表结构发生改变时，前断也需要更新。所以要求直接在select后面接上字段名。</li>
+<li>SQL 语句中 <code>IN</code> 包含的值不应过多，不能超过 200 个，200 个以内查询优化器计算成本时比较精准，超过 200 个是估算的成本，另外建议能用 <code>between</code> 就不要用 <code>in</code>，这样就可以使用 <code>range</code> 索引了。</li>
+<li><code>SELECT</code> 语句务必指明字段名称: <code>SELECT *</code> 增加很多不必要的消耗(cpu、io、内存、网络带宽);<br>增加了使用覆盖索引的可能性;当表结构发生改变时，前断也需要更新。所以要求直接在 select 后面接上字段名。</li>
 <li>当只需要一条数据的时候，使用 <code>LIMIT 1</code>。</li>
 <li>排序时注意是否能用到索引。</li>
 <li>使用 <code>OR</code> 时如果没有用到索引，可以改为 <code>UNION ALL</code> 或者 <code>UNION</code>。</li>
@@ -461,7 +460,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/MySQL/" class="category-chain-item">MySQL</a>
   
   
 
@@ -475,8 +474,6 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
       
         <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
       

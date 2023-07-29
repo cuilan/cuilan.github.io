@@ -16,19 +16,19 @@
   <meta name="author" content="zhang.yan">
   <meta name="keywords" content="博客">
   
-    <meta name="description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。">
+    <meta name="description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持 10000 非活动的连接只需 2.5M 内存的性能消耗。同时也是一个邮件服务器。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nginx基础">
 <meta property="og:url" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。">
+<meta property="og:description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持 10000 非活动的连接只需 2.5M 内存的性能消耗。同时也是一个邮件服务器。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx2.png">
 <meta property="article:published_time" content="2018-11-11T07:31:24.000Z">
-<meta property="article:modified_time" content="2023-07-21T10:29:01.368Z">
+<meta property="article:modified_time" content="2023-07-29T10:00:22.638Z">
 <meta property="article:author" content="zhang.yan">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png">
   
@@ -276,43 +276,45 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、什么是-Nginx？"><a href="#一、什么是-Nginx？" class="headerlink" title="一、什么是 Nginx？"></a>一、什么是 Nginx？</h1><p>Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持10000非活动的连接只需2.5M内存的性能消耗。同时也是一个邮件服务器。</p>
+                <h1 id="一、什么是-Nginx？"><a href="#一、什么是-Nginx？" class="headerlink" title="一、什么是 Nginx？"></a>一、什么是 Nginx？</h1><p>Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持 10000 非活动的连接只需 2.5M 内存的性能消耗。同时也是一个邮件服务器。</p>
 <span id="more"></span>
 
-<p>Nginx的进程模型：**deamon (守护)**。</p>
-<p><strong>Nginx的优势：</strong></p>
+<p>Nginx 的进程模型：**deamon (守护)**。</p>
+<p><strong>Nginx 的优势：</strong></p>
 <ul>
-<li>1、Nginx采用多进程模型：<strong>Master</strong>、多个 <strong>Worker</strong> (独立进程，不需要锁，避免了锁带来的性能开销)</li>
+<li>1、Nginx 采用多进程模型：<strong>Master</strong>、多个 <strong>Worker</strong> (独立进程，不需要锁，避免了锁带来的性能开销)</li>
 <li>2、异步非阻塞 <strong>(NIO)</strong></li>
 </ul>
 <img src="/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png" srcset="/img/loading.gif" lazyload class="" title="Nginx进程模型">
 
-<h1 id="二、Nginx安装与命令"><a href="#二、Nginx安装与命令" class="headerlink" title="二、Nginx安装与命令"></a>二、Nginx安装与命令</h1><h2 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h2><p>Linux 下安装 Nginx：</p>
+<h1 id="二、Nginx-安装与命令"><a href="#二、Nginx-安装与命令" class="headerlink" title="二、Nginx 安装与命令"></a>二、Nginx 安装与命令</h1><h2 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h2><p>Linux 下安装 Nginx：</p>
 <ul>
-<li><p>1、下载 nginx 的 linux 版本。</p>
-</li>
-<li><p>2、解压：</p>
+<li>1、下载 nginx 的 linux 版本。</li>
+<li>2、解压：</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf nginx-1.*.tar.gz<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>3、设置 nginx 安装的配置信息，指定安装路径：</p>
+
+<ul>
+<li>3、设置 nginx 安装的配置信息，指定安装路径：</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --prefix=/usr/***<br></code></pre></td></tr></table></figure>
 
 <p>需要 gcc 依赖</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># ubuntu:</span><br>apt-get install gcc<br><br><span class="hljs-comment"># centos:</span><br>yum -y install gcc<br></code></pre></td></tr></table></figure>
-<p>需要PCRE库的依赖，下载并解压pcre。<br>(CentOS下直接：<code>yum -y install pcre-devel</code>)，或还依赖zlib-devel，安装同理。</p>
+
+<p>需要 PCRE 库的依赖，下载并解压 pcre。<br>(CentOS 下直接：<code>yum -y install pcre-devel</code>)，或还依赖 zlib-devel，安装同理。</p>
 <p>配置：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --prefix=/usr/soft/pcre/pcre-bin/<br></code></pre></td></tr></table></figure>
 
-<p>配置Nginx：</p>
+<p>配置 Nginx：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --prefix=/usr/soft/nginx/nginx-1.10.3-bin/ --with-pcre=/usr/soft/pcre/pcre-8.41/<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>4、编译：make</p>
-</li>
-<li><p>5、安装：make install</p>
-</li>
+
+<ul>
+<li>4、编译：make</li>
+<li>5、安装：make install</li>
 </ul>
-<p>Windows下直接下载解压即可。</p>
-<h2 id="命令："><a href="#命令：" class="headerlink" title="命令："></a>命令：</h2><p><strong>启动</strong>：（CentOS下需要关闭防火墙）</p>
+<p>Windows 下直接下载解压即可。</p>
+<h2 id="命令："><a href="#命令：" class="headerlink" title="命令："></a>命令：</h2><p><strong>启动</strong>：（CentOS 下需要关闭防火墙）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NGINX_HOME/sbin/nginx -c NGINX_HOME/conf/nginx.conf<br></code></pre></td></tr></table></figure>
 
 <p><strong>停止</strong>：</p>
@@ -325,25 +327,33 @@
 <li><strong><code>kill -9</code></strong></li>
 </ul>
 <ol start="2">
-<li>命令方式：  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">GINX_HOME/sbin/nginx -s stop<br></code></pre></td></tr></table></figure></li>
-<li>配置文件重新加载：  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NGINX_HOME/sbin/nginx -s reload<br></code></pre></td></tr></table></figure>
-  校验nginx.conf文件的语法格式：  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NGINX_HOME/sbin/nginx -t<br></code></pre></td></tr></table></figure></li>
+<li>命令方式：</li>
 </ol>
-<h1 id="三、Nginx配置文件"><a href="#三、Nginx配置文件" class="headerlink" title="三、Nginx配置文件"></a>三、Nginx配置文件</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-comment"># Main 段，定义全局属性</span><br><br><span class="hljs-comment"># 表示有一个工作子进程，默认为1，一般配置为CPU的核心数，或两倍于CPU核心数</span><br>worker_processes <span class="hljs-number">1</span>;<br><br><span class="hljs-comment"># 定义错误日志，日志级别：[ debug | info | notice | warn | error | crit | alert | emerg ]</span><br><span class="hljs-comment">#error_log  &lt;file_path&gt; &lt;level&gt;</span><br><span class="hljs-comment">#error_log  logs/error.log;</span><br><span class="hljs-comment">#error_log  logs/error.log  notice;</span><br><span class="hljs-comment">#error_log  logs/error.log  info;</span><br><br><span class="hljs-comment">#pid        logs/nginx.pid;</span><br><br><span class="hljs-comment"># 定义不同IO模型下的工作机制</span><br>events &#123;<br>    <span class="hljs-comment"># 定义事件类型，系统默认会根据系统选择最优的方式</span><br>	<span class="hljs-comment"># epoll | select | ......</span><br>    <span class="hljs-comment">#use epoll;</span><br>    <span class="hljs-comment"># 设置一个工作进程最大允许多少个连接</span><br>    worker_connections <span class="hljs-number">1024</span>;<br>&#125;<br><br>http &#123;<br>    <span class="hljs-comment"># 作为web服务器的相关属性</span><br>    server &#123; <span class="hljs-comment"># 定义一个虚拟主机</span><br>	    <span class="hljs-comment"># 定义一个url定位</span><br>        location [option] url &#123;<br>    &#125;<br>&#125;<br>    server &#123;&#125;<br>    ......<br>    upstream &lt;name&gt; &#123;<br>        <span class="hljs-comment"># 将多个server结合实现负载均衡</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">GINX_HOME/sbin/nginx -s stop<br></code></pre></td></tr></table></figure>
 
-<h1 id="四、Nginx虚拟主机配置"><a href="#四、Nginx虚拟主机配置" class="headerlink" title="四、Nginx虚拟主机配置"></a>四、Nginx虚拟主机配置</h1><ul>
-<li><p><strong>基于域名</strong><br>修改server_name映射域名。</p>
+<ol start="3">
+<li>配置文件重新加载：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NGINX_HOME/sbin/nginx -s reload<br></code></pre></td></tr></table></figure>
+
+<p>校验 nginx.conf 文件的语法格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NGINX_HOME/sbin/nginx -t<br></code></pre></td></tr></table></figure>
+
+<h1 id="三、Nginx-配置文件"><a href="#三、Nginx-配置文件" class="headerlink" title="三、Nginx 配置文件"></a>三、Nginx 配置文件</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-comment"># Main 段，定义全局属性</span><br><br><span class="hljs-comment"># 表示有一个工作子进程，默认为1，一般配置为CPU的核心数，或两倍于CPU核心数</span><br>worker_processes <span class="hljs-number">1</span>;<br><br><span class="hljs-comment"># 定义错误日志，日志级别：[ debug | info | notice | warn | error | crit | alert | emerg ]</span><br><span class="hljs-comment">#error_log  &lt;file_path&gt; &lt;level&gt;</span><br><span class="hljs-comment">#error_log  logs/error.log;</span><br><span class="hljs-comment">#error_log  logs/error.log  notice;</span><br><span class="hljs-comment">#error_log  logs/error.log  info;</span><br><br><span class="hljs-comment">#pid        logs/nginx.pid;</span><br><br><span class="hljs-comment"># 定义不同IO模型下的工作机制</span><br>events &#123;<br>    <span class="hljs-comment"># 定义事件类型，系统默认会根据系统选择最优的方式</span><br>	<span class="hljs-comment"># epoll | select | ......</span><br>    <span class="hljs-comment">#use epoll;</span><br>    <span class="hljs-comment"># 设置一个工作进程最大允许多少个连接</span><br>    worker_connections <span class="hljs-number">1024</span>;<br>&#125;<br><br>http &#123;<br>    <span class="hljs-comment"># 作为web服务器的相关属性</span><br>    server &#123; <span class="hljs-comment"># 定义一个虚拟主机</span><br>	    <span class="hljs-comment"># 定义一个url定位</span><br>        location [option] url &#123;<br>    &#125;<br>&#125;<br>    server &#123;&#125;<br>    ......<br>    upstream &lt;name&gt; &#123;<br>        <span class="hljs-comment"># 将多个server结合实现负载均衡</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="四、Nginx-虚拟主机配置"><a href="#四、Nginx-虚拟主机配置" class="headerlink" title="四、Nginx 虚拟主机配置"></a>四、Nginx 虚拟主机配置</h1><ul>
+<li><p><strong>基于域名</strong><br>修改 server_name 映射域名。</p>
 </li>
-<li><p><strong>基于端口</strong><br>修改listen映射的端口号。</p>
+<li><p><strong>基于端口</strong><br>修改 listen 映射的端口号。</p>
 </li>
-<li><p><strong>基于IP</strong><br>修改server_name映射为IP地址。</p>
+<li><p><strong>基于 IP</strong><br>修改 server_name 映射为 IP 地址。</p>
 </li>
 </ul>
-<h1 id="五、Nginx日志管理"><a href="#五、Nginx日志管理" class="headerlink" title="五、Nginx日志管理"></a>五、Nginx日志管理</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-comment"># Log声明 路径及文件名 日志标识</span><br><span class="hljs-comment">#log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="hljs-comment">#                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="hljs-comment">#                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br><br><span class="hljs-comment">#access_log  logs/host.access.log  main;</span><br></code></pre></td></tr></table></figure>
+<h1 id="五、Nginx-日志管理"><a href="#五、Nginx-日志管理" class="headerlink" title="五、Nginx 日志管理"></a>五、Nginx 日志管理</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-comment"># Log声明 路径及文件名 日志标识</span><br><span class="hljs-comment">#log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="hljs-comment">#                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="hljs-comment">#                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br><br><span class="hljs-comment">#access_log  logs/host.access.log  main;</span><br></code></pre></td></tr></table></figure>
 
-<h1 id="六、location配置"><a href="#六、location配置" class="headerlink" title="六、location配置"></a>六、location配置</h1><p>location 在 server 配置中可以存在多个，主要实现定位功能，根据uri进行不同的定位。</p>
+<h1 id="六、location-配置"><a href="#六、location-配置" class="headerlink" title="六、location 配置"></a>六、location 配置</h1><p>location 在 server 配置中可以存在多个，主要实现定位功能，根据 uri 进行不同的定位。</p>
 <p><strong>语法：location [&#x3D;|<del>|</del>*|^~] &#x2F;uri&#x2F; {……}</strong></p>
-<p>&#x3D;：表示精确匹配<br>^<del>：表示uri以某个常规字符串开头，相当于匹配uri路径<br>~：区分大小写的正则匹配<br>!</del>：区分大小写不匹配<br>!~*：不区分大小写，不匹配<br>~*：不区分大小写的正则匹配<br>&#x2F;：通用匹配</p>
+<p>&#x3D;：表示精确匹配<br>^<del>：表示 uri 以某个常规字符串开头，相当于匹配 uri 路径<br>~：区分大小写的正则匹配<br>!</del>：区分大小写不匹配<br>!~_：不区分大小写，不匹配<br>~_：不区分大小写的正则匹配<br>&#x2F;：通用匹配</p>
 <p><strong>匹配种类：</strong></p>
 <ul>
 <li>精准匹配</li>
@@ -353,11 +363,11 @@
 <p><strong>匹配优先级：</strong></p>
 <ul>
 <li>1、首先匹配精准匹配。</li>
-<li>2、如果两个location都是一般匹配规则，那么会按照最长路径匹配。</li>
-<li>3、一般匹配和正则匹配的过程是：<br><strong>首先会选择一般匹配过程中的大前缀匹配，但是匹配过程不会停止，最大前缀匹配只是一个临时结果，nginx还会继续检查正则location。按照正则location在配置文件的物理顺序做匹配，如果匹配到一条正则location，就不会考虑后面的规则。</strong></li>
+<li>2、如果两个 location 都是一般匹配规则，那么会按照最长路径匹配。</li>
+<li>3、一般匹配和正则匹配的过程是：<br><strong>首先会选择一般匹配过程中的大前缀匹配，但是匹配过程不会停止，最大前缀匹配只是一个临时结果，nginx 还会继续检查正则 location。按照正则 location 在配置文件的物理顺序做匹配，如果匹配到一条正则 location，就不会考虑后面的规则。</strong></li>
 </ul>
-<h1 id="七、Rewrite重写"><a href="#七、Rewrite重写" class="headerlink" title="七、Rewrite重写"></a>七、Rewrite重写</h1><p>支持url重写，常用指令如下：</p>
-<h2 id="if-指令"><a href="#if-指令" class="headerlink" title="if 指令"></a>if 指令</h2><p>语法：if 空格 (condition条件) {}<br>条件：</p>
+<h1 id="七、Rewrite-重写"><a href="#七、Rewrite-重写" class="headerlink" title="七、Rewrite 重写"></a>七、Rewrite 重写</h1><p>支持 url 重写，常用指令如下：</p>
+<h2 id="if-指令"><a href="#if-指令" class="headerlink" title="if 指令"></a>if 指令</h2><p>语法：if 空格 (condition 条件) {}<br>条件：</p>
 <ol>
 <li>“&#x3D;” 来判断相等，用于字符的比较。</li>
 <li>“<del>” 正则匹配（表示区分大小写），“</del>*” 不区分大小写</li>
@@ -367,26 +377,26 @@
 <h2 id="rewrite-指令"><a href="#rewrite-指令" class="headerlink" title="rewrite 指令"></a>rewrite 指令</h2><p>语法：rewrite regex replacement; flag;<br>flag：last&#x2F;break&#x2F;redirect&#x2F;permant<br>作用：用于请求重定向。</p>
 <h2 id="set-指令"><a href="#set-指令" class="headerlink" title="set 指令"></a>set 指令</h2><p>语法：set variale value;<br>作用：定义一个变量并赋值。</p>
 <blockquote>
-<p><strong>例如</strong>：对远程指定IP进行限制访问：</p>
+<p><strong>例如</strong>：对远程指定 IP 进行限制访问：</p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">if</span> ($remote_addr = <span class="hljs-number">192.168</span>.<span class="hljs-number">0</span>.<span class="hljs-number">120</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">403</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 </blockquote>
 <img src="/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx2.png" srcset="/img/loading.gif" lazyload class="" title="Rewrite重写">
 
-<h1 id="八、gzip压缩"><a href="#八、gzip压缩" class="headerlink" title="八、gzip压缩"></a>八、gzip压缩</h1><p>gizp主要对内容、静态文件做压缩，用来提升网站访问速度，节省带宽。</p>
+<h1 id="八、gzip-压缩"><a href="#八、gzip-压缩" class="headerlink" title="八、gzip 压缩"></a>八、gzip 压缩</h1><p>gizp 主要对内容、静态文件做压缩，用来提升网站访问速度，节省带宽。</p>
 <p><code>gzip</code> 可以在 <code>http</code> 作用范围内配置，也可以对单独一台虚拟主机进行配置。</p>
-<h2 id="gzip相关配置："><a href="#gzip相关配置：" class="headerlink" title="gzip相关配置："></a>gzip相关配置：</h2><p><code>gizp on|off</code> 是否开启。</p>
-<p><code>gzip_buffer 32 4k</code> 设置系统获取多少个单位的缓存用于存储gzip的压缩结果数据流，即以32乘4k的大小去申请缓冲区，128k。</p>
+<h2 id="gzip-相关配置："><a href="#gzip-相关配置：" class="headerlink" title="gzip 相关配置："></a>gzip 相关配置：</h2><p><code>gizp on|off</code> 是否开启。</p>
+<p><code>gzip_buffer 32 4k</code> 设置系统获取多少个单位的缓存用于存储 gzip 的压缩结果数据流，即以 32 乘 4k 的大小去申请缓冲区，128k。</p>
 <p><code>gzip_comp_level [1-9]</code> 压缩级别，值越高，压缩的内容越小。</p>
-<p><code>gzip_min_length 200</code> 开始压缩的最小长度，大于200B的文件进行压缩。</p>
+<p><code>gzip_min_length 200</code> 开始压缩的最小长度，大于 200B 的文件进行压缩。</p>
 <p><code>gzip_types</code> 对哪些文件做压缩处理。</p>
-<p><code>gzip_vary on|off</code> 是否传输gzip压缩标识。</p>
-<p><code>gzip_disable</code> 正则匹配UA,表示对指定的浏览器不做gzip压缩。</p>
+<p><code>gzip_vary on|off</code> 是否传输 gzip 压缩标识。</p>
+<p><code>gzip_disable</code> 正则匹配 UA,表示对指定的浏览器不做 gzip 压缩。</p>
 <font color="red">
 注意：
 
 <ol>
-<li>图片、mp3、视频之类大文件，压缩会损耗CPU资源。</li>
-<li>太小的文件没必要压缩，200B大小的文件压缩后会添加一些压缩信息，会变成210B大小。</li>
+<li>图片、mp3、视频之类大文件，压缩会损耗 CPU 资源。</li>
+<li>太小的文件没必要压缩，200B 大小的文件压缩后会添加一些压缩信息，会变成 210B 大小。</li>
 </ol>
 </font>
 
@@ -407,7 +417,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/Nginx/" class="category-chain-item">Nginx</a>
   
   
 
@@ -422,7 +432,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
+        <a href="/tags/Nginx/" class="print-no-link">#Nginx</a>
       
     </div>
   

@@ -16,17 +16,16 @@
   <meta name="author" content="zhang.yan">
   <meta name="keywords" content="博客">
   
-    <meta name="description" content="JOIN 连接内连接以下三种写法都是内连接： 123SELECT * FROM t1 JOIN t2 ON t1.a &#x3D; t2.b;SELECT * FROM t1 INNER JOIN t2 ON t1.a &#x3D; t2.b;SELECT * FROM t1 CROSS JOIN t2 ON t1.a &#x3D; t2.b;  左连接、右连接左连接1SELECT * FROM t1 LEFT JOIN t2">
+    <meta name="description" content="JOIN优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="四、关于JOIN的优化">
 <meta property="og:url" content="https://cuilan.github.io/2020/10/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/mysql/%E5%85%B3%E4%BA%8EJOIN%E7%9A%84%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="翠兰 - Greenland">
-<meta property="og:description" content="JOIN 连接内连接以下三种写法都是内连接： 123SELECT * FROM t1 JOIN t2 ON t1.a &#x3D; t2.b;SELECT * FROM t1 INNER JOIN t2 ON t1.a &#x3D; t2.b;SELECT * FROM t1 CROSS JOIN t2 ON t1.a &#x3D; t2.b;  左连接、右连接左连接1SELECT * FROM t1 LEFT JOIN t2">
+<meta property="og:description" content="JOIN优化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-07-21T10:29:01.368Z">
+<meta property="article:modified_time" content="2023-07-29T10:00:22.638Z">
 <meta property="article:author" content="zhang.yan">
-<meta property="article:tag" content="中间件">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="JOIN优化"></span>
+            <span id="subtitle" data-typed-text="四、关于JOIN的优化"></span>
           
         </div>
 
@@ -269,7 +268,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">JOIN优化</h1>
+            <h1 id="seo-header">四、关于JOIN的优化</h1>
             
             
               <div class="markdown-body">
@@ -294,19 +293,21 @@
 <h2 id="嵌套循环连接（Nested-Loop-Join）"><a href="#嵌套循环连接（Nested-Loop-Join）" class="headerlink" title="嵌套循环连接（Nested-Loop Join）"></a>嵌套循环连接（Nested-Loop Join）</h2><p>上面的过程就像是一个嵌套的循环，所以这种驱动表只访问一次，但被驱动表却可能被多次访问，访问次数取决于，对驱动表执行单表查询后的结果集中记录条数的连接执行方式称之为<br><strong>嵌套循环连接(Nested-Loop Join)</strong> ，这是最简单，也是最笨拙的一种连接查询算法。</p>
 <p>比如对于下面这个 SQL：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> t2.b <span class="hljs-keyword">WHERE</span> t1.b <span class="hljs-keyword">IN</span> (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br></code></pre></td></tr></table></figure>
+
 <p>会先执行：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">WHERE</span> t1.b <span class="hljs-keyword">IN</span> (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+---+---+---+</span><br><span class="hljs-operator">|</span> a <span class="hljs-operator">|</span> b <span class="hljs-operator">|</span> c <span class="hljs-operator">|</span> d <span class="hljs-operator">|</span> e <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+---+---+---+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> a <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> b <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">5</span> <span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-number">3</span> <span class="hljs-operator">|</span> <span class="hljs-number">5</span> <span class="hljs-operator">|</span> e <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+---+---+---+</span><br><span class="hljs-number">3</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
+
 <p>得到三条记录后，再依次执行：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t2.a <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t2.a <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t2 <span class="hljs-keyword">WHERE</span> t2.a <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br></code></pre></td></tr></table></figure>
 
 <p>所以上面的步骤实际上都是针对单表的查询，所以都可以使用索引来帮助查询。</p>
 <h2 id="基于块的嵌套循环连接（Block-Nested-Loop-Join）"><a href="#基于块的嵌套循环连接（Block-Nested-Loop-Join）" class="headerlink" title="基于块的嵌套循环连接（Block Nested-Loop Join）"></a>基于块的嵌套循环连接（Block Nested-Loop Join）</h2><h3 id="嵌套循环连接的缺陷"><a href="#嵌套循环连接的缺陷" class="headerlink" title="嵌套循环连接的缺陷"></a>嵌套循环连接的缺陷</h3><p>扫描一个表的过程其实是先把这个表 <strong>从磁盘上加载到内存中</strong>，然后 <strong>在内存中比较匹配的条件是否满足</strong>。</p>
 <p>实际中表的数据可能很多，内存中无法存放表中所有的记录。所以在扫描表前边的记录时，后边的记录可能还在磁盘上，等扫描到后边记录的时候可能内存不足，就会将前边的记录从内存中释放。</p>
-<p>但采用 <strong>嵌套循环连接算法</strong> 的两表连接过程中，<strong>被驱动表</strong> 会被访问多次，如果 <strong>被驱动表</strong> 中的数据特别多且不能使用索引进行访问，那就相当于从磁盘上多次读这个表，<strong>I&#x2F;O代价非常大</strong>。</p>
+<p>但采用 <strong>嵌套循环连接算法</strong> 的两表连接过程中，<strong>被驱动表</strong> 会被访问多次，如果 <strong>被驱动表</strong> 中的数据特别多且不能使用索引进行访问，那就相当于从磁盘上多次读这个表，<strong>I&#x2F;O 代价非常大</strong>。</p>
 <p><strong>解决办法：尽量减少访问被驱动表的次数。</strong></p>
 <h3 id="join-buffer"><a href="#join-buffer" class="headerlink" title="join buffer"></a>join buffer</h3><p>MySQL 中有一个叫做 <code>join buffer</code> 的概念，join buffer 就是：执行连接查询前申请的一块固定大小的内存，先把若干条驱动表结果集中的记录装在这个 join buffer 中，然后开始扫描被驱动表，<br>每一条被驱动表的记录一次性和 join buffer 中的多条驱动表记录做匹配。因为匹配的过程都是在内存中完成的，所以这样可以显著减少被驱动表的 I&#x2F;O 代价。</p>
 <p>这种加入了 join buffer 的 嵌套循环连接算法 称之为 <strong>基于块的嵌套连接(Block Nested-Loop Join)算法</strong>。</p>
-<h3 id="join-buffer-size-参数"><a href="#join-buffer-size-参数" class="headerlink" title="join_buffer_size 参数"></a>join_buffer_size 参数</h3><p><code>join buffer</code> 的大小是可以通过启动参数或者系统变量 <code>join_buffer_size</code>进行配置，默认大小为 **262144字节(也就是256KB)**，最小可以设置为 <strong>128字节</strong>。<br>当然，对于优化被驱动表的查询来说，最好是为被驱动表加上效率高的索引，如果实在不能使用索引，并且自己的机器的内存也比较大可以尝试调大 join_buffer_size 的值来对连接查询进行优化。</p>
+<h3 id="join-buffer-size-参数"><a href="#join-buffer-size-参数" class="headerlink" title="join_buffer_size 参数"></a>join_buffer_size 参数</h3><p><code>join buffer</code> 的大小是可以通过启动参数或者系统变量 <code>join_buffer_size</code>进行配置，默认大小为 **262144 字节(也就是 256KB)**，最小可以设置为 <strong>128 字节</strong>。<br>当然，对于优化被驱动表的查询来说，最好是为被驱动表加上效率高的索引，如果实在不能使用索引，并且自己的机器的内存也比较大可以尝试调大 join_buffer_size 的值来对连接查询进行优化。</p>
 <hr>
 <h1 id="JOIN-优化"><a href="#JOIN-优化" class="headerlink" title="JOIN 优化"></a>JOIN 优化</h1><h2 id="1-小表连接大表"><a href="#1-小表连接大表" class="headerlink" title="1. 小表连接大表"></a>1. 小表连接大表</h2><p>可显著减少嵌套循环连接的次数。</p>
 <h2 id="2-为被驱动表加索引"><a href="#2-为被驱动表加索引" class="headerlink" title="2. 为被驱动表加索引"></a>2. 为被驱动表加索引</h2><p>牺牲部分空间，换取时间。</p>
@@ -321,6 +322,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql">t1 大表：有多条数据<br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br><span class="hljs-operator">|</span> a <span class="hljs-operator">|</span> b <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span> <span class="hljs-number">2</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br><br>t2 小表：部分数据<br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br><span class="hljs-operator">|</span> a <span class="hljs-operator">|</span> b <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">1</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---+---+</span><br></code></pre></td></tr></table></figure>
 
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> t2.a <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-keyword">IN</span> (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br><span class="hljs-operator">|</span> t1.a <span class="hljs-operator">|</span> t1.b <span class="hljs-operator">|</span> t2.a <span class="hljs-operator">|</span> t2.b <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">2</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">2</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br></code></pre></td></tr></table></figure>
+
 <p>此 SQL 的驱动表和被驱动表示固定的，无法转换。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t1 <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> t2 <span class="hljs-keyword">ON</span> t1.a <span class="hljs-operator">=</span> t2.a <span class="hljs-keyword">WHERE</span> t1.a <span class="hljs-keyword">IN</span> (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">AND</span> t2.b <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>;<br><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br><span class="hljs-operator">|</span> t1.a <span class="hljs-operator">|</span> t1.b <span class="hljs-operator">|</span> t2.a <span class="hljs-operator">|</span> t2.b <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br><span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span>  <span class="hljs-number">1</span>   <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+------+------+------+</span><br></code></pre></td></tr></table></figure>
 
@@ -343,7 +345,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/MySQL/" class="category-chain-item">MySQL</a>
   
   
 
@@ -357,8 +359,6 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
       
         <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
       
