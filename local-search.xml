@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Earthly好用的Dockerfile构建工具</title>
+    <link href="/2023/07/28/2023/earthly-build-md/"/>
+    <url>/2023/07/28/2023/earthly-build-md/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Earthly"><a href="#Earthly" class="headerlink" title="Earthly"></a>Earthly</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install earthly &amp;&amp; earthly bootstrap<br></code></pre></td></tr></table></figure><h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo /bin/sh -c <span class="hljs-string">&#x27;wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly &amp;&amp; chmod +x /usr/local/bin/earthly &amp;&amp; /usr/local/bin/earthly bootstrap --with-autocomplete&#x27;</span><br></code></pre></td></tr></table></figure><h3 id="Windows-WSL2"><a href="#Windows-WSL2" class="headerlink" title="Windows(WSL2)"></a>Windows(WSL2)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo /bin/sh -c <span class="hljs-string">&#x27;wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly &amp;&amp; chmod +x /usr/local/bin/earthly &amp;&amp; /usr/local/bin/earthly bootstrap --with-autocomplete&#x27;</span><br></code></pre></td></tr></table></figure><h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>登录 <a href="https://cloud.earthly.dev/">earthly</a> 创建账号。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">earthly account login --token &#123;your token&#125; &amp;&amp; earthly org <span class="hljs-keyword">select</span> &#123;your organization&#125;<br></code></pre></td></tr></table></figure><h2 id="本地编译"><a href="#本地编译" class="headerlink" title="本地编译"></a>本地编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">earthly github.com/earthly/hello-world+hello --name=<span class="hljs-string">&quot;<span class="hljs-variable">$USER</span>&quot;</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>@Transactional事务失效场景</title>
     <link href="/2021/11/25/2021/2021-11-26/"/>
     <url>/2021/11/25/2021/2021-11-26/</url>
