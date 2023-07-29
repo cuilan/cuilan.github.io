@@ -1,17 +1,15 @@
 ---
-layout:     post 
-title:      "Redis配置文件详解"
-subtitle:   "Redis、redis.conf"
+layout: post
+title: "Redis配置文件详解"
 description: "Redis各模块功能，及配置参数详解"
-date:       2020-12-01
+date: 2020-12-01
 tags:
-- 中间件
-- Redis
+  - Redis
 categories:
-- 中间件
+  - Redis
 ---
 
-# redis.conf配置文件
+# redis.conf 配置文件
 
 ```bash
 # Redis configuration file example.
@@ -254,12 +252,12 @@ lua-time-limit 5000
 
 # 集群选举新master策略：
 #   (node-timeout * cluster-replica-validity-factor) + repl-ping-replica-period
-# 
+#
 # cluster-replica-validity-factor 10
 
 # cluster-migration-barrier 1
 
-# 默认情况下 Redis 集群只要发现有一个 hash slot 未被覆盖（没有可用的节点为其提供服务）则会停止提供查询服务。 
+# 默认情况下 Redis 集群只要发现有一个 hash slot 未被覆盖（没有可用的节点为其提供服务）则会停止提供查询服务。
 # 因此当集群发生部分故障（比如部分的 hash slot 未被覆盖），则会导致整个集群都无法工作。
 # 当所有的 slots 再次被覆盖后，集群会自动恢复到可用状态。
 # 如果希望在集群发生故障时可用的部分依然可以提供查询服务，可设置为 no
@@ -280,9 +278,3 @@ slowlog-log-slower-than 10000
 # 记录大小，可通过SLOWLOG RESET命令重置
 slowlog-max-len 128
 ```
-
-
-
-
-
-

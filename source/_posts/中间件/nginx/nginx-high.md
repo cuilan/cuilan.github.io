@@ -2,12 +2,12 @@
 title: Nginx高级
 date: 2018-11-12 12:19:23
 tags:
-- nginx
+  - Nginx
 categories:
-- 中间件
+  - Nginx
 ---
 
-# 一、Nginx的反向代理
+# 一、Nginx 的反向代理
 
 ![Nginx反向代理](nginx-high/nginx-high1.png)
 
@@ -26,7 +26,7 @@ categories:
 location / {
     proxy_pass http://www.baidu.com;
 }
-    
+
 # proxy_pass [可以是 IP、IP:port 或 域名]
 location /cuilan {
     proxy_set_header Host $host;
@@ -36,90 +36,108 @@ location /cuilan {
 }
 ```
 
-# 二、Nginx的负载均衡
+# 二、Nginx 的负载均衡
 
 目前主流的负载均衡器：**Nginx、LVS、HAProxy**
 
 ## upstream
 
-upstream 是 nginx 服务器的一个重要模块，upstream 模块实现在轮询客户端IP之间实现后端的负载均衡，**ip_hash算法**。
+upstream 是 nginx 服务器的一个重要模块，upstream 模块实现在轮询客户端 IP 之间实现后端的负载均衡，**ip_hash 算法**。
 
 ## 配置负载均衡
 
 修改 **nginx.conf**
 
 ### 1.轮询
-无法保证session。
+
+无法保证 session。
+
 ```
 upstream xxx {
     server ip:port;
     server ip:port;
 }
 ```
+
 ![轮询](nginx-high/nginx-high2.png)
 
 ### 2.ip_hash
-访问固定的一台后端服务器，可以保证session。
+
+访问固定的一台后端服务器，可以保证 session。
 ![ip_hash](nginx-high/nginx-high3.png)
 
 ### 3.权重(weight)
-分配轮询的比重，weight值越高，访问的几率越大，权重值跟请求几率成正比。
+
+分配轮询的比重，weight 值越高，访问的几率越大，权重值跟请求几率成正比。
 ![权重](nginx-high/nginx-high4.png)
 
 ### 4.响应时间
+
 响应时间最短的优先分配。
 ![响应时间](nginx-high/nginx-high5.png)
 
 ### 5.url_hash
-根据url计算来确定访问哪台主机，配置hash。
+
+根据 url 计算来确定访问哪台主机，配置 hash。
 ![url_hash](nginx-high/nginx-high6.png)
 
 # 三、进程模型及工作原理
 
-Master/Worker进程模型
+Master/Worker 进程模型
 
-## Master进程
+## Master 进程
+
 1. 接受外界的信号：kill -QUIT / kill -HUP
-2. 向各个Worker进程发送信号。
-3. 监控Worker的运行状态。
-4. 当Worker进程因异常退出，会自动重新启动新的Worker进程。
+2. 向各个 Worker 进程发送信号。
+3. 监控 Worker 的运行状态。
+4. 当 Worker 进程因异常退出，会自动重新启动新的 Worker 进程。
 
-## Worker进程
+## Worker 进程
+
 1. 处理客户端请求。
 2. 同步锁。
 
-## Nginx模块
-1. 核心模块：**http模块、event模块、mail模块**
+## Nginx 模块
+
+1. 核心模块：**http 模块、event 模块、mail 模块**
 2. 基础模块
 3. 第三方模块
 
-# 四、Nginx + keepalived实现高可用
+# 四、Nginx + keepalived 实现高可用
 
-keepalived：基于VRRP（虚拟路由器冗余器）来实现对web服务的高可用方案。
+keepalived：基于 VRRP（虚拟路由器冗余器）来实现对 web 服务的高可用方案。
 
 ## 安装 keepalived
 
 1. 下载 **keepalived**，并解压： **`tar -zxvf keepalived-1.3.4.tar.gz`**
 2. 配置：
-  ```bash
-  #keepalived启动时会默认读取/etc/keepalived/keepalived.conf配置文件。
-  ./configure --prefix=/usr/soft/keepalived/keepalived-1.3.4-bin/ --sysconf=/etc/
-  ```
-  依赖OpenSSL，安装OpenSSL：
-  ```bash
-  sudo yum install openssl-devel
-  ```
+
+```bash
+#keepalived启动时会默认读取/etc/keepalived/keepalived.conf配置文件。
+./configure --prefix=/usr/soft/keepalived/keepalived-1.3.4-bin/ --sysconf=/etc/
+```
+
+依赖 OpenSSL，安装 OpenSSL：
+
+```bash
+sudo yum install openssl-devel
+```
+
 3. **make && make install**
 4. 建立软连接(安装路径下)：
+
 ```bash
 sudo ln -s /usr/soft/keepalived/keepalived-1.3.5-bin/sbin/keepalived /sbin/
 ```
+
 5. 复制启动脚本，配置服务（源码包下）：
+
 ```bash
 sudo cp /usr/soft/keepalived/keepalived-1.3.5/keepalived/etc/init.d/keepalived /etc/init.d/
 ```
 
-6. 将配置添加入服务（CentOS下）：
+6. 将配置添加入服务（CentOS 下）：
+
 ```bash
 sudo chkconfig --add keepalived
 chkconfig keepalived on
@@ -127,7 +145,7 @@ chkconfig keepalived on
 sudo service keepalived start
 ```
 
-## **keepalived配置文件**
+## **keepalived 配置文件**
 
 ```bash
 global_defs { (全局配置，配置告警邮件服务器)
@@ -165,7 +183,7 @@ virtual_server 192.168.0.100 80 {   (LVS配置，映射VRRP虚拟ip)
 
 ## nginx_service.sh
 
-nginx安装目录下的检测nginx运行状态的脚本（nginx_service.sh）
+nginx 安装目录下的检测 nginx 运行状态的脚本（nginx_service.sh）
 
 ```bash
 #!/bin/bash

@@ -1,15 +1,14 @@
 ---
-layout:     post 
-title:      "AnnotationConfigApplicationContext启动入口"
-subtitle:   "SpringIOC源码分析一，AnnotationConfigApplicationContext启动入口，BeanFactory"
-date:       2020-09-19
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "AnnotationConfigApplicationContext启动入口"
+excerpt: "SpringIOC源码分析一，AnnotationConfigApplicationContext启动入口，BeanFactory"
+date: 2020-09-19
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
 # 一、AnnotationConfigApplicationContext 入口
@@ -58,22 +57,23 @@ public GenericApplicationContext() {
 ```
 
 AnnotationConfigApplicationContext 默认构造器中做了两件事：
-  * 初始化 `AnnotatedBeanDefinitionReader` BeanDefinition读取器
-  * 初始化 `ClassPathBeanDefinitionScanner` 仅供程序员外部调用，并不是 Spring 内部扫描包的类
+
+- 初始化 `AnnotatedBeanDefinitionReader` BeanDefinition 读取器
+- 初始化 `ClassPathBeanDefinitionScanner` 仅供程序员外部调用，并不是 Spring 内部扫描包的类
 
 ## 2.1 初始化 AnnotatedBeanDefinitionReader
 
 ### 为 BeanFactory 注册后置处理器
 
 实例化一个 AnnotatedBeanDefinitionReader 委托 AnnotationConfigUtils，
-registerAnnotationConfigProcessors 方法很重要，在这个方法中为容器注册一系列内部的 BeanPostProcessor 后置处理器（6个）。
+registerAnnotationConfigProcessors 方法很重要，在这个方法中为容器注册一系列内部的 BeanPostProcessor 后置处理器（6 个）。
 
-* **ConfigurationClassPostProcessor**: 提供 Java 配置类处理能力。
-* **AutowiredAnnotationBeanPostProcessor**: 提供 Autowired 注解的Bean后置处理器功能。
-* **CommonAnnotationBeanPostProcessor**: 提供 JSR250 标准的通用注解处理器功能，Resource 注解，@@PostConstruct，@PreDestroy 等。
-* **PersistenceAnnotationBeanPostProcessor**: 提供 JPA 相关支持。
-* **DefaultEventListenerFactory**
-* **EventListenerMethodProcessor**
+- **ConfigurationClassPostProcessor**: 提供 Java 配置类处理能力。
+- **AutowiredAnnotationBeanPostProcessor**: 提供 Autowired 注解的 Bean 后置处理器功能。
+- **CommonAnnotationBeanPostProcessor**: 提供 JSR250 标准的通用注解处理器功能，Resource 注解，@@PostConstruct，@PreDestroy 等。
+- **PersistenceAnnotationBeanPostProcessor**: 提供 JPA 相关支持。
+- **DefaultEventListenerFactory**
+- **EventListenerMethodProcessor**
 
 ```java
 public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
@@ -141,12 +141,13 @@ public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 
 ### BeanPostProcessor 后置处理器
 
-BeanPostProcessor 是 Spring 框架的一个扩展点（不止一个，5个扩展点），通过实现 BeanPostProcessor 接口，
+BeanPostProcessor 是 Spring 框架的一个扩展点（不止一个，5 个扩展点），通过实现 BeanPostProcessor 接口，
 程序员可以干预 Bean 的实例化的过程，从而减轻了 BeanFactory 的负担，这个接口可以设置多个，会形成一个列表，然后依次执行。
 比如，AOP 就是在 Bean 实例化后期将切面逻辑织入 Bean 实例中的，AOP 也正是通过 BeanPostProcessor 和 IOC 容器建立联系的
 （由 Spring 提供的默认的 PostProcessor，Spring 提供了很多默认的 PostProcessor 的实现类）。
 
 BeanPostProcessor 常用实现类：
+
 1. ApplicationContextAwareProcessor
 2. InitDestroyAnnotationBeanPostProcessor
 3. InstantiationAwareBeanPostProcessor
@@ -160,6 +161,6 @@ BeanPostProcessor 常用实现类：
 
 ## 2.2 初始化 ClassPathBeanDefinitionScanner
 
-初始化ClassPath下BeanDefinition的扫描器，这里的 scanner 仅仅是提供给程序员外部调用的，Spring 内部扫描包使用的是下面方法中的 scanner
+初始化 ClassPath 下 BeanDefinition 的扫描器，这里的 scanner 仅仅是提供给程序员外部调用的，Spring 内部扫描包使用的是下面方法中的 scanner
 
 **org.springframework.context.annotation.ComponentScanAnnotationParser#parse()**

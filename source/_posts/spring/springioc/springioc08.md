@@ -1,18 +1,17 @@
 ---
-layout:     post 
-title:      "Spring容器初始化流程"
-subtitle:   "SpringIOC源码分析五"
-date:       2020-10-19
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "Spring容器初始化流程"
+excerpt: "SpringIOC源码分析五"
+date: 2020-10-19 12:00:00
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
-# Spring容器初始化流程
+# Spring 容器初始化流程
 
 ```java
 // 父类构造器，实例化一个 BeanFactory -> DefaultListableBeanFactory
@@ -118,4 +117,3 @@ org.springframework.context.support.GenericApplicationContext#GenericApplication
 										org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#instantiateBean()
 			org.springframework.context.support.AbstractApplicationContext#finishRefresh()
 ```
-

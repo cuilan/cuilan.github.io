@@ -2,9 +2,9 @@
 title: 1.SpringMVC使用示例
 date: 2019-10-30 12:00:00
 tags:
-- Java
-- 源码
+- Spring
 - SpringMVC
+- 源码
 categories:
 - Spring
 ---
@@ -13,7 +13,7 @@ SpringMVC项目的演示示例，包含 maven 依赖配置，web.xml 文件配�
 
 <!-- more -->
 
-### 创建maven工程
+# 创建maven工程
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -66,7 +66,7 @@ SpringMVC项目的演示示例，包含 maven 依赖配置，web.xml 文件配�
 </project>
 ```
 
-### 创建 `spring-mvc.xml` 配置文件
+# 创建 `spring-mvc.xml` 配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -111,7 +111,7 @@ SpringMVC项目的演示示例，包含 maven 依赖配置，web.xml 文件配�
 </beans>
 ```
 
-### 配置 `web.xml` 文件
+# 配置 `web.xml` 文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

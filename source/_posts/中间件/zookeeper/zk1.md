@@ -5,10 +5,9 @@ subtitle:   "应用架构、CAP理论"
 description: "分布式系统带来的问题，及解决方案，CAP理论、BASE理论"
 date:       2021-04-19
 tags:
-- 中间件
-- zookeeper
+- Zookeeper
 categories:
-- 中间件
+- 分布式
 ---
 
 # 一、软件架构

@@ -1,15 +1,14 @@
 ---
-layout:     post 
-title:      "refresh 方法后续方法，bean 的实例化"
-subtitle:   "SpringIOC源码分析六，refresh 方法后续方法，完成 BeanFactory 中所有非延迟加载的 bean 的实例化"
-date:       2020-10-19
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "refresh 方法后续方法，bean 的实例化"
+excerpt: "SpringIOC源码分析六，refresh 方法后续方法，完成 BeanFactory 中所有非延迟加载的 bean 的实例化"
+date: 2020-10-19 15:00:00
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
 refresh 方法，至此，BeanFactory 初始化已完成。
@@ -218,6 +217,6 @@ return instantiateBean(beanName, mbd);
 
 最后一步
 
-* 清除资源缓存
-* 初始化生命周期的处理器
-* 发布事件
+- 清除资源缓存
+- 初始化生命周期的处理器
+- 发布事件

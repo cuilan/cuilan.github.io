@@ -1,24 +1,15 @@
 ---
-layout:     post 
-title:      "Synchronizer"
-subtitle:   ""
+layout: post
+title: "Synchronizer"
+subtitle: ""
 description: ""
-date:       2021-03-25
-author:     "张岩"
+date: 2021-03-25
+author: "张岩"
 published: false
 tags:
-    - Java
-    - 虚拟机
-categories: [ Java ]
+  - JAVA
+  - JVM
+categories: []
 ---
 
 #
-
-
-
-
-
-
-
-
-

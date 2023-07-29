@@ -1,20 +1,19 @@
 ---
-layout:     post 
-title:      "Spring注册Bean的流程"
-subtitle:   "SpringIOC源码分析二，Spring注册Bean的流程，register方法"
-date:       2020-09-20
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "Spring注册Bean的流程"
+excerpt: "SpringIOC源码分析二，Spring注册Bean的流程，register方法"
+date: 2020-09-20
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
-![Spring注册Bean的流程](/images/spring/springioc/springioc05/1.png "Spring注册Bean的流程")
+![Spring注册Bean的流程](springioc05/1.png)
 
-# 一、register方法
+# 一、register 方法
 
 register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。
 
@@ -32,7 +31,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 }
 ```
 
-# 二、准备BeanDefinition
+# 二、准备 BeanDefinition
 
 ```java
 private <T> void doRegisterBean(Class<T> beanClass, @Nullable String name,
@@ -156,21 +155,21 @@ public static void registerBeanDefinition(
 
 ## 6. DefaultListableBeanFactory 的核心注册方法
 
-* 首先，从 IOC 核心容器 **`beanDefinitionMap`** 中获取 Bean，防止重复注册。
+- 首先，从 IOC 核心容器 **`beanDefinitionMap`** 中获取 Bean，防止重复注册。
 
 ```java
 // 判断是否已存在，防止重复注册
 BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 ```
 
-* 放入IOC核心容器
+- 放入 IOC 核心容器
 
 ```java
 // 放入IOC核心容器
 this.beanDefinitionMap.put(beanName, beanDefinition);
 ```
 
-* 容量自增，并将原先的所有的 Bean 放入其中，再将当前 Bean 放入其中，保证注册顺序。
+- 容量自增，并将原先的所有的 Bean 放入其中，再将当前 Bean 放入其中，保证注册顺序。
 
 ```java
 // 容量自增
