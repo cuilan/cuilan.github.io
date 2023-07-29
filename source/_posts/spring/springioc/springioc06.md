@@ -1,15 +1,14 @@
 ---
-layout:     post 
-title:      "refresh方法-刷新前的准备工作"
-subtitle:   "SpringIOC源码分析三，refresh方法"
-date:       2020-09-21
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "refresh方法-刷新前的准备工作"
+excerpt: "SpringIOC源码分析三，refresh方法"
+date: 2020-09-21
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
 # refresh() 方法
@@ -68,9 +67,10 @@ public void refresh() throws BeansException, IllegalStateException {
 # prepareRefresh
 
 Spring 上下文容器刷新前的准备
-* 设置启动时间
-* 是否激活标志位
-* 初始化属性源配置
+
+- 设置启动时间
+- 是否激活标志位
+- 初始化属性源配置
 
 # 获得 BeanFactory
 

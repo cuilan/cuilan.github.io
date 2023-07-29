@@ -3,8 +3,7 @@ title: Go环境搭建
 date: 2019-10-16 15:00:00
 tags:
 - Go
-categories:
-- 环境搭建
+categories: []
 ---
 
 ## Go开发环境

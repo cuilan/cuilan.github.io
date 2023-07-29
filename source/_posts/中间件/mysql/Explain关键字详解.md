@@ -1,31 +1,30 @@
 ---
-layout:     post 
-title:      "六、Explain关键字详解"
-subtitle:   "Explain关键字"
-date:       2020-11-02
+layout: post
+title: "六、Explain关键字详解"
+excerpt: "Explain关键字"
+date: 2020-11-02
 tags:
-- 中间件
-- MySQL
+  - MySQL
 categories:
-- 中间件
+  - MySQL
 ---
 
-# Explain关键字
+# Explain 关键字
 
-| 列名 | 描述 |
-| :--- | :--- |
-| id | 在一个大的查询语句中每个SELECT关键字都对应一个唯一的id |
-| select_type | SELECT关键字对应的那个查询的类型 |
-| table | 表名 |
-| partitions | 匹配的分区信息 |
-| **type** | 针对单表的访问方法 |
-| **possible_keys** | 可能用到的索引 |
-| **key** | 实际使用的索引 |
-| **key_len** | 实际使用的索引长度 |
-| ref | 当使用索引列等值查询时，与索引列进行等值匹配的对象信息 |
-| rows | 预估的需要读取的记录条数 |
-| filtered | 某个表经过搜索条件过滤后剩余记录条数的百分比 |
-| **Extra** | 一些额外的信息 |
+| 列名              | 描述                                                      |
+| :---------------- | :-------------------------------------------------------- |
+| id                | 在一个大的查询语句中每个 SELECT 关键字都对应一个唯一的 id |
+| select_type       | SELECT 关键字对应的那个查询的类型                         |
+| table             | 表名                                                      |
+| partitions        | 匹配的分区信息                                            |
+| **type**          | 针对单表的访问方法                                        |
+| **possible_keys** | 可能用到的索引                                            |
+| **key**           | 实际使用的索引                                            |
+| **key_len**       | 实际使用的索引长度                                        |
+| ref               | 当使用索引列等值查询时，与索引列进行等值匹配的对象信息    |
+| rows              | 预估的需要读取的记录条数                                  |
+| filtered          | 某个表经过搜索条件过滤后剩余记录条数的百分比              |
+| **Extra**         | 一些额外的信息                                            |
 
 ---
 
@@ -33,8 +32,8 @@ categories:
 
 ## id
 
-查询语句中每出现一个`SELECT` 关键字，MySQL 就会为它分配一个唯一的id值。这个id值就是 EXPLAIN 语句的第一个列。
-对于连接查询来说，一个 SELECT 关键字后边的 FROM 子句中可以跟随多个表，所以在连接查询的执行计划中，每个表都会对应一条记录，但是这些记录的id值都是相同的。
+查询语句中每出现一个`SELECT` 关键字，MySQL 就会为它分配一个唯一的 id 值。这个 id 值就是 EXPLAIN 语句的第一个列。
+对于连接查询来说，一个 SELECT 关键字后边的 FROM 子句中可以跟随多个表，所以在连接查询的执行计划中，每个表都会对应一条记录，但是这些记录的 id 值都是相同的。
 
 ## select_type
 
@@ -81,7 +80,7 @@ mysql> EXPLAIN SELECT a FROM t1 UNION SELECT a FROM t2;
 
 ### 4. UNION RESULT
 
-MySQL选择使用 **临时表** 来完成 `UNION` 查询的 **去重** 工作，针对该临时表的查询的 `select_type` 就是 `UNION RESULT`。见上边 **UNION** 例子。
+MySQL 选择使用 **临时表** 来完成 `UNION` 查询的 **去重** 工作，针对该临时表的查询的 `select_type` 就是 `UNION RESULT`。见上边 **UNION** 例子。
 
 ### 5. SUBQUERY
 
@@ -212,7 +211,7 @@ mysql> EXPLAIN SELECT * FROM t1 WHERE b = 1;
 
 ### 5. ref_or_null
 
-当对普通二级索引进行等值匹配查询，该索引列的值也可以是NULL值时，那么对该表的访问方法就可能是 `ref_or_null`。
+当对普通二级索引进行等值匹配查询，该索引列的值也可以是 NULL 值时，那么对该表的访问方法就可能是 `ref_or_null`。
 
 ```sql
 mysql> EXPLAIN SELECT * FROM t1 WHERE b = 1 OR b IS NULL;
@@ -227,6 +226,7 @@ mysql> EXPLAIN SELECT * FROM t1 WHERE b = 1 OR b IS NULL;
 ### 6. index_merge
 
 索引合并。
+
 ```sql
 mysql> EXPLAIN SELECT * FROM t1 WHERE a = 1 OR b = 1;
 +----+-------------+-------+------------+-------------+-----------------+-----------------+---------+------+------+----------+------------------------------------------------+
@@ -271,6 +271,7 @@ mysql> EXPLAIN SELECT * FROM t1 WHERE a > 1;
 ### 10. index
 
 当可以使用覆盖索引，但需要扫描全部的索引记录时，该表的访问方法就是 `index`。
+
 ```sql
 mysql> EXPLAIN SELECT b FROM t1;
 +----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
@@ -298,9 +299,10 @@ mysql> EXPLAIN SELECT b FROM t1;
 ## key_len
 
 `key_len` 列表示当优化器决定使用某个索引执行查询时，该索引记录的最大长度，它是由这三个部分构成的：
-* 对于使用固定长度类型的索引列来说，它实际占用的存储空间的最大长度就是该固定值，对于指定字符集的变长类型的索引列来说，比如某个索引列的类型是 `VARCHAR(100)`，使用的字符集是 `utf8`，那么该列实际占用的最大存储空间就是 **100 × 3 = 300** 个字节。
-* 如果该索引列可以存储 `NULL` 值，则 `key_len` 比不可以存储 `NULL` 值时多1个字节。
-* 对于变长字段来说，都会有2个字节的空间来存储该变长列的实际长度。
+
+- 对于使用固定长度类型的索引列来说，它实际占用的存储空间的最大长度就是该固定值，对于指定字符集的变长类型的索引列来说，比如某个索引列的类型是 `VARCHAR(100)`，使用的字符集是 `utf8`，那么该列实际占用的最大存储空间就是 **100 × 3 = 300** 个字节。
+- 如果该索引列可以存储 `NULL` 值，则 `key_len` 比不可以存储 `NULL` 值时多 1 个字节。
+- 对于变长字段来说，都会有 2 个字节的空间来存储该变长列的实际长度。
 
 ## ref
 
@@ -336,7 +338,7 @@ Extra 列是用来说明一些额外信息的，我们可以通过这些额外�
 
 ## No tables used
 
-当查询语句的没有FROM子句时将会提示该额外信息。
+当查询语句的没有 FROM 子句时将会提示该额外信息。
 
 ## Impossible WHERE
 
@@ -352,7 +354,7 @@ Extra 列是用来说明一些额外信息的，我们可以通过这些额外�
 
 ## Using index condition
 
-有些搜索条件中虽然出现了索引列，但却不能使用到索引(在MySQL 5.6版本后加入的新特性)。
+有些搜索条件中虽然出现了索引列，但却不能使用到索引(在 MySQL 5.6 版本后加入的新特性)。
 
 ## Using where
 
@@ -360,7 +362,7 @@ Extra 列是用来说明一些额外信息的，我们可以通过这些额外�
 
 ## Using join buffer(Block Nested Loop)
 
-在连接查询执行过程中，当被驱动表不能有效的利用索引加快访问速度，MySQL一般会为其分配一块名叫 `join buffer` 的内存块来加快查询速度。
+在连接查询执行过程中，当被驱动表不能有效的利用索引加快访问速度，MySQL 一般会为其分配一块名叫 `join buffer` 的内存块来加快查询速度。
 
 ## Using filesort
 
@@ -376,7 +378,7 @@ MySQL 很有可能寻求通过建立内部的临时表来执行查询。如果�
 
 ## Start temporary、End temporary
 
-查询优化器会优先尝试将 `IN` 子查询转换成 semi-join，而semi-join又有好多种执行策略，当执行策略为 `DuplicateWeedout` 时，
+查询优化器会优先尝试将 `IN` 子查询转换成 semi-join，而 semi-join 又有好多种执行策略，当执行策略为 `DuplicateWeedout` 时，
 也就是通过建立临时表来实现为外层查询中的记录进行去重操作时，驱动表查询执行计划的 Extra 列将显示 `Start temporary` 提示，
 被驱动表查询执行计划的 Extra 列将显示 `End temporary` 提示。
 
@@ -394,20 +396,20 @@ MySQL 很有可能寻求通过建立内部的临时表来执行查询。如果�
 
 ## 性能按 Extra 排序
 
-* `Using index` : 用了覆盖索引
-* `Using index condition` : 用了条件索引(索引下推)
-* `Using where` : 从索引查出来数据后继续用 `where` 条件过滤
-* `Using join buffer(Block Nested Loop)` : join 的时候利用了 join buffer(优化策略:去除外连接、增 大join buffer大小)
-* `Using filesort` : 用了文件排序，排序的时候没有用到索引
-* `Using temporary` : 用了临时表(优化策略:增加条件以减少结果集、增加索引，思路就是要么减少待排序的数量，要么就提前排好序)
-* `Start temporary`, `End temporary` : 子查询的时候，可以优化成半连接，但是使用的是通过临时表来去重
-* `FirstMatch(tbl_name)` : 子查询的时候，可以优化成半连接，但是使用的是直接进行数据比较来去重
+- `Using index` : 用了覆盖索引
+- `Using index condition` : 用了条件索引(索引下推)
+- `Using where` : 从索引查出来数据后继续用 `where` 条件过滤
+- `Using join buffer(Block Nested Loop)` : join 的时候利用了 join buffer(优化策略:去除外连接、增 大 join buffer 大小)
+- `Using filesort` : 用了文件排序，排序的时候没有用到索引
+- `Using temporary` : 用了临时表(优化策略:增加条件以减少结果集、增加索引，思路就是要么减少待排序的数量，要么就提前排好序)
+- `Start temporary`, `End temporary` : 子查询的时候，可以优化成半连接，但是使用的是通过临时表来去重
+- `FirstMatch(tbl_name)` : 子查询的时候，可以优化成半连接，但是使用的是直接进行数据比较来去重
 
 ## 常见优化手段
 
-1. SQL语句中 `IN` 包含的值不应过多，不能超过200个，200个以内查询优化器计算成本时比较精准，超过200个是估算的成本，另外建议能用 `between` 就不要用 `in`，这样就可以使用 `range` 索引了。
+1. SQL 语句中 `IN` 包含的值不应过多，不能超过 200 个，200 个以内查询优化器计算成本时比较精准，超过 200 个是估算的成本，另外建议能用 `between` 就不要用 `in`，这样就可以使用 `range` 索引了。
 2. `SELECT` 语句务必指明字段名称: `SELECT *` 增加很多不必要的消耗(cpu、io、内存、网络带宽);
-增加了使用覆盖索引的可能性;当表结构发生改变时，前断也需要更新。所以要求直接在select后面接上字段名。
+   增加了使用覆盖索引的可能性;当表结构发生改变时，前断也需要更新。所以要求直接在 select 后面接上字段名。
 3. 当只需要一条数据的时候，使用 `LIMIT 1`。
 4. 排序时注意是否能用到索引。
 5. 使用 `OR` 时如果没有用到索引，可以改为 `UNION ALL` 或者 `UNION`。
@@ -421,4 +423,3 @@ MySQL 很有可能寻求通过建立内部的临时表来执行查询。如果�
 13. 对于联合索引来说，如果存在范围查询，比如 `between`、`>`、`<` 等条件时，会造成后面的索引字段失效。
 14. 尽量使用 `INNER JOIN`，避免 `LEFT JOIN`，让查询优化器来自动选择小表作为驱动表。
 15. 必要时刻可以使用 `straight_join` 来指定驱动表，前提条件是本身是 `INNER JOIN`。
-

@@ -1,15 +1,14 @@
 ---
-layout:     post 
-title:      "BeanFactoryPostProcessors 后置处理器"
-subtitle:   "SpringIOC源码分析四，invokeBeanFactoryPostProcessors方法，BeanFactoryPostProcessors，BeanDefinitionRegistryPostProcessor"
-date:       2020-09-23
-image:      "/img/tag-bg.jpg"
+layout: post
+title: "BeanFactoryPostProcessors 后置处理器"
+excerpt: "SpringIOC源码分析四，invokeBeanFactoryPostProcessors方法，BeanFactoryPostProcessors，BeanDefinitionRegistryPostProcessor"
+date: 2020-09-23
 tags:
-- Java
-- 源码
-- SpringIOC
+  - Spring
+  - SpringIOC
+  - 源码
 categories:
-- SPRING
+  - Spring
 ---
 
 # 一、invokeBeanFactoryPostProcessors 方法
@@ -17,8 +16,9 @@ categories:
 `invokeBeanFactoryPostProcessors` 方法，调用各种后置处理器。
 
 继承关系
-* `BeanFactoryPostProcessors`
-    * `BeanDefinitionRegistryPostProcessor`
+
+- `BeanFactoryPostProcessors`
+  - `BeanDefinitionRegistryPostProcessor`
 
 ## 获得 BeanFactoryPostProcessors
 
@@ -63,10 +63,10 @@ if (beanFactory instanceof BeanDefinitionRegistry) {
 		if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
             // 强转为 BeanDefinitionRegistryPostProcessor 类型
 			BeanDefinitionRegistryPostProcessor registryProcessor = (BeanDefinitionRegistryPostProcessor) postProcessor;
-			
+
             // 处理实现
             registryProcessor.postProcessBeanDefinitionRegistry(registry);
-			
+
             // 处理完成后添加至 registryProcessors 集合中
             registryProcessors.add(registryProcessor);
 		} else {
@@ -147,7 +147,8 @@ if (registry instanceof SingletonBeanRegistry) {
 
 ### 3). 封装为 ConfigurationClassParser
 
-将当前 registry 后置处理器封装为 **`ConfigurationClassParser`**。
+将当前 registry 后置处理器封装为 **`ConfigurationClassParser`** 。
+
 ```java
 // 解析每一个 @Configuration 类
 ConfigurationClassParser parser = new ConfigurationClassParser(
@@ -175,7 +176,7 @@ do {
 while (!candidates.isEmpty());
 ```
 
-**`doProcessConfigurationClass`** 方法中解析并处理 **`@ComponentScans`** 和 **`@ComponentScan`** 注解，**`@Imports`** 注解，**`@Bean`** 注解的方法。
+**`doProcessConfigurationClass`** 方法中解析并处理 **`@ComponentScans`** 和 **`@ComponentScan`** 注解， **`@Imports`** 注解， **`@Bean`** 注解的方法。
 调用链：
 
 ```java
@@ -230,9 +231,9 @@ org.springframework.context.annotation.ConfigurationClassParser#parse
 
 处理 @Imports 注解，分别判断导入的类型：
 
-* **普通类**
-* **ImportSelector**
-* **ImportBeanDefinitionRegistrar**
+- **普通类**
+- **ImportSelector**
+- **ImportBeanDefinitionRegistrar**
 
 ```java
 // 处理前的检查，是否循环导入，是否循环调用等
@@ -312,4 +313,3 @@ invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 // ********************************************************************************
 currentRegistryProcessors.clear();
 ```
-
