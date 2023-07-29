@@ -1,5 +1,8 @@
 ---
-title: earthly-build.md
+title: Earthly好用的Dockerfile构建工具
+excerpt: 像构建 Makefile 一样 构建 Dockerfile，熟悉的语法、快速、一致的构建。
+index_img: /img/2023/earthly.png
+date: 2023-07-28 15:00:00
 tags:
 ---
 
@@ -38,5 +41,3 @@ earthly account login --token {your token} && earthly org select {your organizat
 ```bash
 earthly github.com/earthly/hello-world+hello --name="$USER"
 ```
-
-
