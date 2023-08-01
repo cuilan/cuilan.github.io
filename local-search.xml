@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Git多用户配置</title>
+    <link href="/2023/08/01/2023/more-user-gitconfig/"/>
+    <url>/2023/08/01/2023/more-user-gitconfig/</url>
+    
+    <content type="html"><![CDATA[<p>大多数情况下，我们本地会有多个 git 用户，在公司连接内网的 gitlab 账号，个人的项目需要使用到 github 账户，或一些其他别的账户，那么就需要配置多用户。</p><h1 id="git-config"><a href="#git-config" class="headerlink" title="git config"></a>git config</h1><p>一般无论在 gitlab 还是 github 等代码托管平台上创建一个空项目，都会有以下两行提示：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git config --global user.name <span class="hljs-string">&quot;xxx&quot;</span><br>git config --global user.email <span class="hljs-string">&quot;xxx@xxx.com&quot;</span><br></code></pre></td></tr></table></figure><p>设置完成后，会在 home 目录下生成： <code>~/.gitconfig</code> 文件，如果需要为单独某个 git 仓库设置，可以进入该仓库目录下，执行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git config user.name <span class="hljs-string">&quot;xxx&quot;</span><br>git config user.email <span class="hljs-string">&quot;xxx@xxx.com&quot;</span><br></code></pre></td></tr></table></figure><p>或修改 <code>.git/config</code> 文件：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs config">[user]<br>    name = xxx<br>    email = xxx@xxx.com<br></code></pre></td></tr></table></figure><p>全部配置的方式虽然简单，但不够灵活；为每一个仓库分别配置，太过于复杂。</p><h1 id="Conditional-Includes"><a href="#Conditional-Includes" class="headerlink" title="Conditional Includes"></a>Conditional Includes</h1><p>在 git 2.13 版本加入了 <a href="https://git-scm.com/docs/git-config#_includes">conditional includes</a> 配置，可以创建多个 gitconfig 文件，并针对不同的根目录使用不同的配置文件。</p><h1 id="配置案例"><a href="#配置案例" class="headerlink" title="配置案例"></a>配置案例</h1><p>拿 gitlab、github、gitee 举例：</p><h2 id="创建多用户配置"><a href="#创建多用户配置" class="headerlink" title="创建多用户配置"></a>创建多用户配置</h2><p>可在任意目录（建议在 <code>~/</code> 目录）下分别创建 <code>.gitconfig_gitlab</code> 、 <code>.gitconfig_github</code> 、 <code>.gitconfig_gitee</code> 文件。</p><p>.gitconfig_gitlab</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs config">[user]<br>    name = gitlabName<br>    email = xxx@gitlab.com<br></code></pre></td></tr></table></figure><p>.gitconfig_github</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs config">[user]<br>    name = githubName<br>    email = xxx@github.com<br></code></pre></td></tr></table></figure><p>.gitconfig_gitee</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs config">[user]<br>    name = giteeName<br>    email = xxx@gitee.com<br></code></pre></td></tr></table></figure><h2 id="修改-gitconfig-文件"><a href="#修改-gitconfig-文件" class="headerlink" title="修改 .gitconfig 文件"></a>修改 .gitconfig 文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs config"># gitlab<br>[includeIf &quot;gitdir:~/code/gitlab/**&quot;]<br>path = ~/.gitconfig_gitlab<br><br># github<br>[includeIf &quot;gitdir:~/code/github/**&quot;]<br>path = ~/.gitconfig_github<br><br># gitee<br>[includeIf &quot;gitdir:~/code/gitee/**&quot;]<br>path = ~/.gitconfig_gitee<br></code></pre></td></tr></table></figure><p>gitdir 配置以 <code>&quot;/&quot;</code> 结尾，表示：<code>&quot;/**&quot;</code> 。</p><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>分别在 <code>~/code/gitlab</code> 、 <code>~/code/github</code> 、 <code>~/code/gitlab</code> 下执行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">git config user.name<br>...<br>gitlabName<br>githubName<br>giteeName<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Earthly好用的Dockerfile构建工具</title>
     <link href="/2023/07/28/2023/earthly-build-md/"/>
     <url>/2023/07/28/2023/earthly-build-md/</url>
@@ -11,6 +36,18 @@
     <content type="html"><![CDATA[<h1 id="Earthly"><a href="#Earthly" class="headerlink" title="Earthly"></a>Earthly</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install earthly &amp;&amp; earthly bootstrap<br></code></pre></td></tr></table></figure><h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo /bin/sh -c <span class="hljs-string">&#x27;wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly &amp;&amp; chmod +x /usr/local/bin/earthly &amp;&amp; /usr/local/bin/earthly bootstrap --with-autocomplete&#x27;</span><br></code></pre></td></tr></table></figure><h3 id="Windows-WSL2"><a href="#Windows-WSL2" class="headerlink" title="Windows(WSL2)"></a>Windows(WSL2)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo /bin/sh -c <span class="hljs-string">&#x27;wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly &amp;&amp; chmod +x /usr/local/bin/earthly &amp;&amp; /usr/local/bin/earthly bootstrap --with-autocomplete&#x27;</span><br></code></pre></td></tr></table></figure><h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>登录 <a href="https://cloud.earthly.dev/">earthly</a> 创建账号。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">earthly account login --token &#123;your token&#125; &amp;&amp; earthly org <span class="hljs-keyword">select</span> &#123;your organization&#125;<br></code></pre></td></tr></table></figure><h2 id="本地编译"><a href="#本地编译" class="headerlink" title="本地编译"></a>本地编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">earthly github.com/earthly/hello-world+hello --name=<span class="hljs-string">&quot;<span class="hljs-variable">$USER</span>&quot;</span><br></code></pre></td></tr></table></figure>]]></content>
     
     
+    <categories>
+      
+      <category>docker</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>docker</tag>
+      
+    </tags>
     
   </entry>
   
@@ -654,11 +691,11 @@
     
     <tags>
       
+      <tag>docker</tag>
+      
       <tag>Kubernetes</tag>
       
       <tag>k8s</tag>
-      
-      <tag>docker</tag>
       
     </tags>
     
