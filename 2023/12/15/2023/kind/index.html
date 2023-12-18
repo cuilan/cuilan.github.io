@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cuilan.github.io/img/2023/kind.png">
 <meta property="article:published_time" content="2023-12-15T04:28:00.000Z">
-<meta property="article:modified_time" content="2023-12-15T10:12:01.814Z">
+<meta property="article:modified_time" content="2023-12-18T03:18:52.852Z">
 <meta property="article:author" content="zhang.yan">
 <meta property="article:tag" content="docker">
 <meta property="article:tag" content="k8s">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.8k 字
+          6.2k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          49 分钟
+          53 分钟
         
       </span>
     
@@ -309,7 +309,7 @@
 <h3 id="3-3-PowerShell"><a href="#3-3-PowerShell" class="headerlink" title="3.3 PowerShell"></a>3.3 PowerShell</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs PowerShell">curl.exe <span class="hljs-literal">-Lo</span> kind<span class="hljs-literal">-windows-amd64</span>.exe https://kind.sigs.k8s.io/dl/v0.<span class="hljs-number">20.0</span>/kind<span class="hljs-literal">-windows-amd64</span><br><span class="hljs-built_in">Move-Item</span> .\kind<span class="hljs-literal">-windows-amd64</span>.exe c:\some<span class="hljs-literal">-dir-in-your-PATH</span>\kind.exe<br></code></pre></td></tr></table></figure>
 
 <h1 id="三、创建集群"><a href="#三、创建集群" class="headerlink" title="三、创建集群"></a>三、创建集群</h1><h2 id="1、创建初始化脚本"><a href="#1、创建初始化脚本" class="headerlink" title="1、创建初始化脚本"></a>1、创建初始化脚本</h2><p>创建一个控制面节点、两个工作节点的集群，对外暴露端口：31000</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /home/kind<br><span class="hljs-built_in">cd</span> /home/kind<br><span class="hljs-built_in">cat</span> &gt; 1c2w.yaml &lt;&lt;- <span class="hljs-string">&#x27;EOF&#x27;</span><br>kind: Cluster<br>apiVersion: kind.x-k8s.io/v1alpha4<br><span class="hljs-comment"># One control plane node and two &quot;workers&quot;.</span><br>nodes:<br>- role: control-plane<br>  extraPortMappings:<br>  - containerPort: 31000<br>    hostPort: 31000<br>    <span class="hljs-comment"># Optional, defaults to &quot;0.0.0.0&quot;</span><br>    listenAddress: <span class="hljs-string">&quot;0.0.0.0&quot;</span><br>    <span class="hljs-comment"># Optional, defaults to tcp</span><br>    protocol: udp<br>- role: worker<br>- role: worker<br>EOF<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /home/kind<br><span class="hljs-built_in">cd</span> /home/kind<br><span class="hljs-built_in">cat</span> &gt; 1c2w.yaml &lt;&lt;- <span class="hljs-string">&#x27;EOF&#x27;</span><br>kind: Cluster<br>apiVersion: kind.x-k8s.io/v1alpha4<br><span class="hljs-comment"># One control plane node and two &quot;workers&quot;.</span><br>nodes:<br>- role: control-plane<br>  extraPortMappings:<br>  - containerPort: 31000<br>    hostPort: 31000<br>    <span class="hljs-comment"># Optional, defaults to &quot;0.0.0.0&quot;</span><br>    listenAddress: <span class="hljs-string">&quot;0.0.0.0&quot;</span><br>    <span class="hljs-comment"># Optional, defaults to tcp</span><br>    protocol: tcp<br>- role: worker<br>- role: worker<br>EOF<br></code></pre></td></tr></table></figure>
 
 <h2 id="2、运行集群"><a href="#2、运行集群" class="headerlink" title="2、运行集群"></a>2、运行集群</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kind create cluster --config /home/kind/1c2w.yaml --name 1c2w<br></code></pre></td></tr></table></figure>
 
@@ -331,7 +331,13 @@
 
 <h2 id="2、create-svc"><a href="#2、create-svc" class="headerlink" title="2、create svc"></a>2、create svc</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /home/k8s<br><br><span class="hljs-built_in">cat</span> &gt; ./svc-nginx.yaml &lt;&lt;- <span class="hljs-string">&#x27;EOF&#x27;</span><br>apiVersion: v1<br>kind: Service<br>metadata:<br>  name: deploy-nginx<br>  labels:<br>    svc: deploy-nginx<br>spec:<br>  <span class="hljs-built_in">type</span>: NodePort<br>  selector:<br>    app: deploy-nginx<br>  ports:<br>    - port: 8000<br>      targetPort: 80<br>      nodePort: 31000<br>EOF<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl delete svc svc-nginx<br>kubectl apply -f ./svc-nginx.yaml<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl delete svc deploy-nginx<br>kubectl apply -f ./svc-nginx.yaml<br></code></pre></td></tr></table></figure>
+
+<h2 id="3、查看运行状态"><a href="#3、查看运行状态" class="headerlink" title="3、查看运行状态"></a>3、查看运行状态</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get pods<br><br>NAME                            READY   STATUS    RESTARTS   AGE<br>deploy-nginx-55b87cfcf7-85d48   1/1     Running   0          21s<br>deploy-nginx-55b87cfcf7-qvcnf   1/1     Running   0          21s<br>deploy-nginx-55b87cfcf7-xnqm8   1/1     Running   0          21s<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get svc<br><br>NAME           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE<br>deploy-nginx   NodePort    10.96.47.102   &lt;none&gt;        8000:31000/TCP   3m17s<br>kubernetes     ClusterIP   10.96.0.1      &lt;none&gt;        443/TCP          4m16s<br></code></pre></td></tr></table></figure>
+
+<p>访问 <code>http://&#123;your host/ip&#125;:31000</code></p>
 
                 
               </div>
