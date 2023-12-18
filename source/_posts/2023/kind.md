@@ -198,7 +198,7 @@ nodes:
     # Optional, defaults to "0.0.0.0"
     listenAddress: "0.0.0.0"
     # Optional, defaults to tcp
-    protocol: udp
+    protocol: tcp
 - role: worker
 - role: worker
 EOF
@@ -336,6 +336,27 @@ EOF
 ```
 
 ```bash
-kubectl delete svc svc-nginx
+kubectl delete svc deploy-nginx
 kubectl apply -f ./svc-nginx.yaml
 ```
+
+## 3、查看运行状态
+
+```bash
+kubectl get pods
+
+NAME                            READY   STATUS    RESTARTS   AGE
+deploy-nginx-55b87cfcf7-85d48   1/1     Running   0          21s
+deploy-nginx-55b87cfcf7-qvcnf   1/1     Running   0          21s
+deploy-nginx-55b87cfcf7-xnqm8   1/1     Running   0          21s
+```
+
+```bash
+kubectl get svc
+
+NAME           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+deploy-nginx   NodePort    10.96.47.102   <none>        8000:31000/TCP   3m17s
+kubernetes     ClusterIP   10.96.0.1      <none>        443/TCP          4m16s
+```
+
+访问 `http://{your host/ip}:31000`
