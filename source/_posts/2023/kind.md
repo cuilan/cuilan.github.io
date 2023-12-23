@@ -189,12 +189,13 @@ cd /home/kind
 cat > 1c2w.yaml <<- 'EOF'
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+name: 1c2w
 # One control plane node and two "workers".
 nodes:
 - role: control-plane
   extraPortMappings:
   - containerPort: 31000
-    hostPort: 31000
+    hostPort: 80
     # Optional, defaults to "0.0.0.0"
     listenAddress: "0.0.0.0"
     # Optional, defaults to tcp
@@ -253,7 +254,7 @@ docker ps -a
 ```bash
 CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS                                                 NAMES
 e65f01903581   kindest/node:v1.27.1   "/usr/local/bin/entr…"   3 minutes ago   Up 3 minutes                                                         1c2w-worker2
-2fea583a6b6b   kindest/node:v1.27.1   "/usr/local/bin/entr…"   3 minutes ago   Up 3 minutes   0.0.0.0:31000->31000/udp, 127.0.0.1:25909->6443/tcp   1c2w-control-plane
+2fea583a6b6b   kindest/node:v1.27.1   "/usr/local/bin/entr…"   3 minutes ago   Up 3 minutes   0.0.0.0:80->31000/tcp, 127.0.0.1:25909->6443/tcp      1c2w-control-plane
 0a0512191340   kindest/node:v1.27.1   "/usr/local/bin/entr…"   3 minutes ago   Up 3 minutes                                                         1c2w-worker
 ```
 
@@ -359,4 +360,4 @@ deploy-nginx   NodePort    10.96.47.102   <none>        8000:31000/TCP   3m17s
 kubernetes     ClusterIP   10.96.0.1      <none>        443/TCP          4m16s
 ```
 
-访问 `http://{your host/ip}:31000`
+访问 `http://{your host/ip}`
