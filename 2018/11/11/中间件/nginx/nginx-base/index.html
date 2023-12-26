@@ -23,14 +23,14 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="一、什么是 Nginx？Nginx 是一款性能极高的 HTTP 反向代理服务器，Nginx 官方发布的测试数据显示，支持 10000 非活动的连接只需 2.5M 内存的性能消耗。同时也是一个邮件服务器。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cuilan.github.io/nginx-base/nginx1.png">
-<meta property="og:image" content="https://cuilan.github.io/nginx-base/nginx2.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx2.png">
 <meta property="article:published_time" content="2018-11-11T07:31:24.000Z">
-<meta property="article:modified_time" content="2023-12-23T09:15:40.282Z">
+<meta property="article:modified_time" content="2023-12-26T03:09:00.889Z">
 <meta property="article:author" content="zhang.yan">
 <meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cuilan.github.io/nginx-base/nginx1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png">
   
   
   
@@ -285,7 +285,8 @@
 <li>1、Nginx 采用多进程模型：<strong>Master</strong>、多个 <strong>Worker</strong> (独立进程，不需要锁，避免了锁带来的性能开销)</li>
 <li>2、异步非阻塞 <strong>(NIO)</strong></li>
 </ul>
-<p><img src="/nginx-base/nginx1.png" srcset="/img/loading.gif" lazyload alt="Nginx进程模型"></p>
+<img src="/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx1.png" srcset="/img/loading.gif" lazyload class="" title="Nginx进程模型">
+
 <h1 id="二、Nginx-安装与命令"><a href="#二、Nginx-安装与命令" class="headerlink" title="二、Nginx 安装与命令"></a>二、Nginx 安装与命令</h1><h2 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h2><p>Linux 下安装 Nginx：</p>
 <ul>
 <li>1、下载 nginx 的 linux 版本。</li>
@@ -379,7 +380,8 @@
 <p><strong>例如</strong>：对远程指定 IP 进行限制访问：</p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">if</span> ($remote_addr = <span class="hljs-number">192.168</span>.<span class="hljs-number">0</span>.<span class="hljs-number">120</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">403</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 </blockquote>
-<p><img src="/nginx-base/nginx2.png" srcset="/img/loading.gif" lazyload alt="Rewrite重写"></p>
+<img src="/2018/11/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx-base/nginx2.png" srcset="/img/loading.gif" lazyload class="" title="Rewrite重写">
+
 <h1 id="八、gzip-压缩"><a href="#八、gzip-压缩" class="headerlink" title="八、gzip 压缩"></a>八、gzip 压缩</h1><p>gizp 主要对内容、静态文件做压缩，用来提升网站访问速度，节省带宽。</p>
 <p><code>gzip</code> 可以在 <code>http</code> 作用范围内配置，也可以对单独一台虚拟主机进行配置。</p>
 <h2 id="gzip-相关配置："><a href="#gzip-相关配置：" class="headerlink" title="gzip 相关配置："></a>gzip 相关配置：</h2><p><code>gizp on|off</code> 是否开启。</p>

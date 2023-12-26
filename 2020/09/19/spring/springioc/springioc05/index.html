@@ -23,15 +23,15 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="SpringIOC源码分析二，Spring注册Bean的流程，register方法">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cuilan.github.io/springioc05/1.png">
+<meta property="og:image" content="https://cuilan.github.io/2020/09/19/spring/springioc/springioc05/1.png">
 <meta property="article:published_time" content="2020-09-19T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-12-23T09:15:40.282Z">
+<meta property="article:modified_time" content="2023-12-26T03:09:00.889Z">
 <meta property="article:author" content="zhang.yan">
 <meta property="article:tag" content="源码">
 <meta property="article:tag" content="Spring">
 <meta property="article:tag" content="SpringIOC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cuilan.github.io/springioc05/1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2020/09/19/spring/springioc/springioc05/1.png">
   
   
   
@@ -277,7 +277,8 @@
             
               <div class="markdown-body">
                 
-                <p><img src="/springioc05/1.png" srcset="/img/loading.gif" lazyload alt="Spring注册Bean的流程"></p>
+                <img src="/2020/09/19/spring/springioc/springioc05/1.png" srcset="/img/loading.gif" lazyload class="" title="Spring注册Bean的流程">
+
 <h1 id="一、register-方法"><a href="#一、register-方法" class="headerlink" title="一、register 方法"></a>一、register 方法</h1><p>register 方法既可以注册普通 Bean，也可以将一个 JavaConfig 配置类作为 Bean 来注册。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 注册普遍Bean</span><br>context.register(Test.class);<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">AnnotationConfigApplicationContext</span><span class="hljs-params">(Class&lt;?&gt;... componentClasses)</span> &#123;<br>	<span class="hljs-comment">// 先调用当前类的构造器，初始化BeanDefinition的读取器、扫描器</span><br>	<span class="hljs-built_in">this</span>();<br>	<span class="hljs-comment">// 注册配置类，本身也作为一个BeanDefinition被注册</span><br>	register(componentClasses);<br>	<span class="hljs-comment">// 刷新方法</span><br>	refresh();<br>&#125;<br></code></pre></td></tr></table></figure>
 
