@@ -23,14 +23,15 @@
 <meta property="og:site_name" content="翠兰 - Greenland">
 <meta property="og:description" content="虚拟机内部细节，各虚拟机厂商的实现略有差异，因此以主流的Oracle HotSpot虚拟机为例分析。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/2018/11/07/jvm/jvm-object-model/clipboard.png">
 <meta property="og:image" content="https://cuilan.github.io/2018/11/07/jvm/jvm-object-model/clipboard1.png">
 <meta property="article:published_time" content="2018-11-07T08:35:23.000Z">
-<meta property="article:modified_time" content="2024-02-05T15:40:53.018Z">
+<meta property="article:modified_time" content="2024-03-09T09:29:41.585Z">
 <meta property="article:author" content="zhang.yan">
 <meta property="article:tag" content="JAVA">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cuilan.github.io/2018/11/07/jvm/jvm-object-model/clipboard1.png">
+<meta name="twitter:image" content="https://cuilan.github.io/2018/11/07/jvm/jvm-object-model/clipboard.png">
   
   
   
@@ -72,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -85,7 +86,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.0.0"></head>
 
 
 <body>
@@ -116,7 +117,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -128,7 +129,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -140,7 +141,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -152,7 +153,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -164,7 +165,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -223,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          1.5k 字
         
       </span>
     
@@ -234,7 +235,7 @@
         
         
         
-          16 分钟
+          13 分钟
         
       </span>
     
@@ -291,7 +292,7 @@
 <h2 id="对齐填充："><a href="#对齐填充：" class="headerlink" title="对齐填充："></a>对齐填充：</h2><p>并不是必然存在的，也没有特别的含义，仅仅起着占位符的作用。而HotSpot VM的自动内存管理系统要求对象的大小必须是8字节的整数倍。对象头部分正好是8字节的倍数（1倍或者2倍），因此当对象实例数据部分没有对齐时，就需要对齐填充来补充。</p>
 <h1 id="3、对象的访问定位"><a href="#3、对象的访问定位" class="headerlink" title="3、对象的访问定位"></a>3、对象的访问定位</h1><p> <strong>Java程序需要通过栈上的引用数据来操作堆上的具体对象</strong>。对象的访问方式取决于虚拟机实现，目前主流的访问方式有使用句柄和直接指针两种。</p>
 <h2 id="句柄："><a href="#句柄：" class="headerlink" title="句柄："></a>句柄：</h2><p>可以理解为指向指针的指针（句柄池，也在堆中），维护指向对象的指针变化，而对象的句柄本身不发生变化。</p>
-
+<img src="/2018/11/07/jvm/jvm-object-model/clipboard.png" srcset="/img/loading.gif" lazyload class="" title="句柄访问 句柄访问">
 
 <p><strong>优势</strong> ：引用中存储的是稳定的句柄地址，在对象被移动（垃圾收集时移动对象是非常普遍的行为）时只会改变句柄中的实例数据指针，而引用本身不需要修改。</p>
 <h2 id="指针："><a href="#指针：" class="headerlink" title="指针："></a>指针：</h2><p>指向对象，代表对象的内存地址。如果使用直接指针访问，那么Java堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，而 <strong>引用中存储的直接就是对象地址</strong> 。</p>
