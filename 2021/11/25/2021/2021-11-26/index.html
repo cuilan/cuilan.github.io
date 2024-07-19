@@ -24,7 +24,7 @@
 <meta property="og:description" content="Spring @Transactional 事务失效的若干场景">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-19T07:23:41.512Z">
+<meta property="article:modified_time" content="2024-07-19T07:26:10.808Z">
 <meta property="article:author" content="zhang.yan">
 <meta property="article:tag" content="JAVA">
 <meta property="article:tag" content="事务">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          242 字
+          241 字
         
       </span>
     
@@ -274,7 +274,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="Transactional-事务失效场景"><a href="#Transactional-事务失效场景" class="headerlink" title="@Transactional 事务失效场景"></a>@Transactional 事务失效场景</h1><h2 id="1-方法访问权限的问题"><a href="#1-方法访问权限的问题" class="headerlink" title="1.方法访问权限的问题"></a>1.方法访问权限的问题</h2><p><code>@Transactional</code> ****作用在非 <code>public</code> 方法上，导致事务不生效。</p>
+                <h1 id="Transactional-事务失效场景"><a href="#Transactional-事务失效场景" class="headerlink" title="@Transactional 事务失效场景"></a>@Transactional 事务失效场景</h1><h2 id="1-方法访问权限的问题"><a href="#1-方法访问权限的问题" class="headerlink" title="1.方法访问权限的问题"></a>1.方法访问权限的问题</h2><p><code>@Transactional</code> 作用在非 <code>public</code> 方法上，导致事务不生效。</p>
 <h2 id="2-方法被-final-修饰"><a href="#2-方法被-final-修饰" class="headerlink" title="2.方法被 final 修饰"></a>2.方法被 final 修饰</h2><p>Spring 底层使用 AOP 代理，在代理类中实现事务的功能，被 <code>final</code> 修饰的方法无法被重写，也就无法生成代理类。</p>
 <h2 id="3-属性-propagation-设置错误"><a href="#3-属性-propagation-设置错误" class="headerlink" title="3.属性 propagation 设置错误"></a>3.属性 propagation 设置错误</h2><h2 id="4-注解属性-rollbackFor-设置错误"><a href="#4-注解属性-rollbackFor-设置错误" class="headerlink" title="4.注解属性 rollbackFor 设置错误"></a>4.注解属性 rollbackFor 设置错误</h2><h2 id="5-同一个类中方法调用"><a href="#5-同一个类中方法调用" class="headerlink" title="5.同一个类中方法调用"></a>5.同一个类中方法调用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>		<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">methodA</span><span class="hljs-params">()</span> &#123;<br>				<span class="hljs-built_in">this</span>.methodB();<br>		&#125;<br><br>		<span class="hljs-meta">@Transactional()</span><br>		<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">methodB</span><span class="hljs-params">()</span> &#123;<br>				...<br>		&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
