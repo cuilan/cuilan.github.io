@@ -14,6 +14,7 @@ layout: about
 > **爱好**：编程、阅读
 > **目前状态**：在职
 > **期望职位**：高级Java、架构师、Leader 均可
+> **期望薪资**：60w/year
 
 GitHub: [https://github.com/cuilan](https://github.com/cuilan)
 Blog: [https://cuilan.github.io](https://cuilan.github.io)
@@ -21,16 +22,18 @@ DockerHub: [https://hub.docker.com/u/cuilan](https://hub.docker.com/u/cuilan)
 
 ### 自我评价
 
+暂无，以后有时间写！
+
 ### 专业技能
 
 * **Java**: Jdk8/11/17、HotSpot、OpenJ、多线程、并发、AQS、集合源码、JVM、JMM、GC等
-* **其他语言**: `Golang`、`Python3`、`NASM`
+* **其他语言**: `Golang`、`Python3`、`ASM`
 * **主流框架**: `SpringFramework`、`SpringBoot2/3`、`SpringCloud`、`Mybatis`、`MybatisPlus`、`JPA`、`SpringData`。
 * **中间件**: `CoreDNS`、`Nginx`、`Caddy`、`Redis`、`Memcached`、`ES`、`MySQL`、`PgSQL`、`Postgis`、`GeoServer`、`MQ` 等。
-* **架构**: 单体、垂直、SOA、微服务、模块单体等。
+* **架构**: 单体、垂直、SOA、微服务、模块化单体等。
 * **CNCF生态**: `docker`、`Earthly`、`lima`、`Containerd`、`Podman`、`OCI`、`nerdctl`、`k8s`、`helm`、`traefik`、`Harbor`。
-* 源码: `Java集合源码`、`SpringFramework 5.2.x`、`OpenJDK一小部分源码`
-* 团队管理经验，从零构建公司 `DevOps`、`gitlab`、`runner`、`CI/CD`，规范制定及落实。
+* **源码**: `Java集合源码`、`SpringFramework 5.2.x`、`OpenJDK部分源码`
+* **团队管理经验**，构建公司 `DevOps`、`gitlab`、`runner`、`CI/CD`，规范制定及落实。
 
 ### 工作经历
 
