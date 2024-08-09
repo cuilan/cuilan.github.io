@@ -14,7 +14,6 @@ layout: about
 > **爱好**：编程、阅读
 > **目前状态**：在职
 > **期望职位**：高级Java、架构师、Leader 均可
-> **期望薪资**：60w/year
 
 GitHub: [https://github.com/cuilan](https://github.com/cuilan)
 Blog: [https://cuilan.github.io](https://cuilan.github.io)
@@ -52,8 +51,6 @@ DockerHub: [https://hub.docker.com/u/cuilan](https://hub.docker.com/u/cuilan)
 * `无秘`
 
 ### 个人项目(GitHub)
-
-> 不做推广，不关心star，关心技术，只为自己方便。
 
 * `tom-common`: Tools of mybatis(TOM) common.
   * [https://github.com/cuilan/tom-common](https://github.com/cuilan/tom-common)
