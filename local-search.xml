@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>How to Write a Git Commit Message?</title>
+    <link href="/2024/09/26/2024/git-commit-msg/"/>
+    <url>/2024/09/26/2024/git-commit-msg/</url>
+    
+    <content type="html"><![CDATA[<h1 id="如何写好-Git-Commit-Message"><a href="#如何写好-Git-Commit-Message" class="headerlink" title="如何写好 Git Commit Message"></a>如何写好 Git Commit Message</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul><li>提交信息的质量在不同的 Git 仓库中差异很大。</li><li>高质量的提交信息对于理解代码变更的上下文至关重要。</li><li>提交信息应该简洁、一致，并且能够清晰地传达变更的原因。</li></ul><h2 id="七个规则"><a href="#七个规则" class="headerlink" title="七个规则"></a>七个规则</h2><ol><li><strong>主题和正文之间用空行分隔</strong>：有助于工具（如 <code>git log</code>）正确解析提交信息。</li><li><strong>主题行限制在50个字符以内</strong>：为了可读性，同时迫使作者思考如何简洁地表达。</li><li><strong>主题行首字母大写</strong>：遵循常见的语法规则。</li><li><strong>主题行不要以句号结尾</strong>：节省空间，保持一致性。</li><li><strong>使用祈使语气书写主题行</strong>：类似于命令或指令，如 “Fix bug”。</li><li><strong>正文换行限制在72个字符</strong>：便于阅读和工具处理。</li><li><strong>正文解释变更的原因和内容，而不是方法</strong>：关注为什么要做这个变更，而不是如何做。</li></ol><h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><ul><li><strong>使用命令行</strong>：命令行提供了 Git 的完整功能，而 IDE 可能限制了 Git 的使用。</li><li><strong>阅读《Pro Git》</strong>：这本书提供了关于 Git 的深入知识。</li></ul><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>文章强调了编写清晰、一致的 Git 提交信息的重要性，并提供了七个具体的规则来指导如何做到这一点。通过遵循这些规则，可以提高代码库的可维护性，使其他开发者（包括未来的你）更容易理解代码变更的背景和原因。此外，文章还建议开发者使用命令行来充分利用 Git 的功能，并推荐阅读《Pro Git》书籍来提升对 Git 的理解。</p><h2 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h2><p><a href="https://cbea.ms/git-commit/">How to Write a Git Commit Message</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>使用kind构建k8s开发环境</title>
     <link href="/2023/12/15/2023/kind/"/>
     <url>/2023/12/15/2023/kind/</url>
