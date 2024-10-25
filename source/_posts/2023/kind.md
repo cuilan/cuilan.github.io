@@ -4,11 +4,10 @@ excerpt: kind 使用 Docker 容器运行本地 Kubernetes 集群的工具。
 index_img: /img/2023/kind.png
 date: 2023-12-15 12:28:00
 tags:
-  - docker
+  - Docker
   - k8s
 categories:
-  - docker
-  - k8s
+  - 容器化
 ---
 
 # 一、依赖

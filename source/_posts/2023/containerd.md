@@ -4,10 +4,10 @@ excerpt: 一款强调简单、稳健、可移植的容器运行时
 index_img: /img/2023/containerd.png
 date: 2023-09-07 17:52:00
 tags:
-  - docker
-  - conainerd
+  - Docker
+  - Containerd
 categories:
-  - docker
+  - 容器化
 ---
 
 在学习 Containerd 之前我们有必要对 Docker 的发展历史做一个简单的回顾，因为这里面牵涉到的组件实战是有点多，有很多我们会经常听到，但是不清楚这些组件到底是干什么用的，比如 `libcontainer`、`runc`、`containerd`、`CRI`、`OCI` 等等。

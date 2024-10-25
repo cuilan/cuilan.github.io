@@ -4,9 +4,9 @@ date: 2020-06-15 21:51:29
 tags:
 - Kubernetes
 - k8s
-- docker
+- Docker
 categories:
-- k8s
+- 容器化
 ---
 
 ## kubelet kubeadm kubectl 安装

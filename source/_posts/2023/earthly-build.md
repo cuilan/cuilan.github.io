@@ -4,9 +4,9 @@ excerpt: 像构建 Makefile 一样 构建 Dockerfile，熟悉的语法、快速�
 index_img: /img/2023/earthly.png
 date: 2023-07-28 15:00:00
 tags:
-  - docker
+  - Docker
 categories:
-  - docker
+  - 容器化
 ---
 
 # Earthly
