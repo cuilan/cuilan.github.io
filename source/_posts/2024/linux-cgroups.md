@@ -1,7 +1,7 @@
 ---
 title: Linux-cgroups
 excerpt: Linux资源管理之cgroups简介
-index_img: /img/2023/git.png
+index_img: /img/2024/cgroup.png
 date: 2024-10-25 11:06:00
 tags:
   - Linux
