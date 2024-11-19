@@ -20,39 +20,84 @@ Linux 系统管理的历史可以追溯到 Unix 时代，随着 Linux 操作系�
 在 Unix 系统中，系统启动和管理最初是通过一系列脚本和程序手动完成的。这些脚本通常位于 /etc/rc 目录下，并且在系统启动时按顺序执行。
 SysVinit：随着时间的推移，System V Init（简称 SysVinit）成为了 Unix 系统中最广泛使用的初始化系统。它定义了运行级别（runlevels），系统在这些级别之间切换以改变系统状态（例如，单用户模式、多用户模式等）。SysVinit 通过一系列的脚本和链接来管理服务的启动和停止。
 
+[SysVinit - ArchLinux](https://wiki.archlinuxcn.org/wiki/SysVinit)
+
 ## upstart 事件驱动
 
-Linux：当 Linux 内核首次发布时，它采用了与 Unix 类似的系统管理方法。Linux 的早期发行版，如 Slackware 和 Debian，都采用了 SysVinit 作为它们的初始化系统。
-Upstart：在 2000 年代初，Ubuntu 开发了 Upstart 框架，旨在解决 SysVinit 的一些局限性，如服务的并行启动和更复杂的服务依赖关系。Upstart 引入了事件驱动的启动和停止机制。
+当 Linux 内核首次发布时，它采用了与 Unix 类似的系统管理方法。Linux 的早期发行版，如 Slackware 和 Debian，都采用了 SysVinit 作为它们的初始化系统。Upstart：在 2000 年代初，Ubuntu 开发了 Upstart 框架，旨在解决 SysVinit 的一些局限性，如服务的并行启动和更复杂的服务依赖关系。Upstart 引入了事件驱动的启动和停止机制。
+
+[浅析 Linux 初始化 init 系统: UpStart](https://linux.cn/article-4423-1.html)
+[ReplacementInit - Ubuntu](https://wiki.ubuntu.com/ReplacementInit)
 
 ## systemd 的诞生
 
-systemd：2010 年，Red Hat 的开发者 Lennart Poettering 开发了 systemd，旨在解决 SysVinit 和 Upstart 的不足。systemd 不仅是一个初始化系统，它还是一个全面的系统和服务管理框架。它提供了并行启动、更强的依赖管理、日志记录、网络管理等功能。
-争议：systemd 的引入在 Linux 社区中引发了争议。一些批评者认为 systemd 过于复杂，且与系统其他部分的集成过于紧密，这可能会影响系统的安全性和可维护性。尽管如此，systemd 还是迅速被大多数主流 Linux 发行版采用。
+2010 年，Red Hat 的开发者 Lennart Poettering 开发了 systemd，旨在解决 SysVinit 和 Upstart 的不足。systemd 不仅是一个初始化系统，它还是一个全面的系统和服务管理框架。它提供了并行启动、更强的依赖管理、日志记录、网络管理等功能。
 
-广泛采用：尽管存在争议，systemd 已经成为大多数现代 Linux 发行版的标准初始化系统，包括 Fedora、Ubuntu、Debian 和 Arch Linux。
-持续发展：systemd 仍在积极开发中，不断引入新特性和改进。同时，也有一些替代方案，如 OpenRC 和 s6，它们提供了不同的系统管理方法，但目前还没有广泛采用。
+systemd 是一个 Linux 系统基础组件的集合，提供了一个系统和服务管理器，运行为 PID 1 并负责启动其它程序。功能包括：支持并行化任务；同时采用 socket 式与 D-Bus 总线式启用服务；按需启动守护进程（daemon）；利用 Linux 的 cgroups 监视进程；支持快照和系统恢复；维护挂载点和自动挂载点；各服务间基于依赖关系进行精密控制。systemd 支持 SysV 和 LSB 初始脚本，可以替代 sysvinit。除此之外，功能还包括日志进程、控制基础系统配置，维护登录用户列表以及系统账户、运行时目录和设置，可以运行容器和虚拟机，可以简单的管理网络配置、网络时间同步、日志转发和名称解析等。
+
+[systemd 项目主页](https://systemd.io/)
+[systemd source code](https://github.com/systemd/systemd)
 
 ---
 
 # Linux 启动流程
 
-提到 systemd 不得不提一下 Linux 的启动流程，这样才能清楚 systemd 在 Linux 系统中的地位和作用 😋。所以就简明扼要第介绍一下 Linux 启动的流程。
+提到 systemd 不得不提一下 Linux 的启动流程，这样才能清楚 systemd 在 Linux 系统中的地位和作用。
 
 Linux 从按下电源键到进入用户交互界面整个启动流程大致可以分为四个阶段：
 
-* BIOS/EFI 阶段
-* BootLoader 阶段
-* kernel 加载阶段
-* init：systemd/sysvinit 初始化阶段
+1. BIOS/UEFI 阶段
+2. 引导程序（Bootloader）阶段
+3. 内核（Kernel）初始化阶段
+4. 初始化（Init/Systemd）阶段
 
-## BIOS/EFI 阶段
+## 1.BIOS/UEFI 阶段
 
-## BootLoader 阶段
+当按下计算机的电源键后，BIOS/UEFI 阶段是整个系统启动的第一步。在这个阶段，硬件和固件开始协作，为加载操作系统做准备。
 
-## kernel 加载阶段
+按下电源键后，电源开始供电，电源提供稳定的电压给主板、CPU、内存、硬盘等硬件。电源良好的信号（Power Good Signal）发送给主板，通知硬件已准备好运行。
+紧接着 CPU 的程序计数器被初始化为一个特定的內存地址，存储在只读存储器（ROM）中的 BIOS 就是从这个特定的內存地址开始执行。所以没有 CPU 是无法启动主板上的 BIOS 的。
 
-## init：systemd/sysvinit 初始化阶段
+BIOS 或 UEFI 开始执行初始化程序（上电自检），并根据引导设备的优先级将系统控制权交给硬件启动项（比如硬盘/网络/U 盘等）。也就是我们 BIOS 上的启动菜单，这一步是可以被打断的。当我们按下 F12 或者 ESC 键（根据主板芯片组而异）就会弹出选择启动项的界面，而且这些按键高度依赖硬件。
+
+BIOS 选择好硬件启动项之后就开始执行硬件设备上的初级引导程序代码，对于 MBR 硬盘来讲是最开始的一个扇区（512 字节）將被加载到內存，並执行行其中的初始化代码来加载下一阶段的 Bootloader 。
+
+> MBR 主引导记录是一个 512 字节的扇区，位于硬盘的第一扇区（0 道 0 柱 1 扇区）。
+> GPT 表则定位 EFI 系统分区（ESP），在 ESP 分区中查找引导管理器文件（如 `BOOTx64.EFI`）。
+
+可以使用 `dd` 命令读取 MBR 里的内容 `dd if=/dev/sda of=mbr.bin bs=512 count=1`
+
+使用 `od` 命令来查看 `od -xa mbr.bin`
+
+```shell
+bj-soho-test-47 ➜  ~ od -xa mbr.bin
+0000000    0000    0000    0000    0000    0000    0000    0000    0000
+        nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul
+*
+0000660    0000    0000    0000    0000    21c1    f4d1    0000    0000
+        nul nul nul nul nul nul nul nul   A   !   Q   t nul nul nul nul
+0000700    0002    feee    ffff    0001    0000    6daf    7470    0000
+        stx nul   n   ~ del del soh nul nul nul   /   m   p   t nul nul
+0000720    0000    0000    0000    0000    0000    0000    0000    0000
+        nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul
+*
+0000760    0000    0000    0000    0000    0000    0000    0000    aa55
+        nul nul nul nul nul nul nul nul nul nul nul nul nul nul   U   *
+0001000
+bj-soho-test-47 ➜  ~
+```
+
+## 2.引导程序（Bootloader）阶段
+
+如果系统配置了多个内核版本或操作系统，引导程序会显示一个菜单，供用户选择要启动的系统，包括：启动 Linux 内核的不同版本、启动其他操作系统（如 Windows）、救援模式、单用户模式或恢复选项。
+
+Bootloader 读取其配置文件，通常包括内核文件的位置和启动参数，在 BIOS 模式下：`/boot/grub/grub.cfg`，在 UEFI 模式下：`/boot/efi/EFI/BOOT/grub.cfg`。
+
+引导程序根据 GRUB 的配置将默认内核镜像和 `initrd` 镜像加载到内存后，传递启动参数到内核，描述挂载点、根文件系统位置等，即将控制权移交给内核。
+
+## 3.内核（Kernel）初始化阶段
+
+## 4.初始化（Init/Systemd）阶段
 
 ---
 
