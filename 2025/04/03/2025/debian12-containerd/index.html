@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/mite.png">
+  <link rel="icon" href="/img/mite.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zhang.yan">
+  <meta name="keywords" content="博客">
+  
+    <meta name="description" content="debian12 安装 Containerd 容器运行时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="debian12 安装 Containerd 容器运行时">
+<meta property="og:url" content="https://cuilan.github.io/2025/04/03/2025/debian12-containerd/index.html">
+<meta property="og:site_name" content="翠兰 - Greenland">
+<meta property="og:description" content="debian12 安装 Containerd 容器运行时">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cuilan.github.io/img/2023/containerd.png">
+<meta property="article:published_time" content="2025-04-03T03:47:00.000Z">
+<meta property="article:modified_time" content="2025-04-03T10:25:03.969Z">
+<meta property="article:author" content="zhang.yan">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Containerd">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cuilan.github.io/img/2023/containerd.png">
+  
+  
+  
+  <title>debian12 安装 Containerd 容器运行时 - 翠兰 - Greenland</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cuilan.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Cuilan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="debian12 安装 Containerd 容器运行时"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-03 11:47" pubdate>
+          2025年4月3日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">debian12 安装 Containerd 容器运行时</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="安装-debian12-10-系统"><a href="#安装-debian12-10-系统" class="headerlink" title="安装 debian12.10 系统"></a>安装 debian12.10 系统</h1><p>最小标准化安装 server 版</p>
+<h2 id="配置系统"><a href="#配置系统" class="headerlink" title="配置系统"></a>配置系统</h2><p><code>init_debain12.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://raw.githubusercontent.com/cuilan/shell_scripts/refs/heads/main/debian/init_debain12.sh<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="安装-containerd"><a href="#安装-containerd" class="headerlink" title="安装 containerd"></a>安装 containerd</h1><h2 id="Step-1-Installing-containerd"><a href="#Step-1-Installing-containerd" class="headerlink" title="Step 1: Installing containerd"></a>Step 1: Installing containerd</h2><p>v2.0.0</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/containerd/containerd/releases/download/v2.0.0/containerd-2.0.0-linux-amd64.tar.gz<br><br>tar Cxzvf /usr/local containerd-2.0.0-linux-amd64.tar.gz<br><br>containerd --version<br></code></pre></td></tr></table></figure>
+
+<h2 id="Step2-enable-systemd"><a href="#Step2-enable-systemd" class="headerlink" title="Step2: enable systemd"></a>Step2: enable systemd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service<br><br>sudo <span class="hljs-built_in">mkdir</span> -p /usr/local/lib/systemd/system<br>sudo <span class="hljs-built_in">mv</span> containerd.service /usr/local/lib/systemd/system/containerd.service<br><br>sudo systemctl daemon-reload<br>sudo systemctl <span class="hljs-built_in">enable</span> --now containerd<br></code></pre></td></tr></table></figure>
+
+<p>systemd</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs systemd"># Copyright The containerd Authors.<br>#<br># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br># you may not use this file except in compliance with the License.<br># You may obtain a copy of the License at<br>#<br>#     http://www.apache.org/licenses/LICENSE-2.0<br>#<br># Unless required by applicable law or agreed to in writing, software<br># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br># See the License for the specific language governing permissions and<br># limitations under the License.<br><br>[Unit]<br>Description=containerd container runtime<br>Documentation=https://containerd.io<br>After=network.target dbus.service<br><br>[Service]<br>ExecStartPre=-/sbin/modprobe overlay<br>ExecStart=/usr/local/bin/containerd<br><br>Type=notify<br>Delegate=yes<br>KillMode=process<br>Restart=always<br>RestartSec=5<br><br># Having non-zero Limit*s causes performance problems due to accounting overhead<br># in the kernel. We recommend using cgroups to do container-local accounting.<br>LimitNPROC=infinity<br>LimitCORE=infinity<br><br># Comment TasksMax if your systemd version does not supports it.<br># Only systemd 226 and above support this version.<br>TasksMax=infinity<br>OOMScoreAdjust=-999<br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure>
+
+<h2 id="Step-3-Installing-runc"><a href="#Step-3-Installing-runc" class="headerlink" title="Step 3: Installing runc"></a>Step 3: Installing runc</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/opencontainers/runc/releases/download/v1.2.6/runc.amd64<br><br>sudo install -m 755 runc.amd64 /usr/local/sbin/runc<br><br>runc --version<br><span class="hljs-comment"># runc version 1.2.6</span><br><span class="hljs-comment"># commit: v1.2.6-0-ge89a2992</span><br><span class="hljs-comment"># spec: 1.2.0</span><br><span class="hljs-comment"># go: go1.23.7</span><br><span class="hljs-comment"># libseccomp: 2.5.5</span><br><br>runc spec<br>runc run --<span class="hljs-built_in">help</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Step-4-Installing-CNI-plugins"><a href="#Step-4-Installing-CNI-plugins" class="headerlink" title="Step 4: Installing CNI plugins"></a>Step 4: Installing CNI plugins</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/containernetworking/plugins/releases/download/v1.6.2/cni-plugins-linux-amd64-v1.6.2.tgz<br><br><span class="hljs-built_in">mkdir</span> -p /opt/cni/bin/<br><br>tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.6.2.tgz<br><br><span class="hljs-built_in">ls</span> /opt/cni/bin/<br><span class="hljs-comment"># bridge  dhcp  flannel  host-local  ipvlan  loopback  macvlan  portmap  ptp  sbr  tuning  vlan</span><br></code></pre></td></tr></table></figure>
+
+<p>配置CNI（可选）</p>
+<p>如果用于 Kubernetes 或容器运行时（如 CRI-O、containerd），需配置 CNI 网络：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/cni/net.d/<br><br><span class="hljs-built_in">touch</span> /etc/cni/net.d/10-mynet.conf<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;cniVersion&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;0.4.0&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mynet&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;bridge&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;bridge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cni0&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;isGateway&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;ipMasq&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;ipam&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;host-local&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;subnet&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;10.22.0.0/16&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;routes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>      <span class="hljs-punctuation">&#123;</span> <span class="hljs-attr">&quot;dst&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;0.0.0.0/0&quot;</span> <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="安装-nerdctl"><a href="#安装-nerdctl" class="headerlink" title="安装 nerdctl"></a>安装 nerdctl</h1><h2 id="Minimal-installation"><a href="#Minimal-installation" class="headerlink" title="Minimal installation"></a>Minimal installation</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/containerd/nerdctl/releases/download/v2.0.4/nerdctl-2.0.4-linux-amd64.tar.gz<br><br>tar Cxzvf /usr/local/bin nerdctl-2.0.4-linux-amd64.tar.gz<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> -l /usr/local/bin/<br>-rwxr-xr-x root/root  27721912 2025-03-20 15:04 nerdctl<br>-rwxr-xr-x root/root     22657 2025-03-20 15:04 containerd-rootless-setuptool.sh<br>-rwxr-xr-x root/root      8708 2025-03-20 15:04 containerd-rootless.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="Full-installation"><a href="#Full-installation" class="headerlink" title="Full installation"></a>Full installation</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/containerd/nerdctl/releases/download/v2.0.4/nerdctl-full-2.0.4-linux-amd64.tar.gz<br><br>tar Cxzvf /usr/local/bin nerdctl-full-2.0.4-linux-amd64.tar.gz<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> -l /usr/local/bin/<br>drwxr-xr-x 0/0               0 2025-03-20 15:11 bin/<br>-rwxr-xr-x 0/0        31114986 2015-10-21 00:00 bin/buildctl<br>-rwxr-xr-x 0/0        23724032 2022-09-05 09:52 bin/buildg<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-LICENSE -&gt; ../libexec/cni/LICENSE<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-README.md -&gt; ../libexec/cni/README.md<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-bandwidth -&gt; ../libexec/cni/bandwidth<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-bridge -&gt; ../libexec/cni/bridge<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-dhcp -&gt; ../libexec/cni/dhcp<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-dummy -&gt; ../libexec/cni/dummy<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-firewall -&gt; ../libexec/cni/firewall<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-host-device -&gt; ../libexec/cni/host-device<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-host-local -&gt; ../libexec/cni/host-local<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-ipvlan -&gt; ../libexec/cni/ipvlan<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-loopback -&gt; ../libexec/cni/loopback<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-macvlan -&gt; ../libexec/cni/macvlan<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-portmap -&gt; ../libexec/cni/portmap<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-ptp -&gt; ../libexec/cni/ptp<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-sbr -&gt; ../libexec/cni/sbr<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-static -&gt; ../libexec/cni/static<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-tap -&gt; ../libexec/cni/tap<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-tuning -&gt; ../libexec/cni/tuning<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-vlan -&gt; ../libexec/cni/vlan<br>lrwxrwxrwx 0/0               0 2025-03-20 15:10 bin/buildkit-cni-vrf -&gt; ../libexec/cni/vrf<br>-rwxr-xr-x 0/0        63159823 2015-10-21 00:00 bin/buildkitd<br>-rwxr-xr-x 0/0        16435808 2025-03-20 15:09 bin/bypass4netns<br>-rwxr-xr-x 0/0         6320312 2025-03-20 15:09 bin/bypass4netnsd<br>-rwxr-xr-x 0/0        39849568 2025-03-20 15:10 bin/containerd<br>-rwxr-xr-x 0/0        11874488 2025-03-19 10:45 bin/containerd-fuse-overlayfs-grpc<br>-rwxr-xr-x 0/0           22657 2025-03-20 15:11 bin/containerd-rootless-setuptool.sh<br>-rwxr-xr-x 0/0            8708 2025-03-20 15:11 bin/containerd-rootless.sh<br>-rwxr-xr-x 0/0         8028344 2025-03-20 15:10 bin/containerd-shim-runc-v2<br>-rwxr-xr-x 0/0        53432472 2024-12-12 14:54 bin/containerd-stargz-grpc<br>-rwxr-xr-x 0/0        23513933 2025-03-20 15:11 bin/ctd-decoder<br>-rwxr-xr-x 0/0        20504760 2025-03-20 15:10 bin/ctr<br>-rwxr-xr-x 0/0        31163196 2025-03-20 15:11 bin/ctr-enc<br>-rwxr-xr-x 0/0        21078168 2024-12-12 14:54 bin/ctr-remote<br>-rwxr-xr-x 0/0         1789968 2025-03-20 15:11 bin/fuse-overlayfs<br>-rwxr-xr-x 0/0        27689144 2025-03-20 15:11 bin/nerdctl<br>-rwxr-xr-x 0/0        12235661 2025-03-10 02:16 bin/rootlessctl<br>-rwxr-xr-x 0/0        14172281 2025-03-10 02:16 bin/rootlesskit<br>-rwxr-xr-x 0/0        17433000 2025-03-20 15:09 bin/runc<br>-rwxr-xr-x 0/0         2383224 2025-03-20 15:11 bin/slirp4netns<br>-rwxr-xr-x 0/0         9707672 2024-12-12 14:54 bin/stargz-store-helper<br>-rwxr-xr-x 0/0          870496 2025-03-20 15:11 bin/tini<br>drwxr-xr-x 0/0               0 2025-03-20 15:10 lib/<br>drwxr-xr-x 0/0               0 2025-03-20 15:10 lib/systemd/<br>drwxr-xr-x 0/0               0 2025-03-20 15:10 lib/systemd/system/<br>-rw-r--r-- 0/0            1325 2025-03-20 15:10 lib/systemd/system/buildkit.service<br>-rw-r--r-- 0/0            1264 2025-03-20 15:09 lib/systemd/system/containerd.service<br>-rw-r--r-- 0/0             312 2025-03-20 15:10 lib/systemd/system/stargz-snapshotter.service<br>drwxr-xr-x 0/0               0 2025-03-20 15:10 libexec/<br>drwxr-xr-x 0/0               0 2025-03-20 15:10 libexec/cni/<br>-rw-r--r-- 0/0           11357 2025-01-06 16:12 libexec/cni/LICENSE<br>-rw-r--r-- 0/0            2343 2025-01-06 16:12 libexec/cni/README.md<br>-rwxr-xr-x 0/0         4655178 2025-01-06 16:12 libexec/cni/bandwidth<br>-rwxr-xr-x 0/0         5287212 2025-01-06 16:12 libexec/cni/bridge<br>-rwxr-xr-x 0/0        12762814 2025-01-06 16:12 libexec/cni/dhcp<br>-rwxr-xr-x 0/0         4847854 2025-01-06 16:12 libexec/cni/dummy<br>-rwxr-xr-x 0/0         5315134 2025-01-06 16:12 libexec/cni/firewall<br>-rwxr-xr-x 0/0         4792010 2025-01-06 16:12 libexec/cni/host-device<br>-rwxr-xr-x 0/0         4060355 2025-01-06 16:12 libexec/cni/host-local<br>-rwxr-xr-x 0/0         4870719 2025-01-06 16:12 libexec/cni/ipvlan<br>-rwxr-xr-x 0/0         4114939 2025-01-06 16:12 libexec/cni/loopback<br>-rwxr-xr-x 0/0         4903324 2025-01-06 16:12 libexec/cni/macvlan<br>-rwxr-xr-x 0/0         4713429 2025-01-06 16:12 libexec/cni/portmap<br>-rwxr-xr-x 0/0         5076613 2025-01-06 16:12 libexec/cni/ptp<br>-rwxr-xr-x 0/0         4333422 2025-01-06 16:12 libexec/cni/sbr<br>-rwxr-xr-x 0/0         3651755 2025-01-06 16:12 libexec/cni/static<br>-rwxr-xr-x 0/0         4928874 2025-01-06 16:12 libexec/cni/tap<br>-rwxr-xr-x 0/0         4208424 2025-01-06 16:12 libexec/cni/tuning<br>-rwxr-xr-x 0/0         4868252 2025-01-06 16:12 libexec/cni/vlan<br>-rwxr-xr-x 0/0         4488658 2025-01-06 16:12 libexec/cni/vrf<br>drwxr-xr-x 0/0               0 2025-03-20 15:08 share/<br>drwxr-xr-x 0/0               0 2025-03-20 15:11 share/doc/<br>drwxr-xr-x 0/0               0 2025-03-20 15:11 share/doc/nerdctl/<br>-rw-r--r-- 0/0           12101 2025-03-20 15:04 share/doc/nerdctl/README.md<br>drwxr-xr-x 0/0               0 2025-03-20 15:04 share/doc/nerdctl/docs/<br>-rw-r--r-- 0/0            3953 2025-03-20 15:04 share/doc/nerdctl/docs/build.md<br>-rw-r--r-- 0/0            2570 2025-03-20 15:04 share/doc/nerdctl/docs/builder-debug.md<br>-rw-r--r-- 0/0            4779 2025-03-20 15:04 share/doc/nerdctl/docs/cni.md<br>-rw-r--r-- 0/0           81663 2025-03-20 15:04 share/doc/nerdctl/docs/command-reference.md<br>-rw-r--r-- 0/0            1814 2025-03-20 15:04 share/doc/nerdctl/docs/compose.md<br>-rw-r--r-- 0/0            5814 2025-03-20 15:04 share/doc/nerdctl/docs/config.md<br>-rw-r--r-- 0/0            9128 2025-03-20 15:04 share/doc/nerdctl/docs/cosign.md<br>-rw-r--r-- 0/0            5660 2025-03-20 15:04 share/doc/nerdctl/docs/cvmfs.md<br>drwxr-xr-x 0/0               0 2025-03-20 15:04 share/doc/nerdctl/docs/dev/<br>-rw-r--r-- 0/0           12859 2025-03-20 15:04 share/doc/nerdctl/docs/dev/auditing_dockerfile.md<br>-rw-r--r-- 0/0            8587 2025-03-20 15:04 share/doc/nerdctl/docs/dev/store.md<br>-rw-r--r-- 0/0            2776 2025-03-20 15:04 share/doc/nerdctl/docs/dir.md<br>-rw-r--r-- 0/0             906 2025-03-20 15:04 share/doc/nerdctl/docs/experimental.md<br>-rw-r--r-- 0/0           14687 2025-03-20 15:04 share/doc/nerdctl/docs/faq.md<br>-rw-r--r-- 0/0             884 2025-03-20 15:04 share/doc/nerdctl/docs/freebsd.md<br>-rw-r--r-- 0/0            3273 2025-03-20 15:04 share/doc/nerdctl/docs/gpu.md<br>drwxr-xr-x 0/0               0 2025-03-20 15:04 share/doc/nerdctl/docs/images/<br>-rw-r--r-- 0/0            1540 2025-03-20 15:04 share/doc/nerdctl/docs/images/nerdctl-white.svg<br>-rw-r--r-- 0/0            1462 2025-03-20 15:04 share/doc/nerdctl/docs/images/nerdctl.svg<br>-rw-r--r-- 0/0          684421 2025-03-20 15:04 share/doc/nerdctl/docs/images/rootlessKit-network-design.png<br>-rw-r--r-- 0/0           14462 2025-03-20 15:04 share/doc/nerdctl/docs/ipfs.md<br>-rw-r--r-- 0/0            2384 2025-03-20 15:04 share/doc/nerdctl/docs/multi-platform.md<br>-rw-r--r-- 0/0            2960 2025-03-20 15:04 share/doc/nerdctl/docs/notation.md<br>-rw-r--r-- 0/0            2610 2025-03-20 15:04 share/doc/nerdctl/docs/nydus.md<br>-rw-r--r-- 0/0            3277 2025-03-20 15:04 share/doc/nerdctl/docs/ocicrypt.md<br>-rw-r--r-- 0/0            1876 2025-03-20 15:04 share/doc/nerdctl/docs/overlaybd.md<br>-rw-r--r-- 0/0           15657 2025-03-20 15:04 share/doc/nerdctl/docs/registry.md<br>-rw-r--r-- 0/0            9147 2025-03-20 15:04 share/doc/nerdctl/docs/rootless.md<br>-rw-r--r-- 0/0            2015 2025-03-20 15:04 share/doc/nerdctl/docs/soci.md<br>-rw-r--r-- 0/0           10312 2025-03-20 15:04 share/doc/nerdctl/docs/stargz.md<br>drwxr-xr-x 0/0               0 2025-03-20 15:04 share/doc/nerdctl/docs/testing/<br>-rw-r--r-- 0/0            4916 2025-03-20 15:04 share/doc/nerdctl/docs/testing/README.md<br>-rw-r--r-- 0/0           15584 2025-03-20 15:04 share/doc/nerdctl/docs/testing/tools.md<br>drwxr-xr-x 0/0               0 2025-03-20 15:11 share/doc/nerdctl-full/<br>-rw-r--r-- 0/0             999 2025-03-20 15:11 share/doc/nerdctl-full/README.md<br>-rw-r--r-- 0/0            9232 2025-03-20 15:11 share/doc/nerdctl-full/SHA256SUMS<br></code></pre></td></tr></table></figure>
+
+<h2 id="Quick-start"><a href="#Quick-start" class="headerlink" title="Quick start"></a>Quick start</h2><h3 id="Rootful-root用户运行容器"><a href="#Rootful-root用户运行容器" class="headerlink" title="Rootful root用户运行容器"></a>Rootful root用户运行容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sudo systemctl <span class="hljs-built_in">enable</span> --now containerd<br>$ sudo nerdctl run -d --name nginx -p 80:80 nginx:alpine<br></code></pre></td></tr></table></figure>
+
+<h3 id="Rootless-非root用户运行容器"><a href="#Rootless-非root用户运行容器" class="headerlink" title="Rootless 非root用户运行容器"></a>Rootless 非root用户运行容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ containerd-rootless-setuptool.sh install<br>$ nerdctl run -d --name nginx -p 8080:80 nginx:alpine<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="配置-containerd"><a href="#配置-containerd" class="headerlink" title="配置 containerd"></a>配置 containerd</h1><h2 id="生成默认配置文件"><a href="#生成默认配置文件" class="headerlink" title="生成默认配置文件"></a>生成默认配置文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">containerd config default &gt; /etc/containerd/config.toml<br></code></pre></td></tr></table></figure>
+
+<h2 id="配置私有仓库"><a href="#配置私有仓库" class="headerlink" title="配置私有仓库"></a>配置私有仓库</h2><ul>
+<li>In containerd 2.x</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">version = 3<br><br>[plugins.<span class="hljs-string">&#x27;io.containerd.cri.v1.images&#x27;</span>.registry]<br>  config_path = <span class="hljs-string">&#x27;/etc/containerd/certs.d&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>In containerd 1.x</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">version = 2<br><br>[plugins.<span class="hljs-string">&quot;io.containerd.grpc.v1.cri&quot;</span>.registry]<br>   config_path = <span class="hljs-string">&quot;/etc/containerd/certs.d&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="配置认证信息"><a href="#配置认证信息" class="headerlink" title="配置认证信息"></a>配置认证信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建目录</span><br>sudo <span class="hljs-built_in">mkdir</span> -p /etc/containerd/certs.d/reg.weattech.com<br><br>sudo <span class="hljs-built_in">touch</span> /etc/containerd/certs.d/reg.weattech.com/hosts.toml<br><br>sudo <span class="hljs-built_in">tee</span> /etc/containerd/certs.d/reg.weattech.com/hosts.toml &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">server = &quot;https://reg.weattech.com&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">[host.&quot;https://reg.weattech.com&quot;]</span><br><span class="hljs-string">  capabilities = [&quot;pull&quot;, &quot;resolve&quot;, &quot;push&quot;]</span><br><span class="hljs-string">  [host.&quot;https://reg.weattech.com&quot;.auth]</span><br><span class="hljs-string">    username = &quot;admin&quot;</span><br><span class="hljs-string">    password = &quot;password&quot;</span><br><span class="hljs-string">EOF</span><br><br>sudo systemctl restart containerd<br></code></pre></td></tr></table></figure>
+
+<h2 id="nerdctl-login"><a href="#nerdctl-login" class="headerlink" title="nerdctl login"></a>nerdctl login</h2><p>nerdctl 需要单独登录并认证，提供类似 docker login 的功能，认证文件存储在：<code>/root/.docker/config.json</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ nerdctl login reg.weattech.com<br>Enter Username:<br>Enter Password: <br><br>WARNING! Your credentials are stored unencrypted <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;/root/.docker/config.json&#x27;</span>.<br>Configure a credential helper to remove this warning. See<br>https://docs.docker.com/go/credential-store/<br><br>Login Succeeded<br><br>$ nerdctl pull reg.weattech.com/base/alpine:3.20<br>$ nerdctl pull reg.weattech.com/dockerhub/nginx:1.22-alpine<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AE%B9%E5%99%A8%E5%8C%96/" class="category-chain-item">容器化</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+      
+        <a href="/tags/Containerd/" class="print-no-link">#Containerd</a>
+      
+        <a href="/tags/Linux/" class="print-no-link">#Linux</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>debian12 安装 Containerd 容器运行时</div>
+      <div>https://cuilan.github.io/2025/04/03/2025/debian12-containerd/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zhang.yan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/11/01/2024/linux-systemd/" title="Linux 系统管理：深入探索 systemd">
+                        <span class="hidden-mobile">Linux 系统管理：深入探索 systemd</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-github-fill"></i> <a href="https://github.com/cuilan" target="_blank" rel="nofollow noopener"><span>cuilan</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
