@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      main
+      - main
 
 jobs:
   build:
@@ -11,26 +11,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: 'npm'
-      
-      - name: Install and Build 🔧
-        run: |
-          npm install -g hexo-cli
-          npm install
-          hexo clean
-          hexo generate
+          node-version: "20"
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
         with:
-          # GITHUB_TOKEN 为内置变量，无需在secrets手动添加
-          # https://docs.github.com/zh/actions/security-guides/automatic-token-authentication
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: public
+          path: node_modules
+          key: ${{ runner.OS }}-npm-cache
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build 🔧
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      # - name: Deploy 🚀
+      #   uses: JamesIves/github-pages-deploy-action@3.7.1
+      #   with:
+      #     # GITHUB_TOKEN 为内置变量，无需在secrets手动添加
+      #     # https://docs.github.com/zh/actions/security-guides/automatic-token-authentication
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     BRANCH: gh-pages
+      #     FOLDER: public
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: gh-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
