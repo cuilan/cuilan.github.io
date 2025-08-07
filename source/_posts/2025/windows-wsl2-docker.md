@@ -1,6 +1,6 @@
 ---
 title: 在 Windows 环境下优雅的使用 Docker
-excerpt: 拒绝 Docker Desktop 从我做起，无论是 Mac 还是 Windows，Docker 官方的 Docker Desktop 容器管理软件都是垃圾，不接受任何形式的反驳。在 Mac 上推荐使用：lima。
+excerpt: 拒绝 Docker Desktop 从我做起，无论是 Mac 还是 Windows，Docker 官方的 Docker Desktop 容器管理软件都是垃圾。在 Mac 上推荐使用：lima。
 index_img: /img/2025/win-wsl-docker.png
 date: 2025-08-06 17:18:00
 tags:
@@ -14,16 +14,23 @@ categories:
 
 # 一、先说期望
 
-对于每天重度依赖 Linux 开发环境的开发者来说，Windows 一直以来都存在一些痛点。不过，自微软推出 WSL2 (Windows Subsystem for Linux 2) 以来，Windows 的开发体验得到了极大的改善。我们现在可以在 Windows 上获得一个近乎原生的 Linux 环境。
+对于我一个每天重度依赖 Linux 开发环境的开发者来说，Docker 或者说容器化需求几乎是刚需。
 
-然而，在容器化方面，官方的 Docker Desktop for Windows 却不尽如人意：
+Mac 虽然基本满足大部分需求，但对于容器化来说依然不足，尤其是 Docker Desktop for Mac，因此在 Mac 下使用 Docker 有以下几种方案：
+1. 安装 `docker cli`，通过 `docker context` 使用远程 `Linux` 主机上的 `docker`。
+2. 安装 `VMware` 或 `Parallels` 等虚拟机，甚至自己封装 `qemu` 脚本，配置复制且性能开销大。
+3. 在 Mac 下更 **推荐使用 CNCF 生态的 `lima`**，可以在 Apple silicon 系列芯片上获得完美的 x86 开发体验。
+
+Windows 环境下一直以来都存在一些痛点。不过自微软推出 **WSL2 (Windows Subsystem for Linux 2)** 以来，Windows 的开发体验得到了极大的改善。我们现在可以在 Windows 上获得一个近乎原生的 Linux 环境。
+
+然而，在容器化方面，官方的 Docker Desktop for Windows 同样不如人意：
 1.  **资源占用高**：启动后会占用大量内存和 CPU 资源。
 2.  **收费策略**：对于大公司，Docker Desktop 不再是免费的。
 3.  **不够“原生”**：它背后依然是虚拟机技术，有时会出现一些奇怪的网络或文件系统问题。
 
 所以，我们的期望是：
 -   彻底告别 Docker Desktop。
--   在 Windows 环境下，通过原生命令行工具（PowerShell/CMD）使用完整的 `docker` CLI 功能。
+-   在 Windows 环境下，通过原生命令行工具（PowerShell/CMD）使用完整的 `docker cli` 功能。
 -   能够与 VS Code 完美集成，特别是使用 Dev Containers 功能，享受容器化开发带来的便利。
 
 # 二、方案选型
@@ -84,7 +91,7 @@ wsl --install
 wsl --update
 ```
 
-**管理你的 Linux 发行版**
+**管理 Linux 发行版**
 
 以下是一些常用的 WSL 管理命令：
 
@@ -194,17 +201,18 @@ sudo usermod -aG docker $USER
 
 这是实现 Windows 端 CLI 与 WSL 中 Docker Daemon 通信的关键一步。我们需要让 Docker 监听一个 TCP 端口。
 
-创建或修改 `/etc/docker/daemon.json` 文件：
+修改 `/usr/lib/systemd/system/docker.service` 文件：
 ```bash
-sudo nano /etc/docker/daemon.json
+sudo vim /usr/lib/systemd/system/docker.service
 ```
 
 在文件中添加以下内容。如果文件已有内容，请确保合并。这会让 Docker 同时监听默认的 Unix socket 和 2375 端口。
 
-```json
-{
-  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
-}
+```
+# vim /usr/lib/systemd/system/docker.service
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
 ```
 
 **3. 启用并启动 Docker 服务**
@@ -212,8 +220,10 @@ sudo nano /etc/docker/daemon.json
 新版本的 WSL 支持 `systemd`，我们可以像在普通 Linux 上一样管理服务。
 
 ```bash
+# 重新加载
+sudo systemctl daemon-reload
 # 启动 Docker 服务
-sudo systemctl start docker
+sudo systemctl restart docker
 # 设置开机自启
 sudo systemctl enable docker
 # 检查 Docker 服务状态
@@ -233,7 +243,7 @@ sudo dockerd > /dev/null 2>&1 &
 
 ## 3. 在 Windows 上配置 Docker CLI
 
-现在，我们回到 Windows，让 Windows 上的 Docker CLI 与 WSL 中的 Docker 服务对话。
+回到 Windows，让 Windows 上的 Docker CLI 与 WSL 中的 Docker 服务交互。
 
 **安装 Docker CLI**
 
@@ -243,10 +253,20 @@ sudo dockerd > /dev/null 2>&1 &
 ```powershell
 choco install docker-cli
 ```
-使用 `scoop`:
+
+**开发人员更推荐使用 `scoop`**，首先是安装:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+
+然后安装 `docker`:
+
 ```powershell
 scoop install docker
 ```
+
+安装完成后将获得两个可执行程序：`docker.exe` `dockerd.exe`，不过 dockerd.exe 仅可以运行 Windows container，对于我来说基本无用，有了 docker.exe 就足够了。
 
 **配置 Docker 上下文 (Context)**
 
