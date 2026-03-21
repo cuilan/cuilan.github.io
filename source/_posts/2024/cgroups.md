@@ -244,7 +244,7 @@ cat /proc/self/uid_map
 cat /proc/self/gid_map
 ```
 
-![用户权限隔离](linux-cgroups/user-namespace.png)
+![user-namespace](cgroups/usernamespace.png)
 
 常见现象：
 
