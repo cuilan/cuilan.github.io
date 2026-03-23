@@ -23,7 +23,7 @@ categories:
 
 ---
 
-# 二、 Namespace：构建进程的“平行宇宙”
+# 二、 Namespace：构建隔离进程
 
 Namespace 的本质是修改进程对系统资源的“看法”。目前 Linux 内核主要支持 **7 种核心的 Namespace**，它们共同构成了容器的隔离边界。
 
