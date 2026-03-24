@@ -1,12 +1,6 @@
 # hexo-blog
 
-个人博客
-
----
-
 ## Hexo
-
-### Command
 
 ```bash
 # Install
