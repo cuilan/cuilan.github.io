@@ -16,7 +16,7 @@ layout: about
 > **期望职位**：高级Java、架构师、Leader 均可
 
 GitHub: [https://github.com/cuilan](https://github.com/cuilan)
-Blog: [https://cuilan.github.io](https://cuilan.github.io)
+Blog: [https://www.cuilan.org](https://www.cuilan.org)
 DockerHub: [https://hub.docker.com/u/cuilan](https://hub.docker.com/u/cuilan)
 
 ### 自我评价
