@@ -1,7 +1,7 @@
 ---
 title: Linux容器技术深度解析：从LXC到现代容器生态
 excerpt: 深入了解Linux容器技术的发展历程，从底层原理到实际应用，涵盖LXC、Docker、Incus等主流容器实现的对比分析。
-index_img: /img/2025/lxc.webp
+index_img: https://img.cuilan.org/2025/lxc.webp
 date: 2025-09-23 10:14:00
 tags:
   - LXC

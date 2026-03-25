@@ -1,7 +1,7 @@
 ---
 title: 使用kind构建k8s开发环境
 excerpt: kind 使用 Docker 容器运行本地 Kubernetes 集群的工具。
-index_img: /img/2023/kind.png
+index_img: https://img.cuilan.org/2023/kind.png
 date: 2023-12-15 12:28:00
 tags:
   - Docker

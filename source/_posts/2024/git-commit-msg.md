@@ -1,7 +1,7 @@
 ---
 title: How to Write a Git Commit Message?
 excerpt: 如何写好 Git Commit Message
-index_img: /img/2023/git.png
+index_img: https://img.cuilan.org/2023/git.png
 date: 2024-09-26 23:53:00
 tags:
   - git

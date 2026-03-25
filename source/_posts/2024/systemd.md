@@ -1,7 +1,7 @@
 ---
 title: Linux 系统管理：深入探索 systemd
 excerpt: 在现代 Linux 系统中，systemd 已经成为系统和服务管理的新标准。systemd 提供了一系列创新功能，旨在提高系统的效率和可靠性。无论你是系统管理员还是对 Linux 内核感兴趣的用户，了解 systemd 都是必不可少的。
-index_img: /img/2024/systemd.png
+index_img: https://img.cuilan.org/2024/systemd.png
 date: 2024-11-01 09:40:00
 tags:
   - Linux

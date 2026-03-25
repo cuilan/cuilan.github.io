@@ -1,7 +1,7 @@
 ---
 title: Containerd容器运行时
 excerpt: 一款强调简单、稳健、可移植的容器运行时
-index_img: /img/2023/containerd.png
+index_img: https://img.cuilan.org/2023/containerd.png
 date: 2023-09-07 17:52:00
 tags:
   - Docker

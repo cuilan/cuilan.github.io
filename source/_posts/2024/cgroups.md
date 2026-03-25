@@ -1,7 +1,7 @@
 ---
 title: Linux Namespace 与 Cgroups 深度全解
 excerpt: Linux 中 Namespace 决定了进程“能看到什么”，而 Cgroups 决定了进程“能用多少”。本文将探索资源管控的终极奥秘。
-index_img: /img/2024/cgroup.png
+index_img: https://img.cuilan.org/2024/cgroup.png
 date: 2024-12-25 11:06:00
 tags:
   - Linux
@@ -244,7 +244,7 @@ cat /proc/self/uid_map
 cat /proc/self/gid_map
 ```
 
-![user-namespace](cgroups/usernamespace.png)
+![user-namespace](https://img.cuilan.org/2024/cgroups/usernamespace.png)
 
 常见现象：
 

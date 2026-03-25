@@ -1,7 +1,7 @@
 ---
 title: debian12 安装 Containerd 容器运行时
 excerpt: debian12 安装 Containerd 容器运行时
-index_img: /img/2023/containerd.png
+index_img: https://img.cuilan.org/2023/containerd.png
 date: 2025-04-03 11:47:00
 tags:
   - Linux

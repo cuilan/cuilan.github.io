@@ -1,7 +1,7 @@
 ---
 title: frp 内网穿透配置
 excerpt: 详细介绍如何配置 frp 内网穿透服务，包括服务端和客户端的完整配置方法，以及使用 systemd 进行服务管理的最佳实践 
-index_img: /img/2025/frp.png
+index_img: https://img.cuilan.org/2025/frp.png
 date: 2025-06-26 15:07:00
 tags:
   - Linux

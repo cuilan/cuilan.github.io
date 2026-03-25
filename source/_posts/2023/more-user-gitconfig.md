@@ -1,7 +1,7 @@
 ---
 title: Git多用户配置
 excerpt: 大多数情况下，我们本地会有多个 git 用户，在公司连接内网的 gitlab 账号，个人的项目需要使用到 github 账户，或一些其他别的账户，那么就需要配置多用户。
-index_img: /img/2023/git.png
+index_img: https://img.cuilan.org/2023/git.png
 date: 2023-08-01 18:14:00
 tags:
   - git

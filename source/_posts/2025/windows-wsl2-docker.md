@@ -1,7 +1,7 @@
 ---
 title: 在 Windows 环境下优雅的使用 Docker
 excerpt: 拒绝 Docker Desktop 从我做起，无论是 Mac 还是 Windows，Docker 官方的 Docker Desktop 容器管理软件都是垃圾。在 Mac 上推荐使用：lima。
-index_img: /img/2025/win-wsl-docker.png
+index_img: https://img.cuilan.org/2025/win-wsl-docker.png
 date: 2025-08-06 17:18:00
 tags:
   - Windows
