@@ -139,6 +139,8 @@ memory=8GB
 processors=4
 # 关闭 localhostForwarding，当需要将 WSL 端口暴露给局域网时可能需要
 # localhostForwarding=false
+# 解决 WSL 占用内存不释放的著名“灵异事件”
+autoMemoryReclaim=gradual
 ```
 修改后需要重启 WSL (`wsl --shutdown`) 才能生效。
 
@@ -212,8 +214,10 @@ sudo vim /usr/lib/systemd/system/docker.service
 # vim /usr/lib/systemd/system/docker.service
 [Service]
 ExecStart=
-ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2375 --containerd=/run/containerd/containerd.sock
 ```
+
+> 新版的 docker 引起是通过 systemd 托管 socket 的，新版默认使用 `fd://` 配合 `containerd`
 
 **3. 启用并启动 Docker 服务**
 
